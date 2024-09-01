@@ -1,4 +1,6 @@
 package org.example.subject.exception;
 
-public record Error(int status, String message) {
+import org.springframework.http.HttpStatus;
+
+public record Error(HttpStatus status, String message) {
 }
