@@ -1,4 +1,4 @@
-package org.example.subject.appConfig;
+package org.example.subject.appconfig;
 
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +16,7 @@ public class AppConfig {
         return sql -> {
             Resource resource = new ClassPathResource("schema.sql");
             String schemaSql;
-
             schemaSql = new String(Files.readAllBytes(resource.getFile().toPath()));
-
-
             databaseClient.sql(schemaSql).then().subscribe();
         };
     }

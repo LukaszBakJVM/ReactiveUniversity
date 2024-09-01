@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS subject
 (
     id      integer primary key generated always as identity,
    -- userid  INT,
-    name VARCHAR(255)
+    subject VARCHAR(255)
    -- fork    boolean,
  --   name    VARCHAR(255),
  --   login   VARCHAR(255),
