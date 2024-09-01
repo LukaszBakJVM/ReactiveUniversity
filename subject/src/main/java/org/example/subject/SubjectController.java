@@ -24,4 +24,8 @@ public class SubjectController {
     Flux<SubjectDto>allSubject(){
         return subjectServices.findAll();
     }
+    @GetMapping("/{subject}")
+    Mono<SubjectDto>findSubject(@PathVariable String subject){
+        return subjectServices.findBySubject(subject);
+    }
 }

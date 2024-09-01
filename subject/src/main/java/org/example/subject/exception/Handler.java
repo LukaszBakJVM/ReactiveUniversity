@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class Handler {
     @ExceptionHandler(DuplicateSubjectException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Error userNotFoundException(DuplicateSubjectException ex) {
+    public Error duplicateSubject(DuplicateSubjectException ex) {
         return new Error(HttpStatus.CONFLICT.value(), ex.getMessage());
+    }
+    @ExceptionHandler(SubjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Error subjectNotFound(SubjectNotFoundException ex) {
+        return new Error(HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
 }
