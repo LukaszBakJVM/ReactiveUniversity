@@ -18,7 +18,7 @@ public class SubjectServices {
     }
 
     Mono<SubjectDto> newSubject(SubjectDto subjectDto) {
-        return subjectRepository.findBySubject(subjectDto.subject()).flatMap(existingSubject -> Mono.<SubjectDto>error(new DuplicateSubjectException("Subject with the same name already exists"))).switchIfEmpty(subjectRepository.save(new Subject(subjectDto.subject())).map(savedSubject -> new SubjectDto(savedSubject.subject())));
+        return subjectRepository.findBySubject(subjectDto.subject()).flatMap(existingSubject -> Mono.<SubjectDto>error(new DuplicateSubjectException("Subject with the same name already exists"))).switchIfEmpty(subjectRepository.save(subjectMapper.dtoToEntity(subjectDto)).map(subjectMapper::entityToDto));
     }
     Flux<SubjectDto>findAll(){
         return subjectRepository.findAll().map(subjectMapper::entityToDto);
