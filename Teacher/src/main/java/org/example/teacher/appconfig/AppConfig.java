@@ -20,4 +20,5 @@ public class AppConfig {
             databaseClient.sql(schemaSql).then().subscribe();
         };
     }
+
 }

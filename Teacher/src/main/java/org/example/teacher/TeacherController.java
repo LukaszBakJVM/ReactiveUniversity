@@ -1,5 +1,7 @@
 package org.example.teacher;
 
+import org.example.teacher.dto.NewTeacherDto;
+import org.example.teacher.dto.ResponseNewTeacherDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +21,7 @@ public class TeacherController {
     }
 
     @PostMapping
-    Mono<ResponseEntity<NewTeacherDto>> addNewTeacher(@RequestBody NewTeacherDto dto) {
+    Mono<ResponseEntity<ResponseNewTeacherDto>> addNewTeacher(@RequestBody NewTeacherDto dto) {
         return teacherServices.newTeacher(dto).map(teacher -> ResponseEntity.created(URI.create("/teacher")).body(teacher));
 
     }

@@ -1,6 +1,8 @@
 package org.example.teacher;
 
 import jakarta.validation.ConstraintViolation;
+import org.example.teacher.dto.NewTeacherDto;
+import org.example.teacher.dto.ResponseNewTeacherDto;
 import org.example.teacher.exception.DuplicateEmailException;
 import org.example.teacher.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,10 +34,10 @@ public class TeacherServices {
         this.webClientBuilder = webClientBuilder;
     }
 
-    Mono<NewTeacherDto> newTeacher(NewTeacherDto dto) {
+    Mono<ResponseNewTeacherDto> newTeacher(NewTeacherDto dto) {
         Teacher teacher = teacherMapper.dtoToEntity(dto);
         validationTeacher(teacher);
-        return teacherRepository.findByEmail(dto.email()).flatMap(existingEmail -> Mono.<NewTeacherDto>error(new DuplicateEmailException(String.format("Email %s already exists", dto.email())))).switchIfEmpty(teacherRepository.save(teacherMapper.dtoToEntity(dto)).map(teacherMapper::entityToDto));
+        return teacherRepository.findByEmail(dto.email()).flatMap(existingEmail -> Mono.<ResponseNewTeacherDto>error(new DuplicateEmailException(String.format("Email %s already exists", dto.email())))).switchIfEmpty(teacherRepository.save(teacherMapper.dtoToEntity(dto)).map(teacherMapper::entityToDto));
 
 
     }
