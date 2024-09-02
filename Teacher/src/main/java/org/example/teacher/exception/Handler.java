@@ -11,4 +11,9 @@ public class Handler {
     public Error validation(ValidationException ex) {
         return new Error(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public Error duplicateEmail(DuplicateEmailException ex) {
+        return new Error(HttpStatus.CONFLICT, ex.getMessage());
+    }
 }

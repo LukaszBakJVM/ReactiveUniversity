@@ -6,4 +6,6 @@ import reactor.core.publisher.Mono;
 public interface SubjectRepository extends ReactiveCrudRepository<Subject, Long> {
 
     Mono<Subject> findBySubject(String subject);
+
+
 }

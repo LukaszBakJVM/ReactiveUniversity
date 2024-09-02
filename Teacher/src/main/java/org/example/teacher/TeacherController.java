@@ -19,7 +19,7 @@ public class TeacherController {
     }
 
     @PostMapping
-    Mono<ResponseEntity<TeacherDto>> addNewTeacher(@RequestBody TeacherDto dto) {
+    Mono<ResponseEntity<NewTeacherDto>> addNewTeacher(@RequestBody NewTeacherDto dto) {
         return teacherServices.newTeacher(dto).map(teacher -> ResponseEntity.created(URI.create("/teacher")).body(teacher));
 
     }
