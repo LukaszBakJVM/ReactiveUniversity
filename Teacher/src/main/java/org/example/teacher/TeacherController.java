@@ -22,7 +22,7 @@ public class TeacherController {
 
     @PostMapping
     Mono<ResponseEntity<ResponseNewTeacherDto>> addNewTeacher(@RequestBody NewTeacherDto dto) {
-        return teacherServices.newTeacher(dto).map(teacher -> ResponseEntity.created(URI.create("/teacher")).body(teacher));
+        return teacherServices.createTeacher(dto).map(teacher -> ResponseEntity.created(URI.create("/teacher")).body(teacher));
 
     }
 }

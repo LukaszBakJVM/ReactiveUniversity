@@ -18,7 +18,7 @@ public class SubjectController {
 
     @PostMapping
     Mono<ResponseEntity<SubjectDto>> addNewSubject(@RequestBody SubjectDto dto) {
-        return subjectServices.newSubject(dto).map(subject -> ResponseEntity.created(URI.create("/subject")).body(subject));
+        return subjectServices.createSubject(dto).map(subject -> ResponseEntity.created(URI.create("/subject")).body(subject));
     }
     @GetMapping("/all")
     Flux<SubjectDto>allSubject(){

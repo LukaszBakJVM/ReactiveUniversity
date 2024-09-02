@@ -18,7 +18,7 @@ public class SubjectServices {
         this.subjectMapper = subjectMapper;
     }
 
-    Mono<SubjectDto> newSubject(SubjectDto subjectDto) {
+    Mono<SubjectDto> createSubject(SubjectDto subjectDto) {
         return subjectRepository.findBySubject(subjectDto.subject()).flatMap(existingSubject -> Mono.<SubjectDto>error(new DuplicateSubjectException(String.format("Subject %s already exists",subjectDto.subject())))).switchIfEmpty(subjectRepository.save(subjectMapper.dtoToEntity(subjectDto)).map(subjectMapper::entityToDto));
     }
 

@@ -34,7 +34,7 @@ public class TeacherServices {
         this.webClientBuilder = webClientBuilder;
     }
 
-    Mono<ResponseNewTeacherDto> newTeacher(NewTeacherDto dto) {
+    Mono<ResponseNewTeacherDto> createTeacher(NewTeacherDto dto) {
         Teacher teacher = teacherMapper.dtoToEntity(dto);
         validationTeacher(teacher);
         return teacherRepository.findByEmail(dto.email()).flatMap(existingEmail -> Mono.<ResponseNewTeacherDto>error(new DuplicateEmailException(String.format("Email %s already exists", dto.email())))).switchIfEmpty(teacherRepository.save(teacherMapper.dtoToEntity(dto)).map(teacherMapper::entityToDto));
