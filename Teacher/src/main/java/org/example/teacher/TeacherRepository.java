@@ -1,8 +1,8 @@
 package org.example.teacher;
 
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
 
-public interface TeacherRepository extends R2dbcRepository<Teacher, Long> {
+public interface TeacherRepository extends ReactiveCrudRepository<Teacher, Long> {
     Mono<Teacher> findByEmail(String email);
 }
