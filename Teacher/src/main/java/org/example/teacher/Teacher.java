@@ -8,8 +8,6 @@ import org.springframework.data.annotation.Id;
 import java.util.List;
 
 public class Teacher {
-    @Id
-    private long id;
     @Size(min = 3)
     String lastName;
     @Min(value = 18, message = "Under 18")
@@ -19,6 +17,8 @@ public class Teacher {
     @Size(min = 6)
     String password;
     List<String> subjectName;
+    @Id
+    private long id;
     @Size(min = 3)
     private String firstName;
 
@@ -71,9 +71,6 @@ public class Teacher {
         this.firstName = firstName;
     }
 
-    public long getId() {
-        return id;
-    }
 
     public void setId(long id) {
         this.id = id;
