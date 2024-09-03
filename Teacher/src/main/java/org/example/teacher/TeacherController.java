@@ -28,8 +28,8 @@ public class TeacherController {
     }
 
     @PostMapping("/update")
-    Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody List<String> subjects, @RequestParam long email) {
-        return teacherServices.addSchoolSubjectsMono(subjects, email).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
+    Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody List<String> subjects, @RequestParam long id) {
+        return teacherServices.addSchoolSubjectsMono(subjects, id).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
     }
 
     @GetMapping("/{email}")

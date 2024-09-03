@@ -1,6 +1,6 @@
 package org.example.teacher.dto;
 
-import java.util.List;
+import java.util.Set;
 
-public record AddSchoolSubjects(List<String>subjects) {
+public record AddSchoolSubjects(Set<String> subjects) {
 }

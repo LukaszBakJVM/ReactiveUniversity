@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 
-import java.util.List;
+import java.util.Set;
 
 public class Teacher {
     @Size(min = 3)
@@ -16,7 +16,8 @@ public class Teacher {
     String email;
     @Size(min = 6)
     String password;
-    List<String> subjectName;
+
+    Set<String> subjectName;
     @Id
     private long id;
     @Size(min = 3)
@@ -55,11 +56,11 @@ public class Teacher {
         this.password = password;
     }
 
-    public List<String> getSubjectName() {
+    public Set<String> getSubjectName() {
         return subjectName;
     }
 
-    public void setSubjectName(List<String> subjectName) {
+    public void setSubjectName(Set<String> subjectName) {
         this.subjectName = subjectName;
     }
 

@@ -5,7 +5,7 @@ import org.example.teacher.dto.NewTeacherDto;
 import org.example.teacher.dto.ResponseNewTeacherDto;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 @Service
 public class TeacherMapper {
@@ -16,7 +16,7 @@ public class TeacherMapper {
         teacher.setAge(dto.age());
         teacher.setEmail(dto.email());
         teacher.setPassword(dto.password());
-        teacher.setSubjectName(new ArrayList<>());
+        teacher.setSubjectName(new HashSet<>());
         return teacher;
 
 

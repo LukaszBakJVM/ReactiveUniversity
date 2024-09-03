@@ -46,17 +46,12 @@ public class TeacherServices {
 
     }
 
-    Mono<AddSchoolSubjects> addSchoolSubjectsMono(List<String> schoolSubjectsMono, long email) {
+    Mono<AddSchoolSubjects> addSchoolSubjectsMono(List<String> schoolSubjectsMono, long id) {
 
-        return subject(schoolSubjectsMono).flatMap(addSchoolSubjectsMono -> teacherRepository.findById(email).flatMap(teacher -> {
-                    teacher.setId(email);
+        return subject(schoolSubjectsMono).flatMap(addSchoolSubjectsMono -> teacherRepository.findById(id).flatMap(teacher -> {teacher.setId(id);
                     teacher.getSubjectName().addAll(schoolSubjectsMono);
-
-
                     return teacherRepository.save(teacher);
-                }).map(teacherMapper::addSchoolSubjects)
-
-        );
+                }).map(teacherMapper::addSchoolSubjects));
 
     }
 
