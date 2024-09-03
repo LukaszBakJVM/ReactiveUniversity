@@ -26,12 +26,14 @@ public class TeacherController {
         return teacherServices.createTeacher(dto).map(teacher -> ResponseEntity.created(URI.create("/teacher")).body(teacher));
 
     }
-    @PatchMapping("/update")
-    Mono<ResponseEntity<AddSchoolSubjects>>updateSubject(@RequestBody  List<String> subjects , @RequestParam String email){
-        return teacherServices.addSchoolSubjectsMono(subjects, email).map(update->ResponseEntity.created(URI.create("/teacher/update")).body(update));
+
+    @PostMapping("/update")
+    Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody List<String> subjects, @RequestParam long email) {
+        return teacherServices.addSchoolSubjectsMono(subjects, email).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
     }
+
     @GetMapping("/{email}")
-    Mono<Teacher>yy(@PathVariable String email){
+    Mono<Teacher> yy(@PathVariable String email) {
         return repository.findByEmail(email);
     }
 }

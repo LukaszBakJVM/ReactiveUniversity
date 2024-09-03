@@ -6,18 +6,27 @@ import org.example.teacher.dto.ResponseNewTeacherDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class TeacherMapper {
-    Teacher dtoToEntity(NewTeacherDto dto){
-        return new Teacher(dto.firstName(), dto.lastName(), dto.age(), dto.email(), dto.password(),new ArrayList<>());
-    }
-    ResponseNewTeacherDto entityToDto(Teacher teacher){
-        return new ResponseNewTeacherDto(teacher.firstName(),teacher.lastName(),teacher.age(),teacher.email());
-    }
-    AddSchoolSubjects addSchoolSubjects(List<String> subjects){
-        return new AddSchoolSubjects(subjects);
+    Teacher dtoToEntity(NewTeacherDto dto) {
+        Teacher teacher = new Teacher();
+        teacher.setFirstName(dto.firstName());
+        teacher.setLastName(dto.lastName());
+        teacher.setAge(dto.age());
+        teacher.setEmail(dto.email());
+        teacher.setPassword(dto.password());
+        teacher.setSubjectName(new ArrayList<>());
+        return teacher;
 
+
+    }
+
+    ResponseNewTeacherDto entityToDto(Teacher teacher) {
+        return new ResponseNewTeacherDto(teacher.getFirstName(), teacher.getLastName(), teacher.getAge(), teacher.getEmail());
+    }
+
+    AddSchoolSubjects addSchoolSubjects(Teacher teacher) {
+        return new AddSchoolSubjects(teacher.getSubjectName());
     }
 }
