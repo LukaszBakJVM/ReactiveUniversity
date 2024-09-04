@@ -1,10 +1,7 @@
 package org.example.teacher;
 
 import jakarta.validation.ConstraintViolation;
-import org.example.teacher.dto.AddSchoolSubjects;
-import org.example.teacher.dto.NewTeacherDto;
-import org.example.teacher.dto.ResponseNewTeacherDto;
-import org.example.teacher.dto.Subject;
+import org.example.teacher.dto.*;
 import org.example.teacher.exception.DuplicateEmailException;
 import org.example.teacher.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,5 +64,8 @@ public class TeacherServices {
 
             throw new ValidationException(errorMessage);
         }
+    }
+    public Mono<TeacherLogin>login(String email){
+        return teacherRepository.findByEmail(email).map(teacherMapper::login);
     }
 }
