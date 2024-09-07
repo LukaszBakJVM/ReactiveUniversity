@@ -11,6 +11,7 @@ import java.util.HashSet;
 
 @Service
 public class TeacherMapper {
+    private final String ROLE = "Teacher";
     private final PasswordEncoder passwordEncoder;
 
     public TeacherMapper(PasswordEncoder passwordEncoder) {
@@ -26,6 +27,7 @@ public class TeacherMapper {
         String password = passwordEncoder.encode(dto.password());
         teacher.setPassword(password);
         teacher.setSubjectName(new HashSet<>());
+        teacher.setRole(ROLE);
         return teacher;
 
 
@@ -38,7 +40,8 @@ public class TeacherMapper {
     AddSchoolSubjects addSchoolSubjects(Teacher teacher) {
         return new AddSchoolSubjects(teacher.getSubjectName());
     }
-    TeacherLogin login(Teacher teacher){
-        return new TeacherLogin(teacher.getEmail(),teacher.getPassword());
+
+    TeacherLogin login(Teacher teacher) {
+        return new TeacherLogin(teacher.getEmail(), teacher.getPassword(), teacher.getRole());
     }
 }

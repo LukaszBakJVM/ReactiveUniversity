@@ -54,10 +54,10 @@ public class AppConfig {
         AuthenticationManager authenticationManager = authenticationManagerBuilder.getOrBuild();
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtService);
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
-        http.authorizeHttpRequests(requests -> requests
-                .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/products")).hasRole("ADMIN")
-                .requestMatchers(mvc.pattern("/api/products")).hasAnyRole("USER", "ADMIN")
-                .anyRequest().permitAll()
+        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST,"teacher")).permitAll()
+                .requestMatchers(mvc.pattern(HttpMethod.POST, "/teacher/update")).hasAnyRole("Teacher")
+               // .requestMatchers(mvc.pattern("/api/products")).hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()
         );
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);

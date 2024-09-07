@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS teacher
 ),
     password VARCHAR(255),
 
-    subject_name text[]
+    subject_name text[],
+    role VARCHAR(40)
 
     );

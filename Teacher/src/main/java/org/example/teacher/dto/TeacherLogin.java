@@ -1,4 +1,4 @@
 package org.example.teacher.dto;
 
-public record TeacherLogin(String email,String password) {
+public record TeacherLogin(String email,String password,String role) {
 }

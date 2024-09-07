@@ -4,6 +4,8 @@ import org.example.teacher.dto.AddSchoolSubjects;
 import org.example.teacher.dto.NewTeacherDto;
 import org.example.teacher.dto.ResponseNewTeacherDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -28,8 +30,11 @@ public class TeacherController {
     }
 
     @PostMapping("/update")
-    Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody List<String> subjects, @RequestParam long id) {
-        return teacherServices.addSchoolSubjectsMono(subjects, id).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
+    Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody List<String> subjects) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+
+        return teacherServices.addSchoolSubjectsMono(subjects, name).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
     }
 
     @GetMapping("/{email}")

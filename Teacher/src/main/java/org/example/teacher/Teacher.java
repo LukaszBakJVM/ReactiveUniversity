@@ -8,6 +8,10 @@ import org.springframework.data.annotation.Id;
 import java.util.Set;
 
 public class Teacher {
+    @Id
+    private long id;
+    @Size(min = 3)
+    private String firstName;
     @Size(min = 3)
     String lastName;
     @Min(value = 18, message = "Under 18")
@@ -18,10 +22,9 @@ public class Teacher {
     String password;
 
     Set<String> subjectName;
-    @Id
-    private long id;
-    @Size(min = 3)
-    private String firstName;
+    private String role;
+
+
 
     public @Size(min = 3) String getLastName() {
         return lastName;
@@ -75,5 +78,17 @@ public class Teacher {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public long getId() {
+        return id;
     }
 }
