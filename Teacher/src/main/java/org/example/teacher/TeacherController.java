@@ -38,7 +38,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{email}")
-    Mono<Teacher> yy(@PathVariable String email) {
+    Mono<Teacher> findTeacherByEmail(@PathVariable String email) {
         return repository.findByEmail(email);
     }
 }
