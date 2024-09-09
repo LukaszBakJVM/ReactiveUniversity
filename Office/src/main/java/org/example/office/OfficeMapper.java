@@ -10,7 +10,7 @@ public class OfficeMapper {
 
     Office dtoToOffice(CreateNewPersonOffice dto) {
         Office office = new Office();
-        office.setFirstName(dto.firstNme());
+        office.setFirstName(dto.firstName());
         office.setLastName(dto.lastName());
         office.setEmail(dto.email());
         office.setPassword(dto.password());
