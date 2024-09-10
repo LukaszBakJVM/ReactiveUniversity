@@ -3,7 +3,7 @@ package org.example.teacher;
 import jakarta.validation.ConstraintViolation;
 import org.example.teacher.dto.*;
 import org.example.teacher.exception.DuplicateEmailException;
-import org.example.teacher.exception.ValidationException;
+import org.example.teacher.exception.CustomValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -64,7 +64,7 @@ public class TeacherServices {
         if (!violations.isEmpty()) {
             String errorMessage = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(" , "));
 
-            throw new ValidationException(errorMessage);
+            throw new CustomValidationException(errorMessage);
         }
     }
     public Mono<TeacherLogin>login(String email){

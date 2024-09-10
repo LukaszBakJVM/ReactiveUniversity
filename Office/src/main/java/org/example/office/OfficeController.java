@@ -21,7 +21,7 @@ public class OfficeController {
     }
 
     @PostMapping
-    Mono<ResponseEntity<CreateNewPersonOfficeResponse>> addNewTeacher(@RequestBody CreateNewPersonOffice dto) {
+    Mono<ResponseEntity<CreateNewPersonOfficeResponse>> createNewTeacher(@RequestBody CreateNewPersonOffice dto) {
         return officeServices.createNewPerson(dto).map(office -> ResponseEntity.created(URI.create("/office")).body(office));
     }
 
