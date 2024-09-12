@@ -57,7 +57,7 @@ public class AppConfig {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtService);
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
         http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST,"/office")).permitAll()
-               // .requestMatchers(mvc.pattern(HttpMethod.POST, "/teacher/update")).hasAnyRole( "Office")
+                .requestMatchers(mvc.pattern(HttpMethod.GET, "/office/{email}")).hasAnyRole( "Office")
                 .anyRequest().authenticated());
 
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
