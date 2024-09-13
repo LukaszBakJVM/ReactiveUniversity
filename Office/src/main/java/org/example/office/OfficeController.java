@@ -23,8 +23,8 @@ public class OfficeController {
         return officeServices.createNewPerson(dto).map(office -> ResponseEntity.created(URI.create("/office")).body(office));
     }
     @GetMapping("/{email}")
-    Mono<Teacher>findByEmail(@PathVariable String email){
-        return officeServices.byEmail(email);
+    Mono<Teacher>findByEmail(@PathVariable String email,@RequestParam String token){
+        return officeServices.byEmail(email,token);
     }
 
 
