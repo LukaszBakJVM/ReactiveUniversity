@@ -24,8 +24,10 @@ public class JwtService {
     private final JWSAlgorithm jwsAlgorithm = JWSAlgorithm.HS256;
     private final JWSSigner signer;
     private final JWSVerifier verifier;
+    private final TokenStore tokenStore;
 
-    public JwtService(@Value("${jws.sharedKey}") String sharedKey) {
+    public JwtService(@Value("${jws.sharedKey}") String sharedKey, TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
         try {
             signer = new MACSigner(sharedKey.getBytes());
             verifier = new MACVerifier(sharedKey.getBytes());
@@ -42,6 +44,8 @@ public class JwtService {
         SignedJWT signedJWT = new SignedJWT(header, claimsSet);
         try {
             signedJWT.sign(signer);
+            tokenStore.setToken(username, signedJWT.serialize());
+
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }

@@ -22,7 +22,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 
-public class AppConfig {
+public class AppConfig  {
     private final JwtService jwtService;
     @Value("${jws.sharedKey}")
     private String key;
