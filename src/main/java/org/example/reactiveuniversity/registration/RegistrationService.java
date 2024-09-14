@@ -1,9 +1,11 @@
 package org.example.reactiveuniversity.registration;
 
 import jakarta.validation.ConstraintViolation;
+import org.example.reactiveuniversity.dto.Login;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.exception.CustomValidationException;
 import org.example.reactiveuniversity.exception.DuplicateEmailException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -15,6 +17,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class RegistrationService {
+    @Value("${teacher}")
+    private String teacher;
+    @Value("${course}")
+    private String courseUrl;
+    @Value("${student}")
+    private String studentUrl;
+    @Value("${subject}")
+    private String subjectUrl;
+
+
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
     private final LocalValidatorFactoryBean validation;
@@ -38,6 +50,9 @@ public class RegistrationService {
         validationRegistration(registration);
         Registration save = registrationRepository.save(registration);
         return registrationMapper.entityToDto(save);
+    }
+    public Optional<Login >login(String email){
+        return registrationRepository.findByEmail(email).map(registrationMapper::login);
     }
 
     private void validationRegistration(Registration registration) {
