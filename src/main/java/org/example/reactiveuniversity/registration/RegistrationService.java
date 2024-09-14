@@ -3,11 +3,14 @@ package org.example.reactiveuniversity.registration;
 import jakarta.validation.ConstraintViolation;
 import org.example.reactiveuniversity.dto.Login;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
+import org.example.reactiveuniversity.dto.Teacher;
 import org.example.reactiveuniversity.exception.CustomValidationException;
 import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +20,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class RegistrationService {
+    private final RegistrationRepository registrationRepository;
+    private final RegistrationMapper registrationMapper;
+    private final LocalValidatorFactoryBean validation;
+    private final WebClient.Builder webClientBuilder;
     @Value("${teacher}")
     private String teacher;
     @Value("${course}")
@@ -26,18 +33,15 @@ public class RegistrationService {
     @Value("${subject}")
     private String subjectUrl;
 
-
-    private final RegistrationRepository registrationRepository;
-    private final RegistrationMapper registrationMapper;
-    private final LocalValidatorFactoryBean validation;
-
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation) {
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, WebClient.Builder webClientBuilder) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
+        this.webClientBuilder = webClientBuilder;
     }
 
     List<String> role() {
+
         return Arrays.stream(Role.values()).map(Role::getROLE).toList();
     }
 
@@ -51,9 +55,14 @@ public class RegistrationService {
         Registration save = registrationRepository.save(registration);
         return registrationMapper.entityToDto(save);
     }
-    public Optional<Login >login(String email){
+
+    public Optional<Login> login(String email) {
         return registrationRepository.findByEmail(email).map(registrationMapper::login);
     }
+    Mono<Teacher>email(String email){
+        return webClientBuilder.baseUrl(teacher).build().get().uri("/teacher/{email}",email).retrieve().bodyToMono(Teacher.class);
+    }
+
 
     private void validationRegistration(Registration registration) {
         Set<ConstraintViolation<Registration>> violations = validation.validate(registration);

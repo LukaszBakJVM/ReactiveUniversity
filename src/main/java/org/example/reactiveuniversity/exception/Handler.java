@@ -19,4 +19,10 @@ public class Handler {
     public Error duplicateEmail(DuplicateEmailException ex) {
         return new Error(HttpStatus.CONFLICT, ex.getMessage());
     }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Error userNotFound(UsernameNotFoundException ex) {
+        return new Error(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
 }
