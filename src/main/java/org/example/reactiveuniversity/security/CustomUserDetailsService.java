@@ -3,7 +3,7 @@ package org.example.reactiveuniversity.security;
 
 import org.example.reactiveuniversity.dto.Login;
 import org.example.reactiveuniversity.exception.UsernameNotFoundException;
-import org.example.reactiveuniversity.registration.RegistrationService;
+import org.example.reactiveuniversity.RegistrationService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

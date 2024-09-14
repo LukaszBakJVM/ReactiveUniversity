@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.registration;
+package org.example.reactiveuniversity;
 
 import jakarta.validation.ConstraintViolation;
 import org.example.reactiveuniversity.dto.Login;
@@ -72,7 +72,7 @@ public class RegistrationService {
         String name = authentication.getName();
         String token = tokenStore.getToken(name);
 
-        return webClientBuilder.baseUrl(teacher).build().get().uri("/teacher/{email}", email).header(HttpHeaders.AUTHORIZATION, "Bearer " + token).retrieve().bodyToMono(Teacher.class);
+        return webClientBuilder.baseUrl(teacher).build().get().uri("/teacher/{email}/name", email).header(HttpHeaders.AUTHORIZATION, "Bearer " + token).retrieve().bodyToMono(Teacher.class);
     }
 
 

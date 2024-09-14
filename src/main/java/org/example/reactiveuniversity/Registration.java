@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.registration;
+package org.example.reactiveuniversity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

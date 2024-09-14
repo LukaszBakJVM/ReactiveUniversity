@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.registration;
+package org.example.reactiveuniversity;
 
 import org.springframework.data.repository.CrudRepository;
 

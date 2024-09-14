@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,14 +14,13 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParseException;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-public class BearerTokenFilter extends HttpFilter {
+public class BearerTokenFilter extends HttpFilter implements Serializable {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
-    private final Logger logger = getLogger(BearerTokenFilter.class);
+
     private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
     private final AuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
     private final JwtService jwtService;
@@ -35,7 +33,7 @@ public class BearerTokenFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
         if (authorizationHeader == null || authorizationHeader.isEmpty()) {
-            logger.debug("Missing Authorization header or empty Bearer token");
+
             chain.doFilter(request, response);
         } else {
             String compactJwt = authorizationHeader.substring(BEARER_PREFIX.length());
@@ -46,11 +44,11 @@ public class BearerTokenFilter extends HttpFilter {
                 setSecurityContext(signedJwt);
                 chain.doFilter(request, response);
             } catch (JwtAuthenticationException e) {
-                logger.debug(e.getMessage());
+
                 failureHandler.onAuthenticationFailure(request, response, e);
             } catch (ParseException e) {
                 JwtAuthenticationException authException = new JwtAuthenticationException("Bearer token could not be parsed");
-                logger.debug(e.getMessage());
+
                 failureHandler.onAuthenticationFailure(request, response, authException);
             }
         }

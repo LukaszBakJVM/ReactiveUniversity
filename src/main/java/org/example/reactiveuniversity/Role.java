@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.registration;
+package org.example.reactiveuniversity;
 
 public enum Role {
     OFFICE("Ofice"),TEACHER("Teacher"),STUDENT("Student");
