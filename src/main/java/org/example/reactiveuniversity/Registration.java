@@ -14,15 +14,14 @@ public class Registration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Size(min = 3)
+    @Size(min = 3, message = "First name must by minimum 3 letter")
     private String firstName;
-    @Size(min = 3)
+    @Size(min = 3, message = "Last name must by minimum 3 letter")
     private String lastName;
-    @Email
+    @Email(message = "Enter valid email")
     private String email;
-    @Size(min = 6)
     private String password;
-    @NotBlank
+    @NotBlank(message = "Select role")
     private String role;
 
     public long getId() {
@@ -33,43 +32,43 @@ public class Registration {
         this.id = id;
     }
 
-    public @Size(min = 3) String getFirstName() {
+    public @Size(min = 3, message = "First name must by minimum 3 letter") String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(@Size(min = 3) String firstName) {
+    public void setFirstName(@Size(min = 3, message = "First name must by minimum 3 letter") String firstName) {
         this.firstName = firstName;
     }
 
-    public @Size(min = 3) String getLastName() {
+    public @Size(min = 3, message = "Last name must by minimum 3 letter") String getLastName() {
         return lastName;
     }
 
-    public void setLastName(@Size(min = 3) String lastName) {
+    public void setLastName(@Size(min = 3, message = "Last name must by minimum 3 letter") String lastName) {
         this.lastName = lastName;
     }
 
-    public @Email String getEmail() {
+    public @Email(message = "Enter valid email") String getEmail() {
         return email;
     }
 
-    public void setEmail(@Email String email) {
+    public void setEmail(@Email(message = "Enter valid email") String email) {
         this.email = email;
     }
 
-    public @Size(min = 6) String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(@Size(min = 6) String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRole() {
+    public @NotBlank(message = "Select role") String getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(@NotBlank(message = "Select role") String role) {
         this.role = role;
     }
 }
