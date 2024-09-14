@@ -12,9 +12,9 @@ public class Office {
     @Size(min = 3)
     String lastName;
     @Email
-    String email;
+   private String email;
     @Size(min = 6)
-    String password;
+   private String password;
 
 
     private String role;

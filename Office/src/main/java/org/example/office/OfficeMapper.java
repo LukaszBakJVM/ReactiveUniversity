@@ -31,6 +31,6 @@ public class OfficeMapper {
     }
 
     OfficeLogin login(Office office) {
-        return new OfficeLogin(office.getEmail(), office.password, office.getRole());
+        return new OfficeLogin(office.getEmail(), office.getPassword(), office.getRole());
     }
 }
