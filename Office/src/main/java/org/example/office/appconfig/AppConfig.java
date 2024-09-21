@@ -2,7 +2,6 @@ package org.example.office.appconfig;
 
 
 import org.example.office.security.BearerTokenFilter;
-import org.example.office.security.JwtAuthenticationFilter;
 import org.example.office.security.JwtService;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +10,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.r2dbc.core.DatabaseClient;
-
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 import java.nio.file.Files;
 
@@ -50,19 +46,14 @@ public class AppConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           MvcRequestMatcher.Builder mvc,
-                                           AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.getOrBuild();
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtService);
+    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
+
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST,"/office")).permitAll()
-                .requestMatchers(mvc.pattern(HttpMethod.GET, "/office/{email}")).hasAnyRole( "Office")
-                .anyRequest().authenticated());
+        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/office")).permitAll().requestMatchers(mvc.pattern(HttpMethod.GET, "/office/{email}")).hasAnyRole("Office").anyRequest().authenticated());
 
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);
-        http.addFilterBefore(jwtAuthenticationFilter, AuthorizationFilter.class);
+
         http.addFilterBefore(bearerTokenFilter, AuthorizationFilter.class);
         return http.build();
     }
