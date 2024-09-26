@@ -13,15 +13,13 @@ public class CourseMapper {
 
         Course course = new Course();
         course.setCourseName(dto.courseName());
-        Set<String> stringSet = subjectsStrings(dto.subject());
-
-        course.setSubjectName(stringSet);
+        course.setSubjectName(dto.subject());
         return course;
     }
 
     CourseDto entityToDto(Course course) {
-        Set<Subject> collect = course.getSubjectName().stream().map(this::mapToSubject).collect(Collectors.toSet());
-        return new CourseDto(course.getCourseName(), collect);
+
+        return new CourseDto(course.getCourseName(), course.getSubjectName());
     }
 
     private Subject mapToSubject(String subject) {

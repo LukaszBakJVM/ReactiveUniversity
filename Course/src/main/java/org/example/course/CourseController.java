@@ -2,10 +2,8 @@ package org.example.course;
 
 import org.example.course.dto.CourseDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -22,6 +20,16 @@ public class CourseController {
     @PostMapping
     Mono<ResponseEntity<CourseDto>> createCourse(@RequestBody CourseDto dto) {
         return courseServices.createCourse(dto).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
+    }
+    @DeleteMapping("/{courseName}")
+    public Mono<ResponseEntity<Void>> deleteCourse(@PathVariable String courseName) {
+        courseServices.deleteCourse(courseName);
+        return Mono.just(ResponseEntity.noContent().build());
+
+    }
+    @GetMapping("/all")
+    ResponseEntity<Flux<CourseDto>>finaAllCourses(){
+        return ResponseEntity.ok(courseServices.findAll());
     }
 
 

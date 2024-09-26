@@ -1,11 +1,13 @@
 package org.example.course;
 
 import org.example.course.dto.CourseDto;
-import org.example.course.exception.DuplicateCourseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.HashSet;
 
 @Service
 public class CourseServices {
@@ -24,9 +26,19 @@ public class CourseServices {
     }
 
     Mono<CourseDto> createCourse(CourseDto dto) {
-        return courseRepository.findByCourseName(dto.courseName()).flatMap(existingCourse -> Mono.<CourseDto>error(new DuplicateCourseException(String.format("Course %s already exists", dto.courseName())))).switchIfEmpty(courseRepository.save(courseMapper.dtoToEntity(dto)).map(courseMapper::entityToDto));
+        return courseRepository.findByCourseName(dto.courseName()).flatMap(course -> {
+            course.setId(course.getId());
+            course.getSubjectName().addAll(new HashSet<>(dto.subject()));
+            return courseRepository.save(course);
+        }).switchIfEmpty(courseRepository.save(courseMapper.dtoToEntity(dto))).map(courseMapper::entityToDto);
+    }
 
+    Mono<Void> deleteCourse(String courseName) {
+      return   courseRepository.deleteByCourseName(courseName);
+    }
 
+    Flux<CourseDto> findAll() {
+        return courseRepository.findAll().map(courseMapper::entityToDto);
     }
 }
 
