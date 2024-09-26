@@ -24,7 +24,6 @@ public class CourseController {
 
     @DeleteMapping("/{courseName}")
     public Mono<ResponseEntity<Void>> deleteCourse(@PathVariable String courseName) {
-
         return courseServices.deleteCourse(courseName).then(Mono.just(ResponseEntity.noContent().build()));
 
     }
