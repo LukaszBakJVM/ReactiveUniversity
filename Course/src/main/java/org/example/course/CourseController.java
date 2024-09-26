@@ -21,14 +21,16 @@ public class CourseController {
     Mono<ResponseEntity<CourseDto>> createCourse(@RequestBody CourseDto dto) {
         return courseServices.createCourse(dto).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
     }
+
     @DeleteMapping("/{courseName}")
     public Mono<ResponseEntity<Void>> deleteCourse(@PathVariable String courseName) {
-        courseServices.deleteCourse(courseName);
-        return Mono.just(ResponseEntity.noContent().build());
+
+        return courseServices.deleteCourse(courseName).then(Mono.just(ResponseEntity.noContent().build()));
 
     }
+
     @GetMapping("/all")
-    ResponseEntity<Flux<CourseDto>>finaAllCourses(){
+    ResponseEntity<Flux<CourseDto>> finaAllCourses() {
         return ResponseEntity.ok(courseServices.findAll());
     }
 
