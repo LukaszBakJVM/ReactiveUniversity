@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.registration;
+package org.example.reactiveuniversity;
 
 import jakarta.validation.ConstraintViolation;
 import org.example.reactiveuniversity.dto.Login;
@@ -9,11 +9,13 @@ import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.example.reactiveuniversity.security.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -72,7 +74,12 @@ public class RegistrationService {
         String name = authentication.getName();
         String token = tokenStore.getToken(name);
 
-        return webClientBuilder.baseUrl(teacher).build().get().uri("/teacher/{email}", email).header(HttpHeaders.AUTHORIZATION, "Bearer " + token).retrieve().bodyToMono(Teacher.class);
+
+        return webClientBuilder.baseUrl(teacher).build().get().uri("/teacher/{email}/name", email).
+                header(HttpHeaders.AUTHORIZATION, "Bearer " + token).retrieve().
+                onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode())))
+                .bodyToMono(Teacher.class);
+
     }
 
 

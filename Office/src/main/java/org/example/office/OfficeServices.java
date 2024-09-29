@@ -3,7 +3,6 @@ package org.example.office;
 import jakarta.validation.ConstraintViolation;
 import org.example.office.dto.CreateNewPersonOffice;
 import org.example.office.dto.CreateNewPersonOfficeResponse;
-import org.example.office.dto.OfficeLogin;
 import org.example.office.dto.Teacher;
 import org.example.office.exception.CustomValidationException;
 import org.example.office.exception.DuplicateEmailException;
@@ -20,16 +19,16 @@ import java.util.stream.Collectors;
 @Service
 public class OfficeServices {
 
+    private final LocalValidatorFactoryBean validation;
+    private final OfficeRepository officeRepository;
+    private final OfficeMapper officeMapper;
+    private final WebClient.Builder webClientBuilder;
     @Value("${teacher}")
     private String teacher;
     @Value("${course}")
     private String courseUrl;
     @Value("${student}")
     private String studentUrl;
-    private final LocalValidatorFactoryBean validation;
-    private final OfficeRepository officeRepository;
-    private final OfficeMapper officeMapper;
-    private final WebClient.Builder webClientBuilder;
 
     public OfficeServices(LocalValidatorFactoryBean validation, OfficeRepository officeRepository, OfficeMapper officeMapper, WebClient.Builder webClientBuilder) {
         this.validation = validation;
@@ -44,12 +43,9 @@ public class OfficeServices {
         return officeRepository.findByEmail(dto.email()).flatMap(existingEmail -> Mono.<CreateNewPersonOfficeResponse>error(new DuplicateEmailException(String.format("Email %s already exists", dto.email())))).switchIfEmpty(officeRepository.save(officeMapper.dtoToOffice(dto)).map(officeMapper::officeToDto));
     }
 
-    public Mono<OfficeLogin> login(String email) {
-        return officeRepository.findByEmail(email).map(officeMapper::login);
-    }
 
-    Mono<Teacher> byEmail(String email,String token) {
-        return webClientBuilder.baseUrl(teacher).build().get().uri("teacher/{email}",email).header(HttpHeaders.AUTHORIZATION, "Bearer " + token).retrieve().bodyToMono(Teacher.class);
+    Mono<Teacher> byEmail(String email, String token) {
+        return webClientBuilder.baseUrl(teacher).build().get().uri("teacher/{email}", email).header(HttpHeaders.AUTHORIZATION, "Bearer " + token).retrieve().bodyToMono(Teacher.class);
     }
 
 

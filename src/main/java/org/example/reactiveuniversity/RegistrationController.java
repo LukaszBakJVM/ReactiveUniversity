@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.registration;
+package org.example.reactiveuniversity;
 
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.Teacher;

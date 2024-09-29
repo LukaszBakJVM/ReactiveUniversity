@@ -13,17 +13,16 @@ public class Teacher {
     @Size(min = 3)
     private String firstName;
     @Size(min = 3)
-    String lastName;
+    private String lastName;
     @Min(value = 18, message = "Under 18")
-    int age;
+    private int age;
     @Email
-    String email;
+    private String email;
     @Size(min = 6)
-    String password;
+    private String password;
 
-    Set<String> subjectName;
+    private Set<String> subjectName;
     private String role;
-
 
 
     public @Size(min = 3) String getLastName() {
@@ -75,11 +74,6 @@ public class Teacher {
         this.firstName = firstName;
     }
 
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getRole() {
         return role;
     }
@@ -90,5 +84,9 @@ public class Teacher {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

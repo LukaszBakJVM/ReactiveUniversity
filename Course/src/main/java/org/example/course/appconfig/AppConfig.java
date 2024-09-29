@@ -1,15 +1,14 @@
-package org.example.office.appconfig;
+package org.example.course.appconfig;
 
-
-import org.example.office.security.BearerTokenFilter;
-import org.example.office.security.JwtService;
+import org.example.course.security.BearerTokenFilter;
+import org.example.course.security.JwtService;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpMethod;
 import org.springframework.r2dbc.core.DatabaseClient;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,6 +23,7 @@ import java.nio.file.Files;
 
 @Configuration
 public class AppConfig {
+
     private final JwtService jwtService;
 
     public AppConfig(JwtService jwtService) {
@@ -48,11 +48,15 @@ public class AppConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
 
-        BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/office")).permitAll().requestMatchers(mvc.pattern(HttpMethod.GET, "/office/{email}")).hasAnyRole("Office").anyRequest().authenticated());
 
+        BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
+        http.authorizeHttpRequests(request -> request.requestMatchers(mvc.pattern("/")).hasAnyRole("Office").anyRequest().permitAll());
+
+
+        //  http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/teacher")).permitAll().requestMatchers(mvc.pattern(HttpMethod.POST, "/teacher/update")).hasAnyRole("Teacher", "Office").requestMatchers(mvc.pattern(HttpMethod.GET, "/teacher/{email}/name")).hasAnyRole("Teacher","Office").anyRequest().authenticated());
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);
+
 
         http.addFilterBefore(bearerTokenFilter, AuthorizationFilter.class);
         return http.build();
@@ -62,5 +66,4 @@ public class AppConfig {
     PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
 }

@@ -37,7 +37,7 @@ public class TeacherController {
         return teacherServices.addSchoolSubjectsMono(subjects, name).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/{email}/name")
     Mono<Teacher> findTeacherByEmail(@PathVariable String email) {
         return repository.findByEmail(email);
     }

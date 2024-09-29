@@ -1,4 +1,4 @@
-package org.example.teacher.security;
+package org.example.course.security;
 
 import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.FilterChain;

@@ -1,6 +1,6 @@
 package org.example.reactiveuniversity.exception;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
-public record Error(HttpStatus status, String message) {
+public record Error(HttpStatusCode status, String message) {
 }
