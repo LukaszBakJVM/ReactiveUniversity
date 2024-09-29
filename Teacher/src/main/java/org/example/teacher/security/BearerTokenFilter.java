@@ -14,10 +14,9 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.ParseException;
 
-public class BearerTokenFilter extends HttpFilter implements Serializable {
+public class BearerTokenFilter extends HttpFilter {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
