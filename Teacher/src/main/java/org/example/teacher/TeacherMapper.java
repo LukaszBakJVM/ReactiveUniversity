@@ -3,7 +3,7 @@ package org.example.teacher;
 import org.example.teacher.dto.AddSchoolSubjects;
 import org.example.teacher.dto.NewTeacherDto;
 import org.example.teacher.dto.ResponseNewTeacherDto;
-import org.example.teacher.dto.TeacherLogin;
+import org.example.teacher.dto.TeacherInfo;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +41,9 @@ public class TeacherMapper {
         return new AddSchoolSubjects(teacher.getSubjectName());
     }
 
-    TeacherLogin login(Teacher teacher) {
-        return new TeacherLogin(teacher.getEmail(), teacher.getPassword(), teacher.getRole());
+    TeacherInfo teacherInfo(Teacher teacher) {
+        return new TeacherInfo(teacher.getFirstName(), teacher.getLastName(), teacher.getEmail(), teacher.getSubjectName());
     }
+
+
 }
