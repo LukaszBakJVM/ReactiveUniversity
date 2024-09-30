@@ -5,4 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface TeacherRepository extends ReactiveCrudRepository<Teacher, Long> {
     Mono<Teacher> findByEmail(String email);
+
+
 }

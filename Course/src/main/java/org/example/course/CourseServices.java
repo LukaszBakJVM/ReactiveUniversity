@@ -34,11 +34,15 @@ public class CourseServices {
     }
 
     Mono<Void> deleteCourse(String courseName) {
-      return   courseRepository.deleteByCourseName(courseName);
+        return courseRepository.deleteByCourseName(courseName);
     }
 
     Flux<CourseDto> findAll() {
         return courseRepository.findAll().map(courseMapper::entityToDto);
+    }
+
+    Flux<CourseDto> findCourseBySubject(String subjectName) {
+        return courseRepository.findCourseBySubjectName(subjectName).map(courseMapper::entityToDto);
     }
 }
 

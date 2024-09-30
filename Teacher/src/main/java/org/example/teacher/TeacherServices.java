@@ -1,10 +1,7 @@
 package org.example.teacher;
 
 import jakarta.validation.ConstraintViolation;
-import org.example.teacher.dto.AddSchoolSubjects;
-import org.example.teacher.dto.NewTeacherDto;
-import org.example.teacher.dto.ResponseNewTeacherDto;
-import org.example.teacher.dto.Subject;
+import org.example.teacher.dto.*;
 import org.example.teacher.exception.CustomValidationException;
 import org.example.teacher.exception.DuplicateEmailException;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +52,12 @@ public class TeacherServices {
             return teacherRepository.save(teacher);
         }).map(teacherMapper::addSchoolSubjects));
 
+    }
+    Mono<TeacherInfo>findTeacher(String email){
+        return teacherRepository.findByEmail(email).map(teacherMapper::teacherInfo);
+    }
+    Flux<TeacherInfo>allTeacherInfo(){
+        return teacherRepository.findAll().map(teacherMapper::teacherInfo);
     }
 
     private Mono<List<String>> subject(List<String> subjectUris) {
