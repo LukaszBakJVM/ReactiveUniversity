@@ -4,20 +4,10 @@ import jakarta.validation.ConstraintViolation;
 import org.example.reactiveuniversity.dto.Login;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
-import org.example.reactiveuniversity.dto.Teacher;
 import org.example.reactiveuniversity.exception.CustomValidationException;
 import org.example.reactiveuniversity.exception.DuplicateEmailException;
-import org.example.reactiveuniversity.security.TokenStore;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,24 +20,13 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
     private final LocalValidatorFactoryBean validation;
-    private final WebClient.Builder webClientBuilder;
-    private final TokenStore tokenStore;
-    @Value("${teacher}")
-    private String teacher;
-    @Value("${course}")
-    private String courseUrl;
-    @Value("${student}")
-    private String studentUrl;
-    @Value("${subject}")
-    private String subjectUrl;
 
 
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, WebClient.Builder webClientBuilder, TokenStore tokenStore) {
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
-        this.webClientBuilder = webClientBuilder;
-        this.tokenStore = tokenStore;
+
     }
 
     List<String> role() {
@@ -68,19 +47,6 @@ public class RegistrationService {
 
     public Optional<Login> login(String email) {
         return registrationRepository.findByEmail(email).map(registrationMapper::login);
-    }
-
-    Mono<Teacher> email(String email) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String name = authentication.getName();
-        String token = tokenStore.getToken(name);
-
-
-        return webClientBuilder.baseUrl(teacher).build().get().uri("/teacher/{email}/name", email).
-                header(HttpHeaders.AUTHORIZATION, "Bearer " + token).retrieve().
-                onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new ResponseStatusException(response.statusCode())))
-                .bodyToMono(Teacher.class);
-
     }
 
 
