@@ -29,7 +29,7 @@ public class CourseController {
     }
 
     @GetMapping("/all")
-    ResponseEntity<Flux<CourseDto>> finaAllCourses() {
+    ResponseEntity<Flux<CourseDto>> allCourseInfo() {
         return ResponseEntity.ok(courseServices.findAll());
     }
     @GetMapping("/{subject}/name")

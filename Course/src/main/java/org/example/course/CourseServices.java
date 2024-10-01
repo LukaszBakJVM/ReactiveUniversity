@@ -42,7 +42,7 @@ public class CourseServices {
     }
 
     Flux<CourseDto> findCourseBySubject(String subjectName) {
-        return courseRepository.findCourseBySubjectName(subjectName).map(courseMapper::entityToDto);
+        return courseRepository.findCourseBySubjectNameContaining(subjectName).map(courseMapper::entityToDto);
     }
 }
 
