@@ -4,7 +4,6 @@ package org.example.reactiveuniversity.appconfig;
 import org.example.reactiveuniversity.security.BearerTokenFilter;
 import org.example.reactiveuniversity.security.JwtAuthenticationFilter;
 import org.example.reactiveuniversity.security.JwtService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,10 +21,9 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 
-public class AppConfig  {
+public class AppConfig {
     private final JwtService jwtService;
-    @Value("${jws.sharedKey}")
-    private String key;
+
 
     public AppConfig(JwtService jwtService) {
         this.jwtService = jwtService;
@@ -43,7 +41,7 @@ public class AppConfig  {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtService);
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
 
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/registration"), mvc.pattern(HttpMethod.POST, "/auth")).permitAll().requestMatchers(mvc.pattern(HttpMethod.GET, "/registration/role")).hasAnyRole("Office").requestMatchers(mvc.pattern(HttpMethod.GET, "/registration/")).hasAnyRole("Office").anyRequest().authenticated());
+        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/auth")).permitAll().requestMatchers(mvc.pattern(HttpMethod.POST, "/registration"), mvc.pattern(HttpMethod.GET, "/registration/role")).hasAnyRole("Office").requestMatchers(mvc.pattern(HttpMethod.GET, "/registration/")).hasAnyRole("Office").anyRequest().authenticated());
 
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);

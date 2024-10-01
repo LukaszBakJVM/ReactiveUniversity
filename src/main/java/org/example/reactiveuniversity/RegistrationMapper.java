@@ -1,6 +1,7 @@
 package org.example.reactiveuniversity;
 
 import org.example.reactiveuniversity.dto.Login;
+import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

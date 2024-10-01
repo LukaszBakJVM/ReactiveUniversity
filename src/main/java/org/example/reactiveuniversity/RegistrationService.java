@@ -2,6 +2,7 @@ package org.example.reactiveuniversity;
 
 import jakarta.validation.ConstraintViolation;
 import org.example.reactiveuniversity.dto.Login;
+import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.Teacher;
 import org.example.reactiveuniversity.exception.CustomValidationException;
