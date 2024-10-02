@@ -1,7 +1,7 @@
 package org.example.reactiveuniversity;
 
 public enum Role {
-    OFFICE("Office"),TEACHER("Teacher"),STUDENT("Student");
+    OFFICE("Office"), TEACHER("Teacher"), STUDENT("Student");
     private final String ROLE;
 
     Role(String role) {

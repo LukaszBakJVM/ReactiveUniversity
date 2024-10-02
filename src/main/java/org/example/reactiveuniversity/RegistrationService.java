@@ -51,7 +51,8 @@ public class RegistrationService {
     public Optional<Login> login(String email) {
         return registrationRepository.findByEmail(email).map(registrationMapper::login);
     }
-    void changePassword(String email,String password){
+
+    void changePassword(String email, String password) {
         Registration user = registrationRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String newPassword = passwordEncoder.encode(password);
         user.setPassword(newPassword);

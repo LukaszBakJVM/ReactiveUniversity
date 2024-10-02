@@ -31,13 +31,14 @@ public class RegistrationController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/registration").buildAndExpand(newUser).toUri();
         return ResponseEntity.created(uri).body(newUser);
     }
+
     @PostMapping("/change password")
-        ResponseEntity<String>newPassword(@RequestParam String password){
-            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-            registrationService.changePassword(currentUsername,password);
-            return ResponseEntity.ok("Ok");
+    ResponseEntity<String> newPassword(@RequestParam String password) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        registrationService.changePassword(currentUsername, password);
+        return ResponseEntity.ok("Ok");
 
 
-        }
+    }
 
 }
