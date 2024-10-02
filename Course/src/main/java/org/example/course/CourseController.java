@@ -32,10 +32,15 @@ public class CourseController {
     ResponseEntity<Flux<CourseDto>> allCourseInfo() {
         return ResponseEntity.ok(courseServices.findAll());
     }
+
     @GetMapping("/{subject}/name")
-    ResponseEntity<Flux<CourseDto>>courseInfoBySubjectName(@PathVariable String subject){
+    ResponseEntity<Flux<CourseDto>> courseInfoBySubjectName(@PathVariable String subject) {
         return ResponseEntity.ok(courseServices.findCourseBySubject(subject));
     }
 
+    @GetMapping("/{course}")
+    ResponseEntity<Mono<CourseDto>> courseInfo(@PathVariable String course) {
+        return ResponseEntity.ok(courseServices.courseInfo(course));
+    }
 
 }

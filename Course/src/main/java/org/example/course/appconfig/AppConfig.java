@@ -50,7 +50,7 @@ public class AppConfig {
 
 
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
-        http.authorizeHttpRequests(request -> request.requestMatchers(mvc.pattern(HttpMethod.POST, "/course")).hasAnyRole("Office").requestMatchers(mvc.pattern(HttpMethod.DELETE, "/course/")).hasAnyRole("Office").anyRequest().permitAll());
+        http.authorizeHttpRequests(request -> request.requestMatchers(mvc.pattern(HttpMethod.POST, "/course")).hasAnyRole("Office").requestMatchers(mvc.pattern(HttpMethod.DELETE, "/course")).hasAnyRole("Office").anyRequest().permitAll());
 
 
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
