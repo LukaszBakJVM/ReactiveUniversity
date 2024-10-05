@@ -8,15 +8,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class Handler {
 
-    @ExceptionHandler(CustomValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Error validation(CustomValidationException ex) {
-        return new Error(HttpStatus.BAD_REQUEST, ex.getMessage());
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Error validation(UsernameNotFoundException ex) {
+        return new Error(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    @ExceptionHandler(DuplicateEmailException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Error duplicateEmail(DuplicateEmailException ex) {
-        return new Error(HttpStatus.CONFLICT, ex.getMessage());
-    }
+
 }

@@ -30,5 +30,9 @@ public class Handler {
     public Error handleResponseStatusException(ResponseStatusException ex) {
         return new Error(ex.getStatusCode(), ex.getMessage());
     }
+    @ExceptionHandler(WrongRoleException.class)
+    public Error wrongRole(WrongRoleException ex) {
+        return new Error(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 }
 

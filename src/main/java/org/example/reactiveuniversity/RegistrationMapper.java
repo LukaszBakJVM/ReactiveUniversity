@@ -3,6 +3,7 @@ package org.example.reactiveuniversity;
 import org.example.reactiveuniversity.dto.Login;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
+import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,9 @@ public class RegistrationMapper {
     }
     Login login(Registration registration){
         return new Login(registration.getEmail(),registration.getPassword(),registration.getRole());
+    }
+    WriteNewPerson write(Registration registration){
+        return new WriteNewPerson(registration.getFirstName(),registration.getLastName(),registration.getEmail());
     }
 
 
