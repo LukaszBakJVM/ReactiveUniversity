@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.nio.file.Files;
@@ -49,12 +50,16 @@ public class AppConfig {
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
 
 
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/teacher")).permitAll().requestMatchers(mvc.pattern(HttpMethod.POST, "/teacher/update")).hasAnyRole("Teacher", "Office").requestMatchers(mvc.pattern(HttpMethod.GET, "/teacher/{email}/name")).hasAnyRole("Teacher", "Office").anyRequest().authenticated());
+        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/teacher")).hasRole("Office").requestMatchers(mvc.pattern(HttpMethod.POST, "/teacher/update")).hasAnyRole("Teacher", "Office").requestMatchers(mvc.pattern(HttpMethod.GET, "/teacher/{email}/name")).hasAnyRole("Teacher", "Office").anyRequest().authenticated());
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.addFilterBefore(bearerTokenFilter, AuthorizationFilter.class);
         return http.build();
+    }
+    @Bean
+    public WebClient.Builder webclient() {
+        return WebClient.builder();
     }
 
 

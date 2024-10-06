@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +50,7 @@ public class RegistrationService {
     }
 
     @Transactional
-   public RegistrationResponseDto createNewUser(RegistrationDto registrationDto, String email) {
+    public RegistrationResponseDto createNewUser(RegistrationDto registrationDto, String email) {
 
         Optional<Registration> byEmail = registrationRepository.findByEmail(registrationDto.email());
         byEmail.ifPresent(present -> {
@@ -87,14 +86,13 @@ public class RegistrationService {
         String header = "Authorization,Bearer %s".formatted(token);
         switch (role) {
             case "Office":
-                webClientBuilder.baseUrl(officeUrl).build().post().uri("/office").header(header).accept(MediaType.APPLICATION_JSON).body(Mono.just(body), WriteNewPerson.class).retrieve();
+                webClientBuilder.baseUrl(officeUrl).build().post().uri("/office").header(header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
                 break;
             case "Teacher":
-                webClientBuilder.baseUrl("http://localhost:8081/teacher").build().post().header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).body(Mono.just(body), WriteNewPerson.class).retrieve();
-
+                webClientBuilder.baseUrl(teacherUrl).build().post().uri("/teacher").header(header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
                 break;
             case "Student":
-                webClientBuilder.baseUrl(studentUrl).build().post().uri("/student").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve();
+                webClientBuilder.baseUrl(studentUrl).build().post().uri("/student").header(header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
                 break;
             default:
                 throw new WrongRoleException("Unknown Error");
@@ -102,5 +100,7 @@ public class RegistrationService {
 
         }
     }
-
 }
+
+
+

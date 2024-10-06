@@ -29,7 +29,7 @@ public class RegistrationController {
     @PostMapping
     ResponseEntity<RegistrationResponseDto> createNewUser(@RequestBody RegistrationDto dto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        RegistrationResponseDto newUser = registrationService.createNewUser(dto,authentication.getName());
+        RegistrationResponseDto newUser = registrationService.createNewUser(dto, authentication.getName());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/registration").buildAndExpand(newUser).toUri();
         return ResponseEntity.created(uri).body(newUser);
     }

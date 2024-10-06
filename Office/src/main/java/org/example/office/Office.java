@@ -5,10 +5,10 @@ import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 
 public class Office {
-    @Size(min = 3)
-    String lastName;
     @Id
     private long id;
+    @Size(min = 3)
+    String lastName;
     @Size(min = 3)
     private String firstName;
     @Email
