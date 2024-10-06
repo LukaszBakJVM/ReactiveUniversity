@@ -83,16 +83,15 @@ public class RegistrationService {
 
 
     private void writeUser(String role, WriteNewPerson body, String token) {
-        String header = "Authorization,Bearer %s".formatted(token);
         switch (role) {
             case "Office":
-                webClientBuilder.baseUrl(officeUrl).build().post().uri("/office").header(header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
+                webClientBuilder.baseUrl(officeUrl).build().post().uri("/office").header("Authorization", "Bearer "+token).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
                 break;
             case "Teacher":
-                webClientBuilder.baseUrl(teacherUrl).build().post().uri("/teacher").header(header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
+                webClientBuilder.baseUrl(teacherUrl).build().post().uri("/teacher").header("Authorization", "Bearer "+token).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
                 break;
             case "Student":
-                webClientBuilder.baseUrl(studentUrl).build().post().uri("/student").header(header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
+                webClientBuilder.baseUrl(studentUrl).build().post().uri("/student").header("Authorization", "Bearer "+token).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
                 break;
             default:
                 throw new WrongRoleException("Unknown Error");
