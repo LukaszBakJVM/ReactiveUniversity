@@ -10,11 +10,11 @@ import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.example.reactiveuniversity.exception.WrongRoleException;
 import org.example.reactiveuniversity.security.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +27,7 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
     private final LocalValidatorFactoryBean validation;
-    private final WebClient.Builder webClientBuilder;
+    private final RestTemplate restTemplate;
     private final TokenStore tokenStore;
     @Value("${teacher}")
     private String teacherUrl;
@@ -37,11 +37,12 @@ public class RegistrationService {
     private String officeUrl;
 
 
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, WebClient.Builder webClientBuilder, TokenStore tokenStore) {
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, RestTemplate restTemplate, TokenStore tokenStore) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
-        this.webClientBuilder = webClientBuilder;
+        this.restTemplate = restTemplate;
+
         this.tokenStore = tokenStore;
     }
 
@@ -62,7 +63,6 @@ public class RegistrationService {
         WriteNewPerson write = registrationMapper.write(registration);
         String token = tokenStore.getToken(email);
         writeUser(save.getRole(), write, token);
-
         return registrationMapper.entityToDto(save);
     }
 
@@ -82,24 +82,34 @@ public class RegistrationService {
     }
 
 
-    private void writeUser(String role, WriteNewPerson body, String token) {
-        String authorization ="Authorization";
+    private HttpStatusCode writeUser(String role, WriteNewPerson body, String token) {
+        String authorization = "Authorization";
         String header = "Bearer %s".formatted(token);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(authorization, header);
+
+        HttpEntity<WriteNewPerson> request = new HttpEntity<>(body, headers);
+        HttpStatusCode httpStatus;
         switch (role) {
             case "Office":
-                webClientBuilder.baseUrl(officeUrl).build().post().uri("/office").header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
+                ResponseEntity<WriteNewPerson> office = restTemplate.exchange(officeUrl + "/office", HttpMethod.POST, request, WriteNewPerson.class);
+                httpStatus = office.getStatusCode();
                 break;
             case "Teacher":
-                webClientBuilder.baseUrl(teacherUrl).build().post().uri("/teacher").header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
+                ResponseEntity<WriteNewPerson> teacher = restTemplate.exchange(teacherUrl + "/teacher", HttpMethod.POST, request, WriteNewPerson.class);
+                httpStatus = teacher.getStatusCode();
                 break;
             case "Student":
-                webClientBuilder.baseUrl(studentUrl).build().post().uri("/student").header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(WriteNewPerson.class).subscribe();
+                ResponseEntity<WriteNewPerson> student = restTemplate.exchange(studentUrl + "/student", HttpMethod.POST, request, WriteNewPerson.class);
+                httpStatus = student.getStatusCode();
                 break;
             default:
                 throw new WrongRoleException("Unknown Error");
 
 
         }
+        return httpStatus;
     }
 }
 
