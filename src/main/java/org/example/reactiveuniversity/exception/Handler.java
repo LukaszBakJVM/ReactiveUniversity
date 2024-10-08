@@ -26,10 +26,12 @@ public class Handler {
     public Error userNotFound(UsernameNotFoundException ex) {
         return new Error(HttpStatus.FORBIDDEN, ex.getMessage());
     }
+
     @ExceptionHandler(ResponseStatusException.class)
     public Error handleResponseStatusException(ResponseStatusException ex) {
         return new Error(ex.getStatusCode(), ex.getMessage());
     }
+
     @ExceptionHandler(WrongRoleException.class)
     public Error wrongRole(WrongRoleException ex) {
         return new Error(HttpStatus.BAD_REQUEST, ex.getMessage());

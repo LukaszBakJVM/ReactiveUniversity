@@ -10,7 +10,10 @@ import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.example.reactiveuniversity.exception.WrongRoleException;
 import org.example.reactiveuniversity.security.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -62,7 +65,13 @@ public class RegistrationService {
         Registration save = registrationRepository.save(registration);
         WriteNewPerson write = registrationMapper.write(registration);
         String token = tokenStore.getToken(email);
-        writeUser(save.getRole(), write, token);
+        try {
+            writeUser(save.getRole(), write, token);
+
+        } catch (Exception e) {
+            throw new WrongRoleException("Unknown Error");
+        }
+
         return registrationMapper.entityToDto(save);
     }
 
@@ -82,7 +91,7 @@ public class RegistrationService {
     }
 
 
-    private HttpStatusCode writeUser(String role, WriteNewPerson body, String token) {
+    private void writeUser(String role, WriteNewPerson body, String token) {
         String authorization = "Authorization";
         String header = "Bearer %s".formatted(token);
         HttpHeaders headers = new HttpHeaders();
@@ -90,26 +99,22 @@ public class RegistrationService {
         headers.set(authorization, header);
 
         HttpEntity<WriteNewPerson> request = new HttpEntity<>(body, headers);
-        HttpStatusCode httpStatus;
         switch (role) {
             case "Office":
-                ResponseEntity<WriteNewPerson> office = restTemplate.exchange(officeUrl + "/office", HttpMethod.POST, request, WriteNewPerson.class);
-                httpStatus = office.getStatusCode();
+                restTemplate.exchange(officeUrl + "/office", HttpMethod.POST, request, WriteNewPerson.class);
                 break;
             case "Teacher":
-                ResponseEntity<WriteNewPerson> teacher = restTemplate.exchange(teacherUrl + "/teacher", HttpMethod.POST, request, WriteNewPerson.class);
-                httpStatus = teacher.getStatusCode();
+                restTemplate.exchange(teacherUrl + "/teacher", HttpMethod.POST, request, WriteNewPerson.class);
                 break;
             case "Student":
-                ResponseEntity<WriteNewPerson> student = restTemplate.exchange(studentUrl + "/student", HttpMethod.POST, request, WriteNewPerson.class);
-                httpStatus = student.getStatusCode();
+                restTemplate.exchange(studentUrl + "/student", HttpMethod.POST, request, WriteNewPerson.class);
                 break;
             default:
                 throw new WrongRoleException("Unknown Error");
 
 
         }
-        return httpStatus;
+
     }
 }
 
