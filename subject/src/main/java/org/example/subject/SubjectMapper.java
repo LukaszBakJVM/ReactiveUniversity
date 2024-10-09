@@ -1,5 +1,6 @@
 package org.example.subject;
 
+import org.example.subject.dto.SubjectDto;
 import org.springframework.stereotype.Service;
 
 @Service

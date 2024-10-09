@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.nio.file.Files;
@@ -52,5 +53,9 @@ public class AppConfig {
 
         http.addFilterBefore(bearerTokenFilter, AuthorizationFilter.class);
         return http.build();
+    }
+    @Bean
+    WebClient.Builder webClient(){
+        return  WebClient.builder();
     }
 }

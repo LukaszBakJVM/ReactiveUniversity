@@ -1,4 +1,4 @@
-package org.example.subject;
+package org.example.subject.dto;
 
 public record SubjectDto(String subject) {
 }

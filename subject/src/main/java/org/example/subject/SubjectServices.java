@@ -1,36 +1,45 @@
 package org.example.subject;
 
+import org.example.subject.dto.Course;
+import org.example.subject.dto.SubjectDto;
 import org.example.subject.exception.DuplicateSubjectException;
-import org.example.subject.exception.SubjectNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Service
 public class SubjectServices {
     private final SubjectRepository subjectRepository;
     private final SubjectMapper subjectMapper;
+    private final WebClient.Builder webClient;
+    @Value("${student}")
+    private String studentUrl;
+    @Value("${teacher}")
+    private String teacherUrl;
+    @Value("${course}")
+    private String courseUrl;
 
 
-    public SubjectServices(SubjectRepository subjectRepository, SubjectMapper subjectMapper) {
+    public SubjectServices(SubjectRepository subjectRepository, SubjectMapper subjectMapper, WebClient.Builder webClient) {
         this.subjectRepository = subjectRepository;
 
         this.subjectMapper = subjectMapper;
+        this.webClient = webClient;
     }
 
     Mono<SubjectDto> createSubject(SubjectDto subjectDto) {
-        return subjectRepository.findBySubject(subjectDto.subject()).flatMap(existingSubject -> Mono.<SubjectDto>error(new DuplicateSubjectException(String.format("Subject %s already exists",subjectDto.subject())))).switchIfEmpty(subjectRepository.save(subjectMapper.dtoToEntity(subjectDto)).map(subjectMapper::entityToDto));
+        return subjectRepository.findBySubject(subjectDto.subject()).flatMap(existingSubject -> Mono.<SubjectDto>error(new DuplicateSubjectException(String.format("Subject %s already exists", subjectDto.subject())))).switchIfEmpty(subjectRepository.save(subjectMapper.dtoToEntity(subjectDto)).map(subjectMapper::entityToDto));
     }
 
-    Flux<SubjectDto> findAll() {
-        return subjectRepository.findAll().map(subjectMapper::entityToDto);
-    }
 
-    Mono<SubjectDto> findBySubject(String subject) {
-        return subjectRepository.findBySubject(subject).map(subjectMapper::entityToDto).switchIfEmpty(Mono.error(new SubjectNotFoundException(String.format("Subject %s not found", subject))));
-
+    Mono<List<Course>> findBySubject(String subject) {
+        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).retrieve().bodyToFlux(Course.class).collectList();
 
     }
+
 }
 
 
