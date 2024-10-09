@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/registration")
+@RequestMapping("/user")
 
 public class RegistrationController {
     private final RegistrationService registrationService;
@@ -26,7 +26,7 @@ public class RegistrationController {
         return registrationService.role();
     }
 
-    @PostMapping
+    @PostMapping("/registration")
     ResponseEntity<RegistrationResponseDto> createNewUser(@RequestBody RegistrationDto dto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         RegistrationResponseDto newUser = registrationService.createNewUser(dto, authentication.getName());

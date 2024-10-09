@@ -42,7 +42,7 @@ public class AppConfig {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtService);
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
 
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/auth")).permitAll().requestMatchers(mvc.pattern(HttpMethod.POST, "/registration"), mvc.pattern(HttpMethod.GET, "/registration/role")).hasAnyRole("Office").anyRequest().authenticated());
+        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/auth")).permitAll().requestMatchers(mvc.pattern(HttpMethod.POST, "/user/registration"), mvc.pattern(HttpMethod.GET, "user/role")).hasAnyRole("Office").anyRequest().authenticated());
 
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);
