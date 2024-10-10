@@ -31,7 +31,7 @@ public class AppConfig {
     }
 
     @Bean
-    public ApplicationRunner initializeDatabase(DatabaseClient databaseClient) {
+    public  ApplicationRunner initializeDatabase(DatabaseClient databaseClient) {
         return sql -> {
             Resource resource = new ClassPathResource("schema.sql");
             String schemaSql;
