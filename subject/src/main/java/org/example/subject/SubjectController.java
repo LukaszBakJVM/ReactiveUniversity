@@ -1,7 +1,6 @@
 package org.example.subject;
 
-import org.example.subject.dto.Course;
-import org.example.subject.dto.SubjectDto;
+import org.example.subject.dto.Course;import org.example.subject.dto.SubjectDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;

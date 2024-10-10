@@ -12,9 +12,10 @@ import java.util.List;
 
 @Service
 public class SubjectServices {
+    private final WebClient.Builder webClient;
     private final SubjectRepository subjectRepository;
     private final SubjectMapper subjectMapper;
-    private final WebClient.Builder webClient;
+
     @Value("${student}")
     private String studentUrl;
     @Value("${teacher}")
@@ -23,11 +24,12 @@ public class SubjectServices {
     private String courseUrl;
 
 
-    public SubjectServices(SubjectRepository subjectRepository, SubjectMapper subjectMapper, WebClient.Builder webClient) {
+    public SubjectServices(WebClient.Builder webClient, SubjectRepository subjectRepository, SubjectMapper subjectMapper) {
+        this.webClient = webClient;
         this.subjectRepository = subjectRepository;
 
         this.subjectMapper = subjectMapper;
-        this.webClient = webClient;
+
     }
 
     Mono<SubjectDto> createSubject(SubjectDto subjectDto) {
@@ -35,8 +37,8 @@ public class SubjectServices {
     }
 
 
-    Mono<List<Course>> findBySubject(String subject) {
-        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).retrieve().bodyToFlux(Course.class).collectList();
+  Mono<List<Course>> findBySubject(String subject) {
+        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name",subject).retrieve().bodyToFlux(Course.class).collectList();
 
     }
 
