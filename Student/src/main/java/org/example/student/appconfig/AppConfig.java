@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.file.Files;
+
 @Configuration
 public class AppConfig {
 
@@ -22,8 +22,5 @@ public class AppConfig {
             databaseClient.sql(schemaSql).then().subscribe();
         };
     }
-    @Bean
-    WebClient.Builder webClientBuilder() {
-        return WebClient.builder();
-    }
+
 }

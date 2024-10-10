@@ -1,11 +1,8 @@
 package org.example.office;
 
-import org.example.office.dto.Teacher;
+
 import org.example.office.dto.WriteNewPersonOffice;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -14,28 +11,17 @@ public class OfficeServices {
 
     private final OfficeRepository officeRepository;
     private final OfficeMapper officeMapper;
-    private final WebClient.Builder webClientBuilder;
-    @Value("${teacher}")
-    private String teacher;
-    @Value("${course}")
-    private String courseUrl;
-    @Value("${student}")
-    private String studentUrl;
 
-    public OfficeServices(OfficeRepository officeRepository, OfficeMapper officeMapper, WebClient.Builder webClientBuilder) {
+
+    public OfficeServices(OfficeRepository officeRepository, OfficeMapper officeMapper) {
 
         this.officeRepository = officeRepository;
         this.officeMapper = officeMapper;
-        this.webClientBuilder = webClientBuilder;
+
     }
 
     Mono<WriteNewPersonOffice> createNewPerson(WriteNewPersonOffice dto) {
         return officeRepository.save(officeMapper.dtoToOffice(dto)).map(officeMapper::officeToDto);
-    }
-
-
-    Mono<Teacher> byEmail(String email, String token) {
-        return webClientBuilder.baseUrl(teacher).build().get().uri("teacher/{email}", email).header(HttpHeaders.AUTHORIZATION, "Bearer " + token).retrieve().bodyToMono(Teacher.class);
     }
 
 

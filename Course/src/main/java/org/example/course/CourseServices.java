@@ -1,9 +1,7 @@
 package org.example.course;
 
 import org.example.course.dto.CourseDto;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -11,16 +9,13 @@ import java.util.HashSet;
 
 @Service
 public class CourseServices {
-    private final WebClient.Builder webClient;
+
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
-    @Value("${subject}")
-    private String subjectUrl;
-    @Value("${student}")
-    private String studentUrl;
 
-    public CourseServices(WebClient.Builder webClient, CourseRepository courseRepository, CourseMapper courseMapper) {
-        this.webClient = webClient;
+
+    public CourseServices(CourseRepository courseRepository, CourseMapper courseMapper) {
+
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
     }
@@ -44,7 +39,8 @@ public class CourseServices {
     Flux<CourseDto> findCourseBySubject(String subjectName) {
         return courseRepository.findCourseBySubjectNameContaining(subjectName).map(courseMapper::entityToDto);
     }
-    Mono<CourseDto>courseInfo(String courseName){
+
+    Mono<CourseDto> courseInfo(String courseName) {
         return courseRepository.findByCourseName(courseName).map(courseMapper::entityToDto);
     }
 }
