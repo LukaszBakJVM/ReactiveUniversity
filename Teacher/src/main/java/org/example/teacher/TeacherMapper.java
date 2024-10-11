@@ -1,7 +1,8 @@
 package org.example.teacher;
 
 import org.example.teacher.dto.AddSchoolSubjects;
-import org.example.teacher.dto.TeacherInfo;
+import org.example.teacher.dto.TeacherPrivateInfo;
+import org.example.teacher.dto.TeacherPublicInfo;
 import org.example.teacher.dto.WriteNewTeacherDto;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +28,17 @@ public class TeacherMapper {
         return new WriteNewTeacherDto(teacher.getFirstName(), teacher.getLastName(), teacher.getEmail());
     }
 
-    AddSchoolSubjects addSchoolSubjects(Teacher teacher) {
+    AddSchoolSubjects addSchoolSubjectsToDto(Teacher teacher) {
         return new AddSchoolSubjects(teacher.getSubjectName());
     }
 
-    TeacherInfo teacherInfo(Teacher teacher) {
-        return new TeacherInfo(teacher.getFirstName(), teacher.getLastName(), teacher.getEmail(), teacher.getSubjectName());
+
+    TeacherPrivateInfo teacherPrivateInfo(Teacher teacher) {
+        return new TeacherPrivateInfo(teacher.getFirstName(), teacher.getLastName(), teacher.getEmail(), teacher.getSubjectName());
+    }
+
+    TeacherPublicInfo teacherPublicInfo(Teacher teacher) {
+        return new TeacherPublicInfo(teacher.getFirstName(), teacher.getLastName(), teacher.getSubjectName());
     }
 
 

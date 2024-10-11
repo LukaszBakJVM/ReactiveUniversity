@@ -1,13 +1,12 @@
 package org.example.teacher;
 
 import org.example.teacher.dto.AddSchoolSubjects;
-import org.example.teacher.dto.TeacherInfo;
+import org.example.teacher.dto.TeacherPrivateInfo;
+import org.example.teacher.dto.TeacherPublicInfo;
 import org.example.teacher.dto.WriteNewTeacherDto;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @Service
 public class TeacherServices {
@@ -28,23 +27,27 @@ public class TeacherServices {
 
     }
 
-    Mono<AddSchoolSubjects> addSchoolSubjectsMono(List<String> schoolSubjectsMono, String email) {
+    Mono<AddSchoolSubjects> addSchoolSubjectsMono(AddSchoolSubjects schoolSubjectsMono, String email) {
 
 
         return teacherRepository.findByEmail(email).flatMap(teacher -> {
             teacher.setId(teacher.getId());
-            teacher.getSubjectName().addAll(schoolSubjectsMono);
+            teacher.getSubjectName().addAll(schoolSubjectsMono.subjects());
             return teacherRepository.save(teacher);
-        }).map(teacherMapper::addSchoolSubjects);
+        }).map(teacherMapper::addSchoolSubjectsToDto);
 
     }
 
-    Mono<TeacherInfo> findTeacher(String email) {
-        return teacherRepository.findByEmail(email).map(teacherMapper::teacherInfo);
+    Mono<TeacherPrivateInfo> findTeacher(String email) {
+        return teacherRepository.findByEmail(email).map(teacherMapper::teacherPrivateInfo);
     }
 
-    Flux<TeacherInfo> allTeacherInfo() {
-        return teacherRepository.findAll().map(teacherMapper::teacherInfo);
+    Flux<TeacherPrivateInfo> allTeacherInfo() {
+        return teacherRepository.findAll().map(teacherMapper::teacherPrivateInfo);
+    }
+
+    Flux<TeacherPublicInfo> teacherPublicInfo(String subjectName) {
+        return teacherRepository.findTeacherBySubjectNameContains(subjectName).map(teacherMapper::teacherPublicInfo);
     }
 
 

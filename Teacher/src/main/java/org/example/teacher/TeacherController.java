@@ -1,7 +1,8 @@
 package org.example.teacher;
 
 import org.example.teacher.dto.AddSchoolSubjects;
-import org.example.teacher.dto.TeacherInfo;
+import org.example.teacher.dto.TeacherPrivateInfo;
+import org.example.teacher.dto.TeacherPublicInfo;
 import org.example.teacher.dto.WriteNewTeacherDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,7 +12,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/teacher")
@@ -31,21 +31,25 @@ public class TeacherController {
     }
 
     @PostMapping("/update")
-    Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody List<String> subjects) {
+    Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody AddSchoolSubjects subjects) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
-
         return teacherServices.addSchoolSubjectsMono(subjects, name).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
     }
 
-    @GetMapping("/{email}")
-    ResponseEntity<Mono<TeacherInfo>> teacherInfoByEmail(@PathVariable String email) {
+    @GetMapping("/private/{email}")
+    ResponseEntity<Mono<TeacherPrivateInfo>> teacherInfoByEmail(@PathVariable String email) {
         return ResponseEntity.ok(teacherServices.findTeacher(email));
     }
 
-    @GetMapping("/all")
-    ResponseEntity<Flux<TeacherInfo>> allTeacherInfo() {
+    @GetMapping("/private/all")
+    ResponseEntity<Flux<TeacherPrivateInfo>> allTeacherInfo() {
         return ResponseEntity.ok(teacherServices.allTeacherInfo());
+    }
+
+    @GetMapping("/info/{subject}")
+    Flux<TeacherPublicInfo> teacherPublicInfoBySubject(@PathVariable String subject) {
+        return teacherServices.teacherPublicInfo(subject);
     }
 
 }
