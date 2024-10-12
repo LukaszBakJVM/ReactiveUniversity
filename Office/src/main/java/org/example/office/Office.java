@@ -1,17 +1,13 @@
 package org.example.office;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 
 public class Office {
+    String lastName;
     @Id
     private long id;
-    @Size(min = 3)
-    String lastName;
-    @Size(min = 3)
     private String firstName;
-    @Email
+
     private String email;
 
 
@@ -23,20 +19,20 @@ public class Office {
         this.lastName = lastName;
     }
 
-    public @Email String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(@Email String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
 
-    public @Size(min = 3) String getFirstName() {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(@Size(min = 3) String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 

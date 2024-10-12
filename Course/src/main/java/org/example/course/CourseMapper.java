@@ -9,7 +9,7 @@ public class CourseMapper {
 
         Course course = new Course();
         course.setCourseName(dto.courseName());
-        course.setSubjectName(dto.subject());
+        course.setSubjectName(dto.subjects());
         return course;
     }
 

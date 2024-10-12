@@ -20,10 +20,10 @@ public class CourseServices {
         this.courseMapper = courseMapper;
     }
 
-    Mono<CourseDto> createCourse(CourseDto dto) {
+    Mono<CourseDto> createOrUpdateCourse(CourseDto dto) {
         return courseRepository.findByCourseName(dto.courseName()).flatMap(course -> {
             course.setId(course.getId());
-            course.getSubjectName().addAll(new HashSet<>(dto.subject()));
+            course.getSubjectName().addAll(new HashSet<>(dto.subjects()));
             return courseRepository.save(course);
         }).switchIfEmpty(courseRepository.save(courseMapper.dtoToEntity(dto))).map(courseMapper::entityToDto);
     }

@@ -19,7 +19,7 @@ public class CourseController {
 
     @PostMapping
     Mono<ResponseEntity<CourseDto>> createCourse(@RequestBody CourseDto dto) {
-        return courseServices.createCourse(dto).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
+        return courseServices.createOrUpdateCourse(dto).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
     }
 
     @DeleteMapping("/{courseName}")
