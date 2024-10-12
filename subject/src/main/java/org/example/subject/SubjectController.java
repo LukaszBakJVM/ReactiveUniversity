@@ -25,6 +25,10 @@ public class SubjectController {
     Flux<SubjectDto>allSubject(){
         return subjectServices.findAllSubject();
     }
+    @DeleteMapping("/{subjectName}")
+    Mono<ResponseEntity<Void>>deleteSubjectByName(@PathVariable String subjectName){
+        return subjectServices.deleteSubject(subjectName).then(Mono.just(ResponseEntity.noContent().build()));
+    }
 
 
 }

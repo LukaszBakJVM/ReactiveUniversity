@@ -27,6 +27,9 @@ public class SubjectServices {
         return subjectRepository.findAll().map(subjectMapper::entityToDto);
     }
 
+    Mono<Void> deleteSubject(String subject) {
+        return subjectRepository.deleteBySubject(subject);
+    }
 
 
 }

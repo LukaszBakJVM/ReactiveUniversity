@@ -10,6 +10,6 @@ public class SubjectMapper {
     }
 
     SubjectDto entityToDto(Subject subject) {
-        return new SubjectDto(subject.subject());
+        return new SubjectDto(subject.getSubject());
     }
 }
