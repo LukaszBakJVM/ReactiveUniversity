@@ -27,9 +27,7 @@ public class TeacherServices {
 
     }
 
-    Mono<AddSchoolSubjects> addSchoolSubjectsMono(AddSchoolSubjects schoolSubjectsMono, String email) {
-
-
+    Mono<AddSchoolSubjects> addSchoolSubjects(AddSchoolSubjects schoolSubjectsMono, String email) {
         return teacherRepository.findByEmail(email).flatMap(teacher -> {
             teacher.setId(teacher.getId());
             teacher.getSubjectName().addAll(schoolSubjectsMono.subjects());

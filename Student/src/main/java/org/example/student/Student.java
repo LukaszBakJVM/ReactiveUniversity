@@ -1,43 +1,41 @@
 package org.example.student;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 
 public class Student {
     @Id
     private long id;
-    @Size(min = 3)
+
     private String firstName;
-    @Size(min = 3)
+
     private String lastName;
-    @Email
+
     private String email;
     private String course;
 
 
-    public @Size(min = 3) String getFirstName() {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(@Size(min = 3) String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public @Size(min = 3) String getLastName() {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(@Size(min = 3) String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
 
-    public @Email String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(@Email String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -50,5 +48,11 @@ public class Student {
         this.course = course;
     }
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
 }

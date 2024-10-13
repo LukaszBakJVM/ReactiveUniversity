@@ -34,7 +34,7 @@ public class TeacherController {
     Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody AddSchoolSubjects subjects) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
-        return teacherServices.addSchoolSubjectsMono(subjects, name).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
+        return teacherServices.addSchoolSubjects(subjects, name).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
     }
 
     @GetMapping("/private/{email}")
