@@ -21,12 +21,14 @@ public class SubjectController {
     Mono<ResponseEntity<SubjectDto>> addNewSubject(@RequestBody SubjectDto dto) {
         return subjectServices.createSubject(dto).map(subject -> ResponseEntity.created(URI.create("/subject")).body(subject));
     }
+
     @GetMapping("/all")
-    Flux<SubjectDto>allSubject(){
+    Flux<SubjectDto> allSubject() {
         return subjectServices.findAllSubject();
     }
+
     @DeleteMapping("/{subjectName}")
-    Mono<ResponseEntity<Void>>deleteSubjectByName(@PathVariable String subjectName){
+    Mono<ResponseEntity<Void>> deleteSubjectByName(@PathVariable String subjectName) {
         return subjectServices.deleteSubject(subjectName).then(Mono.just(ResponseEntity.noContent().build()));
     }
 

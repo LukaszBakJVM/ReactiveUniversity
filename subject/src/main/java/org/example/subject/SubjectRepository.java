@@ -6,7 +6,8 @@ import reactor.core.publisher.Mono;
 public interface SubjectRepository extends ReactiveCrudRepository<Subject, Long> {
 
     Mono<Subject> findBySubject(String subject);
-    Mono<Void>deleteBySubject(String subjectName);
+
+    Mono<Void> deleteBySubject(String subjectName);
 
 
 }
