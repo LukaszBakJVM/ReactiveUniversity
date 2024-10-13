@@ -25,14 +25,17 @@ public class RegistrationMapper {
         registration.setRole(dto.role());
         return registration;
     }
-    RegistrationResponseDto entityToDto(Registration registration){
-        return new RegistrationResponseDto(registration.getFirstName(),registration.getLastName(), registration.getEmail(),registration.getRole());
+
+    RegistrationResponseDto entityToDto(Registration registration) {
+        return new RegistrationResponseDto(registration.getFirstName(), registration.getLastName(), registration.getEmail(), registration.getRole());
     }
-    Login login(Registration registration){
-        return new Login(registration.getEmail(),registration.getPassword(),registration.getRole());
+
+    Login login(Registration registration) {
+        return new Login(registration.getEmail(), registration.getPassword(), registration.getRole());
     }
-    WriteNewPerson write(Registration registration){
-        return new WriteNewPerson(registration.getFirstName(),registration.getLastName(),registration.getEmail());
+
+    WriteNewPerson write(Registration registration) {
+        return new WriteNewPerson(registration.getFirstName(), registration.getLastName(), registration.getEmail());
     }
 
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+
 @Service
 public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
@@ -17,6 +18,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     public JwtAuthenticationSuccessHandler(JwtService jwtService) {
         this.jwtService = jwtService;
     }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         List<String> authorities = authentication.getAuthorities().stream()
@@ -26,5 +28,6 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
         new ObjectMapper().writeValue(response.getWriter(), new JwtWrapper(signedJWT));
     }
 
-    private record JwtWrapper(String token){ }
+    private record JwtWrapper(String token) {
+    }
 }

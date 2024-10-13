@@ -7,8 +7,9 @@ import reactor.core.publisher.Mono;
 
 public interface TeacherRepository extends ReactiveCrudRepository<Teacher, Long> {
     Mono<Teacher> findByEmail(String email);
+
     @Query("SELECT * FROM teacher WHERE $1 = ANY(subject_name)")
-    Flux<Teacher>findTeacherBySubjectNameContains(String subjectName);
+    Flux<Teacher> findTeacherBySubjectNameContains(String subjectName);
 
 
 }

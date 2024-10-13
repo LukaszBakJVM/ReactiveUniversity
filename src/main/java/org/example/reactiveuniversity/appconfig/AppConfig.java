@@ -55,11 +55,11 @@ public class AppConfig {
     PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
     @Bean
-    RestTemplate restTemplate () {
+    RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 
 
 }

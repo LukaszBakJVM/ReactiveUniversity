@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class TokenStore {
     private final Map<String, String> tokenMap = new HashMap<>();
     @Value("${token.store.path}")
-    private  String tokenStore ;
+    private String tokenStore;
 
     @PostConstruct
     public void init() {
