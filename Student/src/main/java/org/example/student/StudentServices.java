@@ -1,9 +1,13 @@
 package org.example.student;
 
 import org.example.student.dto.AddCourse;
+import org.example.student.dto.StudentInfo;
 import org.example.student.dto.WriteNewPerson;
+import org.example.student.exception.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Service
 public class StudentServices {
@@ -30,4 +34,9 @@ public class StudentServices {
             return studentRepository.save(student);
         }).map(studentMapper::addCourseResponse);
     }
-}
+ //   Mono<List<StudentInfo>>findStudentsByEmail(String email){
+      //  Mono<List<Student>> byEmailContaining = studentRepository.findByEmailContaining(email).map(m->studentMapper.info(m));
+      //  r
+
+
+    }

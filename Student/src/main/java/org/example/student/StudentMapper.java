@@ -1,6 +1,7 @@
 package org.example.student;
 
 import org.example.student.dto.AddCourse;
+import org.example.student.dto.StudentInfo;
 import org.example.student.dto.WriteNewPerson;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,8 @@ public class StudentMapper {
 
     AddCourse addCourseResponse(Student student) {
         return new AddCourse(student.getCourse(), student.getEmail());
+    }
+    StudentInfo info(Student student){
+        return new StudentInfo(student.getFirstName(),student.getLastName(),student.getEmail(),student.getCourse());
     }
 }
