@@ -11,7 +11,7 @@ public class Handler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Error validation(UsernameNotFoundException ex) {
+    public Error notfound(UsernameNotFoundException ex) {
         return new Error(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
