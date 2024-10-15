@@ -17,12 +17,15 @@ public class StudentMapper {
 
     WriteNewPerson studentToDto(Student student) {
         return new WriteNewPerson(student.getFirstName(), student.getLastName(), student.getEmail());
+
     }
 
     AddCourse addCourseResponse(Student student) {
         return new AddCourse(student.getCourse(), student.getEmail());
     }
-    StudentInfo info(Student student){
-        return new StudentInfo(student.getFirstName(),student.getLastName(),student.getEmail(),student.getCourse());
+
+
+    protected StudentInfo studentInfo(Student student) {
+        return new StudentInfo(student.getFirstName(), student.getLastName(), student.getEmail(), student.getCourse());
     }
 }
