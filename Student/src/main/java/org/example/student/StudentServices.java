@@ -1,7 +1,8 @@
 package org.example.student;
 
 import org.example.student.dto.AddCourse;
-import org.example.student.dto.StudentInfo;
+import org.example.student.dto.StudentInfoWithCourse;
+import org.example.student.dto.StudentInfoWithoutCourse;
 import org.example.student.dto.WriteNewPerson;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -33,13 +34,14 @@ public class StudentServices {
         }).map(studentMapper::addCourseResponse);
     }
 
-    Flux<StudentInfo> findStudentsByEmail(String email) {
-      return studentRepository.findByEmailContaining(email).map(studentMapper::studentInfo);
+    Flux<StudentInfoWithCourse> findStudentsByEmail(String email) {
+      return studentRepository.findByEmailContaining(email).map(studentMapper::studentInfoWithCourse);
     }
-    Flux<StudentInfo>allStudentsWithCourse(){
-        return studentRepository.findAll().filter(c-> c.getCourse() != null).map(studentMapper::studentInfo);
+    Flux<StudentInfoWithCourse>allStudentsWithCourse(){
+        return studentRepository.findAll().filter(c-> c.getCourse() != null).map(studentMapper::studentInfoWithCourse);
     }
-    Flux<StudentInfo>allStudentsWithoutCourse(){
-        return studentRepository.findAll().filter(c-> c.getCourse() == null).map(studentMapper::studentInfo);
+    Flux<StudentInfoWithoutCourse>allStudentsWithoutCourse(){
+        return studentRepository.findAll().filter(c-> c.getCourse() == null).map(studentMapper::studentInfoWithoutCourse);
     }
+
 }

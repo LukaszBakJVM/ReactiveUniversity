@@ -1,7 +1,8 @@
 package org.example.student;
 
 import org.example.student.dto.AddCourse;
-import org.example.student.dto.StudentInfo;
+import org.example.student.dto.StudentInfoWithCourse;
+import org.example.student.dto.StudentInfoWithoutCourse;
 import org.example.student.dto.WriteNewPerson;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,15 +32,17 @@ public class StudentController {
     }
 
     @GetMapping("/{email}")
-    Flux<StudentInfo> findStudentsByEmail(@PathVariable String email) {
+    Flux<StudentInfoWithCourse> findStudentsByEmail(@PathVariable String email) {
         return studentServices.findStudentsByEmail(email);
     }
     @GetMapping("/assigned")
-    Flux<StudentInfo>allStudentWithCourse(){
+    Flux<StudentInfoWithCourse>allStudentWithCourse(){
         return studentServices.allStudentsWithCourse();
 
     }
-  //  @GetMapping("/unassigned")
-  //  Flux<StudentInfo>
+    @GetMapping("/unassigned")
+    Flux<StudentInfoWithoutCourse>allStudentWithoutCurses(){
+        return studentServices.allStudentsWithoutCourse();
+    }
 
 }
