@@ -14,7 +14,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    private final StudentServices studentServices;
+    private final StudentServices  studentServices;
 
     public StudentController(StudentServices studentServices) {
         this.studentServices = studentServices;
