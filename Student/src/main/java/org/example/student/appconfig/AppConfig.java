@@ -45,7 +45,7 @@ public class AppConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
 
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/student")).hasRole("Office").requestMatchers(mvc.pattern(HttpMethod.POST, "/student/update")).hasAnyRole("Office").anyRequest().permitAll());
+        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/student")).hasRole("Office").requestMatchers(mvc.pattern(HttpMethod.POST, "/student/update")).hasAnyRole("Office").anyRequest().hasAnyRole("Office","Teacher"));
 
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(AbstractHttpConfigurer::disable);
