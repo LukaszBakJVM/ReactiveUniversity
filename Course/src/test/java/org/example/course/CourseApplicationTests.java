@@ -5,45 +5,47 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.Set;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
-@ActiveProfiles("test")
-@Import(SecurityConfig.class)
 class CourseApplicationTests {
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
+    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
     @Autowired
     WebTestClient webTestClient;
-    @Autowired
-    private CourseRepository courseRepository;
+
+    @DynamicPropertySource
+    static void registerDynamicProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://"
+                                               + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort()
+                                               + "/" + postgreSQLContainer.getDatabaseName());
+        registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
+        registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
+    }
 
     @BeforeAll
     static void startPostgres() {
-        postgres.start();
+        postgreSQLContainer.start();
 
     }
 
     @AfterAll
     static void stopPostgres() {
-        postgres.stop();
+        postgreSQLContainer.stop();
     }
 
+
     @Test
-    @WithMockUser(roles = {"Office"})
     void createCourse_shouldReturnCreated_whenUserIsAuthorized() {
-        webTestClient.mutateWith(SecurityMockServerConfigurers.mockJwt().jwt(jwt -> jwt.claim("scope", "office").claim("roles", "Office"))).post().uri("/course").contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isCreated();
+        String office = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzE1MTg1MzksInN1YiI6Imx1a2Fzei5iYWtAaW50ZXJpb3d5LnBsIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9PZmZpY2UiXX0.Wbs4cKmOrB_BKx7whfoyZ2TOLfbwbP8JAu6ANSuFxBw";
+        String teacher = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzE1MTgzMjksInN1YiI6InRlYWNoZXIuYmFrQGludGVyaW93eS5wbCIsImF1dGhvcml0aWVzIjpbIlJPTEVfVGVhY2hlciJdfQ.EIxEKpbLUIrCFY0Icml9AacnWVijZHutO0eiPUhAdm0";
+        webTestClient.post().uri("/course").header("Authorization", "Bearer " + teacher).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isCreated();
 
 
     }

@@ -1,3 +1,6 @@
+CREATE SCHEMA IF NOT EXISTS university;
+
+
 CREATE TABLE IF NOT EXISTS course
 (
     id integer primary key generated always as identity,
