@@ -22,9 +22,7 @@ class CourseApplicationTests {
 
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://"
-                                               + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort()
-                                               + "/" + postgreSQLContainer.getDatabaseName());
+        registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort() + "/" + postgreSQLContainer.getDatabaseName());
         registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
         registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
     }
@@ -43,9 +41,9 @@ class CourseApplicationTests {
 
     @Test
     void createCourse_shouldReturnCreated_whenUserIsAuthorized() {
-        String office = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzE1MTg1MzksInN1YiI6Imx1a2Fzei5iYWtAaW50ZXJpb3d5LnBsIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9PZmZpY2UiXX0.Wbs4cKmOrB_BKx7whfoyZ2TOLfbwbP8JAu6ANSuFxBw";
-        String teacher = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzE1MTgzMjksInN1YiI6InRlYWNoZXIuYmFrQGludGVyaW93eS5wbCIsImF1dGhvcml0aWVzIjpbIlJPTEVfVGVhY2hlciJdfQ.EIxEKpbLUIrCFY0Icml9AacnWVijZHutO0eiPUhAdm0";
-        webTestClient.post().uri("/course").header("Authorization", "Bearer " + teacher).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isCreated();
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+
+        webTestClient.post().uri("/course").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isCreated();
 
 
     }
@@ -59,6 +57,13 @@ class CourseApplicationTests {
     CourseDto courseDto() {
         Set<String> subjects = Set.of("Historia", "Matematyka");
         return new CourseDto("Ścisły", subjects);
+    }
+
+    private String token(String username, String password) {
+        Login login = new Login(username, password);
+        String responseBody = webTestClient.post().uri("http://localhost:8080/auth").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
+        return responseBody.split(":", 2)[1].replace("\"", "");
+
     }
 
 }
