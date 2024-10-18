@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
@@ -20,9 +21,9 @@ import java.util.Set;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
+@AutoConfigureWebTestClient
 class CourseApplicationTests {
-  //  static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
+    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
     @Autowired
     WebTestClient webTestClient;
 
@@ -30,26 +31,26 @@ class CourseApplicationTests {
     @LocalServerPort
     private static int dynamicPort;
     @RegisterExtension
-    static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(8080)).build();
+    static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
 
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
         registry.add("baseUrl", wireMockServer::baseUrl);
-      //  registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort() + "/" + postgreSQLContainer.getDatabaseName());
-      //  registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
-      //  registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
+       registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort() + "/" + postgreSQLContainer.getDatabaseName());
+        registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
+        registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
     }
 
- //  @BeforeAll
- //  static void startPostgres() {
- //      postgreSQLContainer.start();
+   @BeforeAll
+   static void startPostgres() {
+      postgreSQLContainer.start();
 
- //  }
+   }
 
- //  @AfterAll
- //  static void stopPostgres() {
- //      postgreSQLContainer.stop();
- //  }
+   @AfterAll
+   static void stopPostgres() {
+       postgreSQLContainer.stop();
+  }
 
 
    @Test
@@ -74,16 +75,10 @@ class CourseApplicationTests {
 
     private String token(String username, String password) {
         Login login = new Login(username, password);
-        String responseBody = webTestClient.post().uri("http://localhost:8080/auth").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
+        String responseBody = webTestClient.post().uri("http://localhost:"+dynamicPort+"/auth").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
         return responseBody.split(":", 2)[1].replace("\"", "");
 
     }
-    @Test
-    public void recordWiremock() throws InterruptedException {
-        System.out.println(wireMockServer.getPort());
-        while (true) {
-            Thread.sleep(4000);
-        }
-    }
+
 
 }
