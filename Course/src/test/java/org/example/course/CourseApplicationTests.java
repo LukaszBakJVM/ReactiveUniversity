@@ -24,36 +24,35 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 @AutoConfigureWebTestClient
 class CourseApplicationTests {
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
-    @Autowired
-    WebTestClient webTestClient;
-
-
     @LocalServerPort
     private static int dynamicPort;
     @RegisterExtension
     static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
+    @Autowired
+    WebTestClient webTestClient;
 
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
         registry.add("baseUrl", wireMockServer::baseUrl);
-       registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort() + "/" + postgreSQLContainer.getDatabaseName());
+        registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort() + "/" + postgreSQLContainer.getDatabaseName());
         registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
         registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
+
     }
 
-   @BeforeAll
-   static void startPostgres() {
-      postgreSQLContainer.start();
+    @BeforeAll
+    static void startPostgres() {
+        postgreSQLContainer.start();
 
-   }
+    }
 
-   @AfterAll
-   static void stopPostgres() {
-       postgreSQLContainer.stop();
-  }
+    @AfterAll
+    static void stopPostgres() {
+        postgreSQLContainer.stop();
+    }
 
 
-   @Test
+    @Test
     void createCourse_shouldReturnCreated_whenUserIsAuthorized() {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
@@ -74,8 +73,10 @@ class CourseApplicationTests {
     }
 
     private String token(String username, String password) {
+        int port = wireMockServer.getPort();
+
         Login login = new Login(username, password);
-        String responseBody = webTestClient.post().uri("http://localhost:"+dynamicPort+"/auth").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
+        String responseBody = webTestClient.post().uri("http://localhost:" + port + "/auth").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
         return responseBody.split(":", 2)[1].replace("\"", "");
 
     }
