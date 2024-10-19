@@ -73,10 +73,11 @@ class CourseApplicationTests {
     }
 
     private String token(String username, String password) {
-        int port = wireMockServer.getPort();
+
+        String authBase = "http://localhost:" + wireMockServer.getPort() + "/auth";
 
         Login login = new Login(username, password);
-        String responseBody = webTestClient.post().uri("http://localhost:" + port + "/auth").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
+        String responseBody = webTestClient.post().uri(authBase).bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
         return responseBody.split(":", 2)[1].replace("\"", "");
 
     }
