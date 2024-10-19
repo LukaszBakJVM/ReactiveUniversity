@@ -53,7 +53,7 @@ class CourseApplicationTests {
 
 
     @Test
-    void createCourse_shouldReturnCreated_whenUserIsAuthorized() {
+    void createCourse_shouldReturnCreated_whenUserIsAuthorized_OfficeRole() {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
         webTestClient.post().uri("/course").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isCreated();
@@ -74,7 +74,7 @@ class CourseApplicationTests {
 
     private String token(String username, String password) {
 
-        String authBase = "http://localhost:" + wireMockServer.getPort() + "/auth";
+        String authBase = String.format("http://localhost:%s/auth",wireMockServer.getPort());
 
         Login login = new Login(username, password);
         String responseBody = webTestClient.post().uri(authBase).bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
