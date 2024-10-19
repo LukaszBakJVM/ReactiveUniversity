@@ -30,6 +30,7 @@ class CourseApplicationTests {
     static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
     @Autowired
     WebTestClient webTestClient;
+    Response response = new Response();
 
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
@@ -60,11 +61,32 @@ class CourseApplicationTests {
 
 
     }
+    @Test
+    void createCourse_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
+        String token = token("teacher@interiowy.pl", "lukasz");
+
+        webTestClient.post().uri("/course").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isForbidden();
+
+
+    }
+    @Test
+    void createCourse_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
+        String token = token("student@interiowy.pl", "lukasz");
+
+        webTestClient.post().uri("/course").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isForbidden();
+
+
+    }
 
 
     @Test
-    void createCourse_shouldReturnForbidden() {
+    void createCourse_shouldReturnForbidden_whenUserIsNotAuthorized() {
         webTestClient.post().uri("/course").contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isForbidden();
+    }
+    @Test
+    void findCourseBySubject_shouldReturn_bioChem(){
+        String subject = "a";
+        webTestClient.get().uri("/course/{subject}/name",subject).accept(MediaType.APPLICATION_JSON).exchange().expectBody().json(response.course);
     }
 
     CourseDto courseDto() {
