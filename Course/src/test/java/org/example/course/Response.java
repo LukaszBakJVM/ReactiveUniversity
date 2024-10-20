@@ -4,7 +4,7 @@ public class Response {
     String course = """
             [{
                     "courseName": "bio-chem",
-                    "subjects": ["a","b","c"]
+                    "subjects": ["temat6","temat2","temat3"]
                     }]""";
 
 

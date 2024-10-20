@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
@@ -21,7 +20,6 @@ import java.util.Set;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
 class CourseApplicationTests {
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
     @LocalServerPort
@@ -30,6 +28,8 @@ class CourseApplicationTests {
     static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
     @Autowired
     WebTestClient webTestClient;
+    @Autowired
+    CourseRepository courseRepository;
     Response response = new Response();
 
     @DynamicPropertySource
@@ -61,6 +61,7 @@ class CourseApplicationTests {
 
 
     }
+
     @Test
     void createCourse_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
         String token = token("teacher@interiowy.pl", "lukasz");
@@ -69,6 +70,7 @@ class CourseApplicationTests {
 
 
     }
+
     @Test
     void createCourse_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
         String token = token("student@interiowy.pl", "lukasz");
@@ -83,10 +85,13 @@ class CourseApplicationTests {
     void createCourse_shouldReturnForbidden_whenUserIsNotAuthorized() {
         webTestClient.post().uri("/course").contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isForbidden();
     }
+
     @Test
-    void findCourseBySubject_shouldReturn_bioChem(){
-        String subject = "a";
-        webTestClient.get().uri("/course/{subject}/name",subject).accept(MediaType.APPLICATION_JSON).exchange().expectBody().json(response.course);
+    void findCourseBySubject_shouldReturn_bioChem() {
+
+
+        String subject = "temat6";
+        webTestClient.get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).exchange().expectBody().json(response.course);
     }
 
     CourseDto courseDto() {
@@ -96,7 +101,7 @@ class CourseApplicationTests {
 
     private String token(String username, String password) {
 
-        String authBase = String.format("http://localhost:%s/auth",wireMockServer.getPort());
+        String authBase = String.format("http://localhost:%s/auth", wireMockServer.getPort());
 
         Login login = new Login(username, password);
         String responseBody = webTestClient.post().uri(authBase).bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
