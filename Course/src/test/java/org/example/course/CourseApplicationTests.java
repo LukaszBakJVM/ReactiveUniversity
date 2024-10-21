@@ -28,8 +28,7 @@ class CourseApplicationTests {
     static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
     @Autowired
     WebTestClient webTestClient;
-    @Autowired
-    CourseRepository courseRepository;
+
     Response response = new Response();
 
     @DynamicPropertySource
@@ -87,14 +86,19 @@ class CourseApplicationTests {
     }
 
     @Test
-    void findCourseBySubject_shouldReturn_bioChem() {
-
-
-        String subject = "temat6";
-        webTestClient.get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).exchange().expectBody().json(response.course);
+    void findCourseBySubject_shouldReturn_course1() {
+        String subject = "subject2";
+        webTestClient.get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).exchange().expectBody().json(response.courseBySubject);
     }
 
-    CourseDto courseDto() {
+    @Test
+    void findCourseByCourseName_shouldReturn_course2() {
+        String courseName = "course2";
+        webTestClient.get().uri("/course/{courseName}", courseName).accept(MediaType.APPLICATION_JSON).exchange().expectBody().json(response.course);
+
+    }
+
+    private CourseDto courseDto() {
         Set<String> subjects = Set.of("Historia", "Matematyka");
         return new CourseDto("Ścisły", subjects);
     }
