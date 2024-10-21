@@ -28,6 +28,8 @@ class CourseApplicationTests {
     static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
     @Autowired
     WebTestClient webTestClient;
+    @Autowired
+    CourseRepository courseRepository;
 
     Response response = new Response();
 
@@ -86,6 +88,18 @@ class CourseApplicationTests {
     }
 
     @Test
+    void deleteCourse_shouldReturnNoContent_whenUserIsAuthorized_OfficeRole() {
+
+        String courseName = "delete";
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+
+        webTestClient.delete().uri("/course/{courseName}", courseName).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isNoContent();
+
+        webTestClient.get().uri("course/{course}", courseName).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody(String.class).equals("{}");
+
+    }
+
+    @Test
     void findCourseBySubject_shouldReturn_course1() {
         String subject = "subject2";
         webTestClient.get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).exchange().expectBody().json(response.courseBySubject);
@@ -102,6 +116,7 @@ class CourseApplicationTests {
         Set<String> subjects = Set.of("Historia", "Matematyka");
         return new CourseDto("Ścisły", subjects);
     }
+
 
     private String token(String username, String password) {
 

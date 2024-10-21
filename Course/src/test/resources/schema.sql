@@ -8,4 +8,5 @@ CREATE TABLE IF NOT EXISTS course
 
 INSERT INTO course (course_name, subject_name)VALUES ('course1','{subject1, subject2, subject3}');
 INSERT INTO course (course_name, subject_name)VALUES ('course2','{subject4, subject5, subject6}');
+INSERT INTO course (course_name, subject_name)VALUES ('delete','{subject7, subject8, subject9}');
 
