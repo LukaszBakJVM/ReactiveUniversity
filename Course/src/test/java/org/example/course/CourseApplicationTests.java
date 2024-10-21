@@ -15,6 +15,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.util.Objects;
 import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
@@ -95,7 +96,18 @@ class CourseApplicationTests {
 
         webTestClient.delete().uri("/course/{courseName}", courseName).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isNoContent();
 
-        webTestClient.get().uri("course/{course}", courseName).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody(String.class).equals("{}");
+        Objects.equals(webTestClient.get().uri("course/{course}", courseName).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody(String.class), "{}");
+
+    }
+
+    @Test
+    void deleteCourse_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
+
+        String courseName = "delete";
+        String token = token("teacher@interiowy.pl", "lukasz");
+
+        webTestClient.delete().uri("/course/{courseName}", courseName).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isForbidden();
+
 
     }
 
