@@ -17,6 +17,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Objects;
+
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -59,7 +61,7 @@ class OfficeApplicationTests {
     void createPersonOffice_shouldReturnCreated_whenUserIsAuthorized_OfficeRole() {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
-        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isCreated();
+webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isOk().expectBody().jsonPath("$.ok").isEqualTo("Created");
 
         Mono<Office> byEmail = officeRepository.findByEmail(writeNewPersonOffice().email());
         StepVerifier.create(byEmail).expectNextMatches(office -> office.getFirstName().equals("firstName") && office.getLastName().equals("lastName") && office.getEmail().equals("email@email.com")).verifyComplete();
