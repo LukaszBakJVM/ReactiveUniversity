@@ -23,8 +23,6 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 class OfficeApplicationTests {
 
 
-
-
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
     @LocalServerPort
     private static int dynamicPort;
@@ -35,7 +33,7 @@ class OfficeApplicationTests {
     @Autowired
     OfficeRepository officeRepository;
 
-   // Response response = new Response();
+    // Response response = new Response();
 
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
@@ -56,20 +54,33 @@ class OfficeApplicationTests {
     static void stopPostgres() {
         postgreSQLContainer.stop();
     }
+
     @Test
-    void createPersonOffice_shouldReturnCreated_whenUserIsAuthorized_OfficeRole(){
+    void createPersonOffice_shouldReturnCreated_whenUserIsAuthorized_OfficeRole() {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
         webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isCreated();
 
         Mono<Office> byEmail = officeRepository.findByEmail(writeNewPersonOffice().email());
-        StepVerifier.create(byEmail).expectNextMatches(office -> office.getFirstName().equals("firstName")&&office.getLastName().equals("lastName")&&office.getEmail().equals("email@email.com")).verifyComplete();
+        StepVerifier.create(byEmail).expectNextMatches(office -> office.getFirstName().equals("firstName") && office.getLastName().equals("lastName") && office.getEmail().equals("email@email.com")).verifyComplete();
 
 
     }
-    private WriteNewPersonOffice writeNewPersonOffice(){
-        return new WriteNewPersonOffice("firstName","lastName","email@email.com");
+
+    @Test
+    void createPersonOffice_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
+        String token = token("teacher@interiowy.pl", "lukasz");
+
+        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isForbidden();
+
+
+
     }
+
+    private WriteNewPersonOffice writeNewPersonOffice() {
+        return new WriteNewPersonOffice("firstName", "lastName", "email@email.com");
+    }
+
     private String token(String username, String password) {
 
         String authBase = String.format("http://localhost:%s/auth", wireMockServer.getPort());
@@ -79,5 +90,5 @@ class OfficeApplicationTests {
         return responseBody.split(":", 2)[1].replace("\"", "");
 
     }
-    
+
 }
