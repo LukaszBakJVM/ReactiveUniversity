@@ -1,0 +1,30 @@
+{
+  "id" : "a2c568a5-4c04-4586-8105-4942f7cf538b",
+  "name" : "auth",
+  "request" : {
+    "url" : "/auth",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\r\n    \"username\":\"lukasz.bak@interiowy.pl\",\r\n    \"password\":\"lukasz\"\r\n}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "base64Body" : "eyJ0b2tlbiI6ImV5SmhiR2NpT2lKSVV6STFOaUo5LmV5SmxlSEFpT2pFM016RTROamt3TURrc0luTjFZaUk2SW14MWEyRnplaTVpWVd0QWFXNTBaWEpwYjNkNUxuQnNJaXdpWVhWMGFHOXlhWFJwWlhNaU9sc2lVazlNUlY5UFptWnBZMlVpWFgwLlBKTGpNeGF6WGEyLWRmV3lxalJmT1l4bmlZRHhKcFlCa21ubURLMlRLc28ifQ==",
+    "headers" : {
+      "Keep-Alive" : "timeout=60",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Date" : "Fri, 18 Oct 2024 17:43:29 GMT"
+    }
+  },
+  "uuid" : "a2c568a5-4c04-4586-8105-4942f7cf538b",
+  "persistent" : true
+
+}
