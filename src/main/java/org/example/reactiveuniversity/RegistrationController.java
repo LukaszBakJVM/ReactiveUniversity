@@ -3,8 +3,6 @@ package org.example.reactiveuniversity;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -28,7 +26,6 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     Mono<ResponseEntity<RegistrationResponseDto>> createNewUser(@RequestBody RegistrationDto dto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return registrationService.createNewUser(dto, authentication.getName()).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
+        return registrationService.createNewUser(dto).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
     }
 }
