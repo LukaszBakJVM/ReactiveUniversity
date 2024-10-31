@@ -62,6 +62,9 @@ public class RegistrationService {
 
                     Registration registration = registrationMapper.dtoToEntity(registrationDto);
                     validationRegistration(registration);
+                    WriteNewPerson write = registrationMapper.write(registration);
+                    String token = tokenStore.getToken("lukasz.bak@interiowy.pl");
+                    writeUser(registrationDto.role(), write, token);
 
 
                     return registrationRepository.save(registration)
@@ -88,6 +91,7 @@ public class RegistrationService {
 
 
     private void writeUser(String role, WriteNewPerson body, String token) {
+
         String authorization = "Authorization";
         String header = "Bearer %s".formatted(token);
         HttpHeaders headers = new HttpHeaders();
