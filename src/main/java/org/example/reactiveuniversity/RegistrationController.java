@@ -28,7 +28,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     Mono<ResponseEntity<RegistrationResponseDto>> createNewUser(@RequestBody RegistrationDto dto) {
-      //  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return registrationService.createNewUser(dto).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return registrationService.createNewUser(dto, authentication.getName()).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
     }
 }
