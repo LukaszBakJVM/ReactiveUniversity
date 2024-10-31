@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.List;
@@ -27,10 +27,8 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    ResponseEntity<RegistrationResponseDto> createNewUser(@RequestBody RegistrationDto dto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        RegistrationResponseDto newUser = registrationService.createNewUser(dto, authentication.getName());
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/registration").buildAndExpand(newUser).toUri();
-        return ResponseEntity.created(uri).body(newUser);
+    Mono<ResponseEntity<RegistrationResponseDto>> createNewUser(@RequestBody RegistrationDto dto) {
+      //  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return registrationService.createNewUser(dto).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
     }
 }

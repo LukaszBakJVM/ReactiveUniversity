@@ -36,5 +36,12 @@ public class Handler {
     public Error wrongRole(WrongRoleException ex) {
         return new Error(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
+
+
+    @ExceptionHandler(WrongCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Error wrongCredentials(WrongCredentialsException ex) {
+        return new Error(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
 }
 

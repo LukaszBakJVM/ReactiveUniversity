@@ -1,12 +1,11 @@
 package org.example.reactiveuniversity;
 
 import jakarta.validation.ConstraintViolation;
-import org.example.reactiveuniversity.dto.Login;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
+import org.example.reactiveuniversity.security.Login;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.example.reactiveuniversity.exception.CustomValidationException;
-import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.example.reactiveuniversity.exception.WrongRoleException;
 import org.example.reactiveuniversity.security.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,29 +52,32 @@ public class RegistrationService {
         return Arrays.stream(Role.values()).map(Role::getROLE).toList();
     }
 
-    @Transactional
-    public RegistrationResponseDto createNewUser(RegistrationDto registrationDto, String email) {
+   @Transactional
+   public Mono<RegistrationResponseDto> createNewUser(RegistrationDto registrationDto) {
 
-        Optional<Registration> byEmail = registrationRepository.findByEmail(registrationDto.email());
-        byEmail.ifPresent(present -> {
-            throw new DuplicateEmailException("Email exist");
-        });
-        Registration registration = registrationMapper.dtoToEntity(registrationDto);
-        validationRegistration(registration);
-        Registration save = registrationRepository.save(registration);
-        WriteNewPerson write = registrationMapper.write(registration);
-        String token = tokenStore.getToken(email);
-        try {
-            writeUser(save.getRole(), write, token);
 
-        } catch (Exception e) {
-            throw new WrongRoleException("Unknown Error");
-        }
 
-        return registrationMapper.entityToDto(save);
-    }
+       //   Optional<Registration> byEmail = registrationRepository.findByEmail(registrationDto.email());
+       //  byEmail.ifPresent(present -> {
+       //      throw new DuplicateEmailException("Email exist");
+       //   });
+       Registration registration = registrationMapper.dtoToEntity(registrationDto);
+       return registrationRepository.save(registration).map(registrationMapper::entityToDto);
+       // validationRegistration(registration);
+    //   return registrationMapper.entityToDto(registration);
+       // WriteNewPerson write = registrationMapper.write(registration);
+       // String token = tokenStore.getToken(email);
+       //  try {
+       //      writeUser(save.getRole(), write, token);
 
-    public Optional<Login> login(String email) {
+       //  } catch (Exception e) {
+       //     throw new WrongRoleException("Unknown Error");
+       // }
+
+       // return registrationMapper.entityToDto(save);
+
+   }
+    public Mono<Login> login(String email) {
         return registrationRepository.findByEmail(email).map(registrationMapper::login);
     }
 

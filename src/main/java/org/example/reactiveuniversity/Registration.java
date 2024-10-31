@@ -1,18 +1,15 @@
 package org.example.reactiveuniversity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.data.annotation.Id;
 
 
-@Entity
 public class Registration {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Size(min = 3, message = "First name must by minimum 3 letter")
     private String firstName;

@@ -1,54 +1,51 @@
 package org.example.reactiveuniversity.appconfig;
 
 
-import org.example.reactiveuniversity.security.BearerTokenFilter;
-import org.example.reactiveuniversity.security.JwtAuthenticationFilter;
-import org.example.reactiveuniversity.security.JwtService;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import java.nio.file.Files;
 
 @Configuration
+@EnableWebFluxSecurity
 
 public class AppConfig {
-    private final JwtService jwtService;
 
 
-    public AppConfig(JwtService jwtService) {
-        this.jwtService = jwtService;
+    @Bean
+    public ApplicationRunner initializeDatabase(DatabaseClient databaseClient) {
+        return sql -> {
+            Resource resource = new ClassPathResource("schema.sql");
+            String schemaSql;
+            schemaSql = new String(Files.readAllBytes(resource.getFile().toPath()));
+            databaseClient.sql(schemaSql).then().subscribe();
+        };
     }
 
 
     @Bean
-    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
-        return new MvcRequestMatcher.Builder(introspector);
-    }
+    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, ServerAuthenticationConverter authenticationConverter) {
+        AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
+        authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc, AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.getOrBuild();
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtService);
-        BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
 
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/auth")).permitAll().requestMatchers(mvc.pattern(HttpMethod.POST, "/user/registration"), mvc.pattern(HttpMethod.GET, "user/role")).hasAnyRole("Office").anyRequest().authenticated());
-
-        http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.addFilterBefore(jwtAuthenticationFilter, AuthorizationFilter.class);
-        http.addFilterBefore(bearerTokenFilter, AuthorizationFilter.class);
-        return http.build();
+        // return http.authorizeExchange(exchanges -> exchanges.pathMatchers(HttpMethod.POST, "/aaa").permitAll().anyExchange().authenticated()).addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable).build();
+        return http.authorizeExchange(e -> e.pathMatchers(HttpMethod.POST, "/user/registration").permitAll().pathMatchers(HttpMethod.POST,"/login").permitAll().pathMatchers(HttpMethod.GET,"/user/role").hasRole("Office")).addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable).build();
     }
 
     @Bean
