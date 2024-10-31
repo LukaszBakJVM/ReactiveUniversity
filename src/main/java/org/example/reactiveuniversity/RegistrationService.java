@@ -57,9 +57,19 @@ public class RegistrationService {
     public Mono<RegistrationResponseDto> createNewUser(RegistrationDto registrationDto) {
         return registrationRepository.findByEmail(registrationDto.email()).flatMap(existingSubject ->
                 Mono.<RegistrationResponseDto>error(new DuplicateEmailException(String.format("Email %s already exists",
-                        registrationDto.email())))).switchIfEmpty(registrationRepository.save(registrationMapper.dtoToEntity(registrationDto)).map(registrationMapper::entityToDto));
+                        registrationDto.email())))).switchIfEmpty(
+                Mono.defer(() -> {
 
+                    Registration registration = registrationMapper.dtoToEntity(registrationDto);
+                    validationRegistration(registration);
+
+
+                    return registrationRepository.save(registration)
+                            .map(registrationMapper::entityToDto);
+                })
+        );
     }
+
 
     public Mono<Login> login(String email) {
         return registrationRepository.findByEmail(email).map(registrationMapper::login);
