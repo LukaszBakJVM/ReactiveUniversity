@@ -1,8 +1,6 @@
 package org.example.office.appconfig;
 
 
-import org.example.office.security.BearerTokenFilter;
-import org.example.office.security.JwtService;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,23 +8,20 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 
 import java.nio.file.Files;
 
 @Configuration
+@EnableWebFluxSecurity
 public class AppConfig {
-    private final JwtService jwtService;
 
-    public AppConfig(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
 
     @Bean
     public ApplicationRunner initializeDatabase(DatabaseClient databaseClient) {
@@ -38,23 +33,20 @@ public class AppConfig {
         };
     }
 
-    @Bean
-    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
-        return new MvcRequestMatcher.Builder(introspector);
-    }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
+    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, ServerAuthenticationConverter authenticationConverter) {
+        AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
+        authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
-        BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/office")).hasRole("Office").requestMatchers(mvc.pattern(HttpMethod.GET, "/office/{email}")).hasAnyRole("Office").anyRequest().authenticated());
+        http.authorizeExchange(requests -> requests.pathMatchers(HttpMethod.POST, "/office").hasRole("Office").pathMatchers(HttpMethod.GET, "/office/{email}").hasAnyRole("Office").anyExchange().authenticated());
 
-        http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.csrf(AbstractHttpConfigurer::disable);
-
-        http.addFilterBefore(bearerTokenFilter, AuthorizationFilter.class);
+        http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).
+                httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).
+                formLogin(ServerHttpSecurity.FormLoginSpec::disable).
+                csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
         return http.build();
+
+
     }
-
-
 }
