@@ -1,7 +1,6 @@
 package org.example.office;
 
 
-import org.example.office.dto.ResponseOk;
 import org.example.office.dto.WriteNewPersonOffice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +18,9 @@ public class OfficeController {
     }
 
     @PostMapping
-    ResponseEntity<ResponseOk> createNewPerson(@RequestBody WriteNewPersonOffice dto) {
-      officeServices.createNewPerson(dto).subscribe();
-        return ResponseEntity.ok(new ResponseOk("Created"));
+    ResponseEntity<Void> createNewPerson(@RequestBody WriteNewPersonOffice dto) {
+        officeServices.createNewPerson(dto).subscribe();
+        return ResponseEntity.ok().build();
     }
 
 

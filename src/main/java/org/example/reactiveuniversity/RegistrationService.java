@@ -6,18 +6,17 @@ import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.example.reactiveuniversity.exception.CustomValidationException;
 import org.example.reactiveuniversity.exception.DuplicateEmailException;
+import org.example.reactiveuniversity.exception.UsernameNotFoundException;
 import org.example.reactiveuniversity.exception.WrongRoleException;
 import org.example.reactiveuniversity.security.Login;
 import org.example.reactiveuniversity.security.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -32,6 +31,7 @@ public class RegistrationService {
     private final LocalValidatorFactoryBean validation;
     private final RestTemplate restTemplate;
     private final TokenStore tokenStore;
+    private final WebClient.Builder webclient;
     @Value("${teacher}")
     private String teacherUrl;
     @Value("${student}")
@@ -40,13 +40,14 @@ public class RegistrationService {
     private String officeUrl;
 
 
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, RestTemplate restTemplate, TokenStore tokenStore) {
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, RestTemplate restTemplate, TokenStore tokenStore, WebClient.Builder webclient) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
         this.restTemplate = restTemplate;
 
         this.tokenStore = tokenStore;
+        this.webclient = webclient;
     }
 
     List<String> role() {
@@ -55,22 +56,19 @@ public class RegistrationService {
 
     @Transactional
     public Mono<RegistrationResponseDto> createNewUser(RegistrationDto registrationDto) {
-        return registrationRepository.findByEmail(registrationDto.email()).flatMap(existingSubject ->
-                Mono.<RegistrationResponseDto>error(new DuplicateEmailException(String.format("Email %s already exists",
-                        registrationDto.email())))).switchIfEmpty(
-                Mono.defer(() -> {
+        return registrationRepository.findByEmail(registrationDto.email()).flatMap(existingSubject -> Mono.<RegistrationResponseDto>error(new DuplicateEmailException(String.format("Email %s already exists", registrationDto.email())))).switchIfEmpty(Mono.defer(() -> {
 
-                    Registration registration = registrationMapper.dtoToEntity(registrationDto);
-                    validationRegistration(registration);
-                    WriteNewPerson write = registrationMapper.write(registration);
-                    String token = tokenStore.getToken("lukasz.bak@interiowy.pl");
-                    writeUser(registrationDto.role(), write, token);
+            Registration registration = registrationMapper.dtoToEntity(registrationDto);
+            validationRegistration(registration);
+            WriteNewPerson write = registrationMapper.write(registration);
+            //   ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
+            //     .map(Principal::getName).map(UsernameFromContext::username);
+            String token = tokenStore.getToken("lukasz.bak@interiowy.pl");
+            writeUser(registrationDto.role(), write, token);
 
 
-                    return registrationRepository.save(registration)
-                            .map(registrationMapper::entityToDto);
-                })
-        );
+            return registrationRepository.save(registration).map(registrationMapper::entityToDto);
+        }));
     }
 
 
@@ -101,7 +99,11 @@ public class RegistrationService {
         HttpEntity<WriteNewPerson> request = new HttpEntity<>(body, headers);
         switch (role) {
             case "Office":
-                restTemplate.exchange(officeUrl + "/office", HttpMethod.POST, request, WriteNewPerson.class);
+                webclient.baseUrl(officeUrl).build().post().uri("/office").header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().
+                        onStatus(httpStatusCode -> !httpStatusCode.equals(HttpStatus.CREATED), response -> Mono.error(new UsernameNotFoundException("ooo"))).
+                        bodyToMono(WriteNewPerson.class).subscribe();
+
+
                 break;
             case "Teacher":
                 restTemplate.exchange(teacherUrl + "/teacher", HttpMethod.POST, request, WriteNewPerson.class);
