@@ -83,26 +83,12 @@ public class RegistrationService {
     private Mono<Void> writeUser(String role, WriteNewPerson body, String token) {
         String authorization = "Authorization";
         String header = "Bearer %s".formatted(token);
-        String url;
-        switch (role) {
-            case "Office":
-                url = officeUrl + "/office";
-                break;
-
-
-            case "Teacher":
-                url = teacherUrl + "/teacher";
-
-                break;
-            case "Student":
-                url = studentUrl + "/student";
-
-                break;
-            default:
-                throw new WrongRoleException("Unknown Error");
-
-
-        }
+        String url = switch (role) {
+            case "Office" -> officeUrl + "/office";
+            case "Teacher" -> teacherUrl + "/teacher";
+            case "Student" -> studentUrl + "/student";
+            default -> throw new WrongRoleException("Unknown Error");
+        };
 
         return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
     }
