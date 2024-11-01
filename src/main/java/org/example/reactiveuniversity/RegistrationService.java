@@ -8,6 +8,7 @@ import org.example.reactiveuniversity.exception.*;
 import org.example.reactiveuniversity.security.Login;
 import org.example.reactiveuniversity.security.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +58,7 @@ public class RegistrationService {
             WriteNewPerson write = registrationMapper.write(registration);
             //   ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
             //     .map(Principal::getName).map(UsernameFromContext::username);
-            String token = tokenStore.getToken("lukasz.bak@interiowy.pl");
+            String token = tokenStore.getToken("teacher.bak@interiowy.pl");
 
 
             return writeUser(registrationDto.role(), write, token).then(registrationRepository.save(registration).map(registrationMapper::entityToDto));
@@ -90,7 +91,9 @@ public class RegistrationService {
             default -> throw new WrongRoleException("Unknown Error");
         };
 
-        return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
+        return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().
+                onStatus(HttpStatusCode::is4xxClientError,response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).
+                bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
     }
 }
 
