@@ -4,19 +4,16 @@ import jakarta.validation.ConstraintViolation;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
-import org.example.reactiveuniversity.exception.CustomValidationException;
-import org.example.reactiveuniversity.exception.DuplicateEmailException;
-import org.example.reactiveuniversity.exception.UsernameNotFoundException;
-import org.example.reactiveuniversity.exception.WrongRoleException;
+import org.example.reactiveuniversity.exception.*;
 import org.example.reactiveuniversity.security.Login;
 import org.example.reactiveuniversity.security.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -29,7 +26,6 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
     private final LocalValidatorFactoryBean validation;
-    private final RestTemplate restTemplate;
     private final TokenStore tokenStore;
     private final WebClient.Builder webclient;
     @Value("${teacher}")
@@ -40,12 +36,10 @@ public class RegistrationService {
     private String officeUrl;
 
 
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, RestTemplate restTemplate, TokenStore tokenStore, WebClient.Builder webclient) {
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenStore tokenStore, WebClient.Builder webclient) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
-        this.restTemplate = restTemplate;
-
         this.tokenStore = tokenStore;
         this.webclient = webclient;
     }
@@ -64,13 +58,11 @@ public class RegistrationService {
             //   ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
             //     .map(Principal::getName).map(UsernameFromContext::username);
             String token = tokenStore.getToken("lukasz.bak@interiowy.pl");
-            writeUser(registrationDto.role(), write, token);
 
 
-            return registrationRepository.save(registration).map(registrationMapper::entityToDto);
+            return writeUser(registrationDto.role(), write, token).then(registrationRepository.save(registration).map(registrationMapper::entityToDto));
         }));
     }
-
 
     public Mono<Login> login(String email) {
         return registrationRepository.findByEmail(email).map(registrationMapper::login);
@@ -88,28 +80,23 @@ public class RegistrationService {
     }
 
 
-    private void writeUser(String role, WriteNewPerson body, String token) {
-
+    private Mono<Void> writeUser(String role, WriteNewPerson body, String token) {
         String authorization = "Authorization";
         String header = "Bearer %s".formatted(token);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(authorization, header);
-
-        HttpEntity<WriteNewPerson> request = new HttpEntity<>(body, headers);
+        String url;
         switch (role) {
             case "Office":
-                webclient.baseUrl(officeUrl).build().post().uri("/office").header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().
-                        onStatus(httpStatusCode -> !httpStatusCode.equals(HttpStatus.CREATED), response -> Mono.error(new UsernameNotFoundException("ooo"))).
-                        bodyToMono(WriteNewPerson.class).subscribe();
-
-
+                url = officeUrl + "/office";
                 break;
+
+
             case "Teacher":
-                restTemplate.exchange(teacherUrl + "/teacher", HttpMethod.POST, request, WriteNewPerson.class);
+                url = teacherUrl + "/teacher";
+
                 break;
             case "Student":
-                restTemplate.exchange(studentUrl + "/student", HttpMethod.POST, request, WriteNewPerson.class);
+                url = studentUrl + "/student";
+
                 break;
             default:
                 throw new WrongRoleException("Unknown Error");
@@ -117,6 +104,7 @@ public class RegistrationService {
 
         }
 
+        return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
     }
 }
 
