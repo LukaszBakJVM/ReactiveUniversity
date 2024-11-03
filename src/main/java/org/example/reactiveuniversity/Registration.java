@@ -4,7 +4,11 @@ package org.example.reactiveuniversity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+
+import java.time.Instant;
 
 
 public class Registration {
@@ -20,6 +24,18 @@ public class Registration {
     private String password;
     @NotBlank(message = "Select role")
     private String role;
+    @CreatedBy
+    private String createdBy;
+
+    @CreatedDate
+    private Instant timeStamp;
+
+    // @LastModifiedBy
+    // private String lastModifiedBy;
+
+    // @LastModifiedDate
+    // private LocalDateTime lastModifiedDate;
+
 
     public long getId() {
         return id;
