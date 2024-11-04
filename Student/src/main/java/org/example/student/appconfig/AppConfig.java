@@ -1,35 +1,31 @@
 package org.example.student.appconfig;
 
-import org.example.student.security.BearerTokenFilter;
-import org.example.student.security.JwtService;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.ReactiveAuditorAware;
+import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.http.HttpMethod;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 
 import java.nio.file.Files;
 
-@Configuration
-public class AppConfig {
-    private final JwtService jwtService;
 
-    public AppConfig(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
-    @Bean
-    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
-        return new MvcRequestMatcher.Builder(introspector);
-    }
+
+@Configuration
+@EnableWebFluxSecurity
+@EnableR2dbcAuditing
+public class AppConfig {
 
 
     @Bean
@@ -41,17 +37,25 @@ public class AppConfig {
             databaseClient.sql(schemaSql).then().subscribe();
         };
     }
+
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
+    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, ServerAuthenticationConverter authenticationConverter) {
+        AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
+        authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
-        BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
-        http.authorizeHttpRequests(requests -> requests.requestMatchers(mvc.pattern(HttpMethod.POST, "/student")).hasRole("Office").requestMatchers(mvc.pattern(HttpMethod.POST, "/student/update")).hasAnyRole("Office").anyRequest().hasAnyRole("Office","Teacher"));
+        http.authorizeExchange(requests -> requests.pathMatchers(HttpMethod.POST, "/student").hasRole("Office").pathMatchers(HttpMethod.POST, "/student/update").hasAnyRole("Office").anyExchange().hasAnyRole("Office", "Teacher"));
 
-        http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.csrf(AbstractHttpConfigurer::disable);
-
-        http.addFilterBefore(bearerTokenFilter, AuthorizationFilter.class);
+        http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
         return http.build();
+    }
+
+    @Bean
+    public ReactiveAuditorAware<String> auditorProvider() {
+        return () -> ReactiveSecurityContextHolder.getContext().map(securityContext -> securityContext.getAuthentication().getName());
+
+
+
     }
 
 

@@ -59,11 +59,11 @@ public class RegistrationService {
             Registration registration = registrationMapper.dtoToEntity(registrationDto);
             validationRegistration(registration);
             WriteNewPerson write = registrationMapper.write(registration);
-            Mono<String> map = ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
+            Mono<String> name = ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
                     .map(Principal::getName);
 
 
-            return map.flatMap(e -> writeUser(registrationDto.role(), write, tokenStore.getToken(e)).then(registrationRepository.save(registration).map(registrationMapper::entityToDto)));
+            return name.flatMap(e -> writeUser(registrationDto.role(), write, tokenStore.getToken(e)).then(registrationRepository.save(registration).map(registrationMapper::entityToDto)));
         }));
     }
 
