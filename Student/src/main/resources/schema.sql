@@ -8,10 +8,10 @@ CREATE TABLE IF NOT EXISTS student
 
 
 CREATE TABLE IF NOT EXISTS grades
-( id integer primary key  generated always as   identity,
-  subject_and_grades JSONB,
-  student_email VARCHAR(255),
-
+(  id integer primary key  generated always as   identity,
+    email VARCHAR(255) ,
+    subject VARCHAR(255),
+    grades VARCHAR(255),
    time_stamp TIMESTAMP WITH TIME ZONE,
     teacher VARCHAR (255));
 
