@@ -4,3 +4,15 @@ CREATE TABLE IF NOT EXISTS student
     last_name VARCHAR (255),
     email VARCHAR (255),
     course VARCHAR (255));
+
+
+
+CREATE TABLE IF NOT EXISTS grades
+( id integer primary key  generated always as   identity,
+  subject_and_grades JSONB,
+  student_email VARCHAR(255),
+
+   time_stamp TIMESTAMP WITH TIME ZONE,
+    teacher VARCHAR (255));
+
+

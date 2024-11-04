@@ -5,5 +5,7 @@ CREATE TABLE IF NOT EXISTS registration
     email VARCHAR (255),
     password VARCHAR (255),
     role VARCHAR (255),
-   time_stamp TIMESTAMP WITH TIME ZONE,
-   created_by VARCHAR(255));
+    created_by VARCHAR(255),
+    time_stamp TIMESTAMP WITH TIME ZONE,
+    last_modified_by VARCHAR(255),
+    last_modified_date TIMESTAMP WITH TIME ZONE);

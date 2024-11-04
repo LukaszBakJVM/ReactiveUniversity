@@ -4,9 +4,7 @@ package org.example.reactiveuniversity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.*;
 
 import java.time.Instant;
 
@@ -30,11 +28,11 @@ public class Registration {
     @CreatedDate
     private Instant timeStamp;
 
-    // @LastModifiedBy
-    // private String lastModifiedBy;
+     @LastModifiedBy
+     private String lastModifiedBy;
 
-    // @LastModifiedDate
-    // private LocalDateTime lastModifiedDate;
+     @LastModifiedDate
+      private Instant lastModifiedDate;
 
 
     public long getId() {
