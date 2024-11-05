@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS grades
     email VARCHAR(255) ,
     subject VARCHAR(255),
     grades VARCHAR(255),
-   time_stamp TIMESTAMP WITH TIME ZONE,
+   time_stamp DATE,
     teacher VARCHAR (255));
 
 

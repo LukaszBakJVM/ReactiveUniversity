@@ -1,6 +1,5 @@
 package org.example.student.grades;
 
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 
@@ -12,9 +11,9 @@ public class Grades {
     private String email;
     private String subject;
     private String grades;
+    private String gradesDescription;
     @CreatedDate
     private LocalDate timeStamp;
-    @CreatedBy
     private String teacher;
 
     public String getEmail() {
