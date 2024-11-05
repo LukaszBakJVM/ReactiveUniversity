@@ -24,7 +24,7 @@ public class GradesServices {
     }
 
     Mono<GradesResponse> grade(GradesRequest gradesRequest) {
-        return repository.findByEmailAndAndSubject(gradesRequest.email(), gradesRequest.subject()).flatMap(grades -> {
+        return repository.findByEmailAndSubject(gradesRequest.email(), gradesRequest.subject()).flatMap(grades -> {
                     grades.setId(grades.getId());
                     grades.getGradesDescription().add(gradesRequest.gradesDescription() + " " + teacherByEmail());
                     return repository.save(grades);
