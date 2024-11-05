@@ -1,5 +1,6 @@
 package org.example.student.appconfig;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.file.Files;
 
@@ -26,6 +28,8 @@ import java.nio.file.Files;
 @EnableWebFluxSecurity
 @EnableR2dbcAuditing
 public class AppConfig {
+    @Value("${teacherUrl}")
+    private String baseUrl;
 
 
     @Bean
@@ -56,6 +60,10 @@ public class AppConfig {
 
 
 
+    }
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder().baseUrl(baseUrl);
     }
 
 

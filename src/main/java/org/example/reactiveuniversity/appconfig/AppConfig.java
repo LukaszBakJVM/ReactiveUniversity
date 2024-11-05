@@ -65,7 +65,7 @@ public class AppConfig {
 
     @Bean
     public ReactiveAuditorAware<String> auditorProvider() {
-       return () -> ReactiveSecurityContextHolder.getContext().map(securityContext -> securityContext.getAuthentication().getName());
+        return () -> ReactiveSecurityContextHolder.getContext().map(securityContext -> securityContext.getAuthentication().getName());
     }
 
 

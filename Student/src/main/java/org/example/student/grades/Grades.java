@@ -4,14 +4,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Grades {
     @Id
     private long id;
     private String email;
     private String subject;
-    private String grades;
-    private String gradesDescription;
+
+    private List<String> gradesDescription = new ArrayList<>();
     @CreatedDate
     private LocalDate timeStamp;
     private String teacher;
@@ -24,6 +26,22 @@ public class Grades {
         this.email = email;
     }
 
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+
+    public List<String> getGradesDescription() {
+        return gradesDescription;
+    }
+
+    public void setGradesDescription(List<String> gradesDescription) {
+        this.gradesDescription = gradesDescription;
+    }
 
     public LocalDate getTimeStamp() {
         return timeStamp;
@@ -41,19 +59,13 @@ public class Grades {
         this.teacher = teacher;
     }
 
-    public String getSubject() {
-        return subject;
+    public long getId() {
+        return id;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getGrades() {
-        return grades;
-    }
-
-    public void setGrades(String grades) {
-        this.grades = grades;
+    public void setId(long id) {
+        this.id = id;
     }
 }
+
+
