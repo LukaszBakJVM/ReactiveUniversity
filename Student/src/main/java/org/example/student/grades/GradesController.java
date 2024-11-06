@@ -16,11 +16,14 @@ import java.net.URI;
 public class GradesController {
     private final GradesServices gradesServices;
 
+
     public GradesController(GradesServices gradesServices) {
         this.gradesServices = gradesServices;
     }
+
     @PostMapping
-    Mono<ResponseEntity<GradesResponse>>setGrates(@RequestBody GradesRequest request){
-        return gradesServices.grade(request).map(grades ->ResponseEntity.created(URI.create("/grades")).body(grades));
+    Mono<ResponseEntity<GradesResponse>> setGrates(@RequestBody GradesRequest request) {
+        return gradesServices.grade(request).map(grades -> ResponseEntity.created(URI.create("/grades")).body(grades));
     }
+
 }

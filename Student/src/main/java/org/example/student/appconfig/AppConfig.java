@@ -45,7 +45,7 @@ public class AppConfig {
         AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
         authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
-        http.authorizeExchange(requests -> requests.pathMatchers(HttpMethod.POST, "/student").hasRole("Office").pathMatchers(HttpMethod.POST, "/student/update").hasAnyRole("Office").anyExchange().hasAnyRole("Office", "Teacher"));
+        http.authorizeExchange(requests -> requests.pathMatchers(HttpMethod.POST, "/student").hasRole("Office").pathMatchers(HttpMethod.POST, "/student/update").hasAnyRole("Office").anyExchange().permitAll());       //hasAnyRole("Office", "Teacher"));
 
         http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
         return http.build();
