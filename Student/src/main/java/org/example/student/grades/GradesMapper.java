@@ -19,5 +19,5 @@ public class GradesMapper {
         return new GradesResponse(grades.getEmail(), grades.getSubject(), grades.getGradesDescription());
     }
 
-
 }
+
