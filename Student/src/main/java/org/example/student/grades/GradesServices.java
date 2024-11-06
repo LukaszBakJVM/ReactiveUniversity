@@ -12,6 +12,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Service
 public class GradesServices {
@@ -28,15 +30,17 @@ public class GradesServices {
     }
 
     Mono<GradesResponse> grade(GradesRequest gradesRequest) {
+        ZoneId zone = ZoneId.of("Europe/Warsaw");
+        LocalDate localDate = LocalDate.now(zone);
 
         return repository.findByEmailAndSubject(gradesRequest.email(), gradesRequest.subject()).flatMap(grades -> {
 
-            grades.getGradesDescription().add(gradesRequest.gradesDescription());
+            grades.getGradesDescription().add(gradesRequest.gradesDescription() + "  " + localDate);
             return repository.save(grades).map(mapper::entityToDto);
-        }).switchIfEmpty(Mono.defer(() -> teacherByEmail().flatMap(teacher -> {
+        }).switchIfEmpty( teacherByEmail().flatMap(teacher -> {
             Grades grades = mapper.dtoToEntity(gradesRequest, teacher);
             return repository.save(grades);
-        }).map(mapper::entityToDto)));
+        }).map(mapper::entityToDto));
     }
 
 

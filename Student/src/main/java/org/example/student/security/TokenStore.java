@@ -1,6 +1,5 @@
 package org.example.student.security;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,16 +17,8 @@ public class TokenStore {
     private String tokenStore;
 
 
-    @PostConstruct
-    public void init() {
-        read();
-
-
-    }
-
-
     public String getToken(String email) {
-
+        read();
         return tokenMap.get(email);
 
 

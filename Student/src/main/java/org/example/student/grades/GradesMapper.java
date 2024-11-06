@@ -16,7 +16,7 @@ public class GradesMapper {
     }
 
     GradesResponse entityToDto(Grades grades) {
-        return new GradesResponse(grades.getEmail(), grades.getSubject(), grades.getGradesDescription());
+        return new GradesResponse(grades.getEmail(), grades.getSubject(), grades.getGradesDescription().getLast());
     }
 
 }

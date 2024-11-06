@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.ReactiveAuditorAware;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.http.HttpMethod;
 import org.springframework.r2dbc.core.DatabaseClient;
@@ -14,14 +13,12 @@ import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.file.Files;
-
 
 
 @Configuration
@@ -54,13 +51,7 @@ public class AppConfig {
         return http.build();
     }
 
-    @Bean
-    public ReactiveAuditorAware<String> auditorProvider() {
-        return () -> ReactiveSecurityContextHolder.getContext().map(securityContext -> securityContext.getAuthentication().getName());
 
-
-
-    }
     @Bean
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder().baseUrl(baseUrl);

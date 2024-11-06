@@ -54,13 +54,12 @@ public class RegistrationService {
 
     @Transactional
     public Mono<RegistrationResponseDto> createNewUser(RegistrationDto registrationDto) {
-        return registrationRepository.findByEmail(registrationDto.email()).flatMap(existingSubject -> Mono.<RegistrationResponseDto>error(new DuplicateEmailException(String.format("Email %s already exists", registrationDto.email())))).switchIfEmpty(Mono.defer(() -> {
+        return registrationRepository.findByEmailIgnoreCase(registrationDto.email()).flatMap(existingSubject -> Mono.<RegistrationResponseDto>error(new DuplicateEmailException(String.format("Email %s already exists", registrationDto.email())))).switchIfEmpty(Mono.defer(() -> {
 
             Registration registration = registrationMapper.dtoToEntity(registrationDto);
             validationRegistration(registration);
             WriteNewPerson write = registrationMapper.write(registration);
-            Mono<String> name = ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
-                    .map(Principal::getName);
+            Mono<String> name = ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
 
 
             return name.flatMap(e -> writeUser(registrationDto.role(), write, tokenStore.getToken(e)).then(registrationRepository.save(registration).map(registrationMapper::entityToDto)));
@@ -93,9 +92,7 @@ public class RegistrationService {
             default -> throw new WrongRoleException("Unknown Error");
         };
 
-        return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().
-                onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).
-                bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
+        return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
     }
 }
 

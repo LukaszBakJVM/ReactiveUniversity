@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS grades
     email VARCHAR(255) ,
     subject VARCHAR(255),
     grades_description text[],
-   time_stamp DATE,
     teacher VARCHAR (255));
 
 

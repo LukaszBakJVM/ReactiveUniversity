@@ -1,9 +1,7 @@
 package org.example.student.grades;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +11,9 @@ public class Grades {
     private String email;
     private String subject;
 
-    private List<String> gradesDescription = new ArrayList<>();
-    @CreatedDate
-    private LocalDate timeStamp;
+    private  List<String> gradesDescription = new ArrayList<>();
+
+
     private String teacher;
 
     public String getEmail() {
@@ -39,18 +37,6 @@ public class Grades {
         return gradesDescription;
     }
 
-    public void setGradesDescription(List<String> gradesDescription) {
-        this.gradesDescription = gradesDescription;
-    }
-
-    public LocalDate getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(LocalDate timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
     public String getTeacher() {
         return teacher;
     }
@@ -59,13 +45,7 @@ public class Grades {
         this.teacher = teacher;
     }
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 }
 
 
