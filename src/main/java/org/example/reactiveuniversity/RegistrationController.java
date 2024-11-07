@@ -2,11 +2,10 @@ package org.example.reactiveuniversity;
 
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,12 +19,14 @@ public class RegistrationController {
     }
 
     @GetMapping("/role")
+    @ResponseStatus(HttpStatus.OK)
     List<String> role() {
         return registrationService.role();
     }
 
     @PostMapping("/registration")
-    Mono<ResponseEntity<RegistrationResponseDto>> createNewUser(@RequestBody RegistrationDto dto) {
-        return registrationService.createNewUser(dto).map(course -> ResponseEntity.created(URI.create("/course")).body(course));
+    @ResponseStatus(HttpStatus.CREATED)
+    Mono<RegistrationResponseDto> createNewUser(@RequestBody RegistrationDto dto) {
+        return registrationService.createNewUser(dto);
     }
 }
