@@ -2,11 +2,10 @@ package org.example.student.grades;
 
 import org.example.student.grades.dto.GradesRequest;
 import org.example.student.grades.dto.GradesResponse;
+import org.example.student.grades.dto.StudentGrades;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -24,6 +23,10 @@ public class GradesController {
     @PostMapping
     Mono<ResponseEntity<GradesResponse>> setGrates(@RequestBody GradesRequest request) {
         return gradesServices.grade(request).map(grades -> ResponseEntity.created(URI.create("/grades")).body(grades));
+    }
+    @GetMapping("/my-grades")
+    Flux<StudentGrades>myGrades(){
+        return gradesServices.findOwnGrades();
     }
 
 }
