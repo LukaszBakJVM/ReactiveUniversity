@@ -1,5 +1,6 @@
 package org.example.reactiveuniversity.security;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,10 @@ public class TokenStore {
     @Value("${token.store.path}")
     private String tokenStore;
 
+    @PostConstruct
+    void readInit() {
+        read();
+    }
 
     public void setToken(String email, String token) {
         tokenMap.put(email, token);

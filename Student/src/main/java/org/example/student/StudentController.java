@@ -1,9 +1,6 @@
 package org.example.student;
 
-import org.example.student.dto.AddCourse;
-import org.example.student.dto.StudentInfoWithCourse;
-import org.example.student.dto.StudentInfoWithoutCourse;
-import org.example.student.dto.WriteNewPerson;
+import org.example.student.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -43,6 +40,10 @@ public class StudentController {
     @GetMapping("/unassigned")
     Flux<StudentInfoWithoutCourse>allStudentWithoutCurses(){
         return studentServices.allStudentsWithoutCourse();
+    }
+    @GetMapping("/write-grades/{email}")
+    Flux<StudentEmail>studentsEmail(@PathVariable String email){
+        return studentServices.findStudentsByEmails(email);
     }
 
 }

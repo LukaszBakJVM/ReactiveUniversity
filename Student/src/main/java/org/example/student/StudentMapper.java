@@ -1,9 +1,6 @@
 package org.example.student;
 
-import org.example.student.dto.AddCourse;
-import org.example.student.dto.StudentInfoWithCourse;
-import org.example.student.dto.StudentInfoWithoutCourse;
-import org.example.student.dto.WriteNewPerson;
+import org.example.student.dto.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,5 +28,8 @@ public class StudentMapper {
     }
     StudentInfoWithoutCourse studentInfoWithoutCourse (Student student){
         return new StudentInfoWithoutCourse(student.getFirstName(),student.getLastName(),student.getEmail());
+    }
+    StudentEmail email(Student student){
+        return new StudentEmail(student.getEmail());
     }
 }
