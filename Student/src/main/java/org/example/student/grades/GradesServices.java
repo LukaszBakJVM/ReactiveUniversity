@@ -2,6 +2,7 @@ package org.example.student.grades;
 
 import org.example.student.grades.dto.GradesRequest;
 import org.example.student.grades.dto.GradesResponse;
+import org.example.student.grades.dto.StudentGrades;
 import org.example.student.grades.dto.Teacher;
 import org.example.student.security.token.TokenStore;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
@@ -43,14 +45,21 @@ public class GradesServices {
         }).map(mapper::entityToDto));
     }
 
+    Flux<StudentGrades> findOwnGrades() {
+        return name().map(repository::findByEmail).flatMapMany(grades -> grades).map(mapper::studentGrades);
+    }
+
 
     private Mono<String> teacherByEmail() {
 
-        Mono<String> name = ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
         String authorization = "Authorization";
+        return name().flatMap(e -> webclient.get().uri("/teacher/private/{email}", e).header(authorization, "Bearer %s".formatted(tokenStore.getToken(e))).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(Teacher.class).map(teacher -> teacher.firstName() + " " + teacher.lastName()));
+    }
+
+    private Mono<String> name() {
+        return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
 
 
-        return name.flatMap(e -> webclient.get().uri("/teacher/private/{email}", e).header(authorization, "Bearer %s".formatted(tokenStore.getToken(e))).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(Teacher.class).map(teacher -> teacher.firstName() + " " + teacher.lastName()));
     }
 
 
