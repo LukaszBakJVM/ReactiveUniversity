@@ -1,9 +1,10 @@
-package org.example.student.security.token;
+package org.example.reactiveuniversity.security.tokenstore;
 
 import org.springframework.context.ApplicationEvent;
 
 public class TokenUpdatedEvent extends ApplicationEvent {
     private final String fileName;
+
 
     public TokenUpdatedEvent(Object source, String fileName) {
         super(source);
