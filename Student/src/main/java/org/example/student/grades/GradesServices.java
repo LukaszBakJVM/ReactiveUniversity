@@ -37,8 +37,8 @@ public class GradesServices {
 
             grades.getGradesDescription().add(gradesRequest.gradesDescription() + "  " + localDate);
             return repository.save(grades).map(mapper::entityToDto);
-        }).switchIfEmpty( teacherByEmail().flatMap(teacher -> {
-            Grades grades = mapper.dtoToEntity(gradesRequest, teacher,localDate);
+        }).switchIfEmpty(teacherByEmail().flatMap(teacher -> {
+            Grades grades = mapper.dtoToEntity(gradesRequest, teacher, localDate);
             return repository.save(grades);
         }).map(mapper::entityToDto));
     }
