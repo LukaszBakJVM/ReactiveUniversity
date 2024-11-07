@@ -4,6 +4,7 @@ import org.example.teacher.dto.AddSchoolSubjects;
 import org.example.teacher.dto.TeacherPrivateInfo;
 import org.example.teacher.dto.TeacherPublicInfo;
 import org.example.teacher.dto.WriteNewTeacherDto;
+import org.example.teacher.exception.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,12 +28,12 @@ public class TeacherServices {
 
     }
 
-    Mono<AddSchoolSubjects> addSchoolSubjects(AddSchoolSubjects schoolSubjectsMono, String email) {
-        return teacherRepository.findByEmail(email).flatMap(teacher -> {
+    Mono<AddSchoolSubjects> addSchoolSubjects(AddSchoolSubjects schoolSubjects) {
+        return teacherRepository.findByEmail(schoolSubjects.email()).flatMap(teacher -> {
             teacher.setId(teacher.getId());
-            teacher.getSubjectName().addAll(schoolSubjectsMono.subjects());
+            teacher.getSubjectName().addAll(schoolSubjects.subjects());
             return teacherRepository.save(teacher);
-        }).map(teacherMapper::addSchoolSubjectsToDto);
+        }).map(teacherMapper::addSchoolSubjectsToDto).switchIfEmpty(Mono.error(new UsernameNotFoundException(String.format("Teacher %s not found",schoolSubjects.email()))));
 
     }
 

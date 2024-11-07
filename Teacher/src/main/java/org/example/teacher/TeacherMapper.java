@@ -29,7 +29,7 @@ public class TeacherMapper {
     }
 
     AddSchoolSubjects addSchoolSubjectsToDto(Teacher teacher) {
-        return new AddSchoolSubjects(teacher.getSubjectName());
+        return new AddSchoolSubjects(teacher.getEmail(),teacher.getSubjectName());
     }
 
 

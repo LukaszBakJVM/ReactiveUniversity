@@ -5,8 +5,6 @@ import org.example.teacher.dto.TeacherPrivateInfo;
 import org.example.teacher.dto.TeacherPublicInfo;
 import org.example.teacher.dto.WriteNewTeacherDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,9 +30,7 @@ public class TeacherController {
 
     @PostMapping("/update")
     Mono<ResponseEntity<AddSchoolSubjects>> updateSubject(@RequestBody AddSchoolSubjects subjects) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String name = authentication.getName();
-        return teacherServices.addSchoolSubjects(subjects, name).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
+        return teacherServices.addSchoolSubjects(subjects).map(update -> ResponseEntity.created(URI.create("/teacher/update")).body(update));
     }
 
     @GetMapping("/private/{email}")
