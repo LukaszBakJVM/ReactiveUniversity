@@ -3,7 +3,7 @@ package org.example.student.grades;
 import org.example.student.grades.dto.GradesRequest;
 import org.example.student.grades.dto.GradesResponse;
 import org.example.student.grades.dto.Teacher;
-import org.example.student.security.TokenStore;
+import org.example.student.security.token.TokenStore;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
