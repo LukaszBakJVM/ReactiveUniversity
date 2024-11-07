@@ -4,13 +4,15 @@ import org.example.student.grades.dto.GradesRequest;
 import org.example.student.grades.dto.GradesResponse;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class GradesMapper {
-    Grades dtoToEntity(GradesRequest dto, String teacher) {
+    Grades dtoToEntity(GradesRequest dto, String teacher, LocalDate date) {
         Grades grades = new Grades();
         grades.setEmail(dto.email());
         grades.setSubject(dto.subject());
-        grades.getGradesDescription().add(dto.gradesDescription());
+        grades.getGradesDescription().add(dto.gradesDescription() + "  " + date);
         grades.setTeacher(teacher);
         return grades;
     }
