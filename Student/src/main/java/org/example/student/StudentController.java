@@ -1,9 +1,6 @@
 package org.example.student;
 
 import org.example.student.dto.*;
-import org.example.student.grades.Grades;
-import org.example.student.grades.GradesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -14,9 +11,8 @@ import java.net.URI;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    private final StudentServices  studentServices;
-    @Autowired
-    GradesRepository repository;
+    private final StudentServices studentServices;
+
 
     public StudentController(StudentServices studentServices) {
         this.studentServices = studentServices;
@@ -37,21 +33,21 @@ public class StudentController {
     Flux<StudentInfoWithCourse> findStudentsByEmail(@PathVariable String email) {
         return studentServices.findStudentsByEmail(email);
     }
+
     @GetMapping("/assigned")
-    Flux<StudentInfoWithCourse>allStudentWithCourse(){
+    Flux<StudentInfoWithCourse> allStudentWithCourse() {
         return studentServices.allStudentsWithCourse();
 
     }
+
     @GetMapping("/unassigned")
-    Flux<StudentInfoWithoutCourse>allStudentWithoutCurses(){
+    Flux<StudentInfoWithoutCourse> allStudentWithoutCurses() {
         return studentServices.allStudentsWithoutCourse();
     }
+
     @GetMapping("/write-grades/{email}")
-    Flux<StudentEmail>studentsEmail(@PathVariable String email){
+    Flux<StudentEmail> studentsEmail(@PathVariable String email) {
         return studentServices.findStudentsByEmails(email);
     }
-    @GetMapping("/g/{emial}")
-    Flux<Grades>fff(@PathVariable  String emial){
-    return repository.findByEmail(emial);
-    }
+
 }
