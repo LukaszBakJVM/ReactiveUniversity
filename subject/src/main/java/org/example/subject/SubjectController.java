@@ -1,12 +1,11 @@
 package org.example.subject;
 
 import org.example.subject.dto.SubjectDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/subject")
@@ -18,16 +17,19 @@ public class SubjectController {
     }
 
     @PostMapping
-    Mono<ResponseEntity<SubjectDto>> addNewSubject(@RequestBody SubjectDto dto) {
-        return subjectServices.createSubject(dto).map(subject -> ResponseEntity.created(URI.create("/subject")).body(subject));
+    @ResponseStatus(HttpStatus.CREATED)
+    Mono<SubjectDto> addNewSubject(@RequestBody SubjectDto dto) {
+        return subjectServices.createSubject(dto);
     }
 
     @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
     Flux<SubjectDto> allSubject() {
         return subjectServices.findAllSubject();
     }
 
     @DeleteMapping("/{subjectName}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     Mono<ResponseEntity<Void>> deleteSubjectByName(@PathVariable String subjectName) {
         return subjectServices.deleteSubject(subjectName).then(Mono.just(ResponseEntity.noContent().build()));
     }
