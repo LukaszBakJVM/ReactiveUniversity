@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-public class LoginControler {
+public class LoginController {
     private final CustomUserDetailsService services;
 
-    public LoginControler(CustomUserDetailsService services) {
+    public LoginController(CustomUserDetailsService services) {
         this.services = services;
     }
 
