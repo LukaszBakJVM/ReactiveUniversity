@@ -3,6 +3,7 @@ package org.example.teacher;
 import org.example.teacher.dto.*;
 import org.example.teacher.exception.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
@@ -68,7 +69,10 @@ public class TeacherServices {
         return null;
 
     }
-
+    Flux<CourseName>findCourseBySubject(String subject) {
+        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve()
+                .bodyToFlux(CourseName.class);
+    }
 
 
     private Mono<String> name() {
