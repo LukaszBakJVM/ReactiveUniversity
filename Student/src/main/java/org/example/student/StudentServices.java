@@ -1,6 +1,7 @@
 package org.example.student;
 
 import org.example.student.dto.*;
+import org.example.student.exception.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,7 +29,7 @@ public class StudentServices {
             student.setId(student.getId());
             student.setCourse(addCourse.course());
             return studentRepository.save(student);
-        }).map(studentMapper::addCourseResponse);
+        }).map(studentMapper::addCourseResponse).switchIfEmpty(Mono.error(new UsernameNotFoundException(String.format("Student %s not found",addCourse.studentEmail()))));
     }
 
     Flux<StudentInfoWithCourse> findStudentsByEmail(String email) {
