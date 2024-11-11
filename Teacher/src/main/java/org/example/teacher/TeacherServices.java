@@ -25,13 +25,13 @@ public class TeacherServices {
 
     private final TeacherMapper teacherMapper;
     private final TeacherRepository teacherRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClient;
 
 
     public TeacherServices(TeacherMapper teacherMapper, TeacherRepository teacherRepository, WebClient.Builder webClient) {
         this.teacherMapper = teacherMapper;
         this.teacherRepository = teacherRepository;
-        this.webClient = webClient.build();
+        this.webClient = webClient;
     }
 
     Mono<WriteNewTeacherDto> createTeacher(WriteNewTeacherDto dto) {
@@ -61,6 +61,10 @@ public class TeacherServices {
         return teacherRepository.findTeacherBySubjectNameContains(subjectName).map(teacherMapper::teacherPublicInfo);
     }
     Flux<FindAllTeacherStudents>findAllMyStudents(){
+       name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects)
+                .flatMapMany(s -> webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", s).retrieve().bodyToMono(CourseName.class)
+                        .map(CourseName::courseName));
+
         return null;
 
     }

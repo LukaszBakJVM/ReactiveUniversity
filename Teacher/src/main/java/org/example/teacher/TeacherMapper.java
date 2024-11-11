@@ -1,9 +1,6 @@
 package org.example.teacher;
 
-import org.example.teacher.dto.AddSchoolSubjects;
-import org.example.teacher.dto.TeacherPrivateInfo;
-import org.example.teacher.dto.TeacherPublicInfo;
-import org.example.teacher.dto.WriteNewTeacherDto;
+import org.example.teacher.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -39,6 +36,9 @@ public class TeacherMapper {
 
     TeacherPublicInfo teacherPublicInfo(Teacher teacher) {
         return new TeacherPublicInfo(teacher.getFirstName(), teacher.getLastName(), teacher.getSubjectName());
+    }
+    TeacherSubjects email(Teacher teacher){
+        return new TeacherSubjects(teacher.getSubjectName());
     }
 
 
