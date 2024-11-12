@@ -53,5 +53,11 @@ public class StudentController {
     Flux<StudentEmail> studentsEmail(@PathVariable String email) {
         return studentServices.findStudentsByEmails(email);
     }
+    @GetMapping("/studentInfo/{course}")
+    @ResponseStatus(HttpStatus.OK)
+    Flux<StudentInfoWithCourse>infoWithCourse(@PathVariable String course){
+        return studentServices.studentInfoByCourse(course);
+
+    }
 
 }

@@ -44,5 +44,8 @@ public class StudentServices {
     Flux<StudentEmail>findStudentsByEmails(String emailContaining){
         return studentRepository.findByEmailContaining(emailContaining).map(studentMapper::email);
     }
+    Flux<StudentInfoWithCourse>studentInfoByCourse(String course){
+        return studentRepository.findByCourse(course).map(studentMapper::studentInfoWithCourse);
+    }
 
 }

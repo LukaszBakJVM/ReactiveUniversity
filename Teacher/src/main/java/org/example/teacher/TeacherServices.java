@@ -16,17 +16,13 @@ import java.security.Principal;
 @Service
 public class TeacherServices {
 
-    @Value("${student}")
-    private String studentUrl;
-    @Value("${subject}")
-    private String subjectUrl;
-    @Value("${course}")
-    private String courseUrl;
-
-
     private final TeacherMapper teacherMapper;
     private final TeacherRepository teacherRepository;
     private final WebClient.Builder webClient;
+    @Value("${student}")
+    private String studentUrl;
+    @Value("${course}")
+    private String courseUrl;
 
 
     public TeacherServices(TeacherMapper teacherMapper, TeacherRepository teacherRepository, WebClient.Builder webClient) {
@@ -61,15 +57,17 @@ public class TeacherServices {
     Flux<TeacherPublicInfo> teacherPublicInfo(String subjectName) {
         return teacherRepository.findTeacherBySubjectNameContains(subjectName).map(teacherMapper::teacherPublicInfo);
     }
-    Flux<FindAllTeacherStudents>findAllMyStudents(){
-       name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects)
-                .flatMapMany(s -> webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", s).retrieve().bodyToMono(CourseName.class)
-                        .map(CourseName::courseName));
 
-        return null;
+    Flux<FindAllTeacherStudents> findAllMyStudents() {
+       return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects)
+                .flatMapMany(s -> webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", s).retrieve().bodyToFlux(CourseName.class).map(CourseName::courseName).
+        flatMap(e -> webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}", e).accept(MediaType.APPLICATION_JSON)
+                .retrieve().bodyToFlux(FindAllTeacherStudents.class)));
+
 
     }
-    Flux<CourseName>findCourseBySubject(String subject) {
+
+    Flux<CourseName> findCourseBySubject(String subject) {
         return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve()
                 .bodyToFlux(CourseName.class);
     }

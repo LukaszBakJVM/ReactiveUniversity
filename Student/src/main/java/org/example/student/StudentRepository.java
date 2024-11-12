@@ -8,5 +8,6 @@ public interface StudentRepository extends ReactiveCrudRepository<Student, Long>
     Mono<Student> findByEmail(String email);
 
     Flux<Student> findByEmailContaining(String email);
+    Flux<Student>findByCourse(String course);
 
 }

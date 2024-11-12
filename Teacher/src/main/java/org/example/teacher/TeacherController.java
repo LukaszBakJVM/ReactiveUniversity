@@ -1,9 +1,6 @@
 package org.example.teacher;
 
-import org.example.teacher.dto.AddSchoolSubjects;
-import org.example.teacher.dto.TeacherPrivateInfo;
-import org.example.teacher.dto.TeacherPublicInfo;
-import org.example.teacher.dto.WriteNewTeacherDto;
+import org.example.teacher.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +46,11 @@ public class TeacherController {
     @GetMapping("/info/{subject}")
     Flux<TeacherPublicInfo> teacherPublicInfoBySubject(@PathVariable String subject) {
         return teacherServices.teacherPublicInfo(subject);
+    }
+    @GetMapping("/aa")
+    @ResponseStatus(HttpStatus.OK)
+    Flux<FindAllTeacherStudents>findAllTeacherStudents(){
+        return teacherServices.findAllMyStudents();
     }
 
 }
