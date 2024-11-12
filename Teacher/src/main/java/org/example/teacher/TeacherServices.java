@@ -60,16 +60,16 @@ public class TeacherServices {
 
     Flux<FindAllTeacherStudents> findAllMyStudents() {
        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects)
-                .flatMapMany(s -> webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", s).retrieve().bodyToFlux(CourseName.class).map(CourseName::courseName).
+                .flatMapIterable(stringSet -> stringSet).flatMap(this::findCourseBySubject).
         flatMap(e -> webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}", e).accept(MediaType.APPLICATION_JSON)
-                .retrieve().bodyToFlux(FindAllTeacherStudents.class)));
+               .retrieve().bodyToFlux(FindAllTeacherStudents.class)).distinct();
 
 
     }
 
-    Flux<CourseName> findCourseBySubject(String subject) {
+    Flux<String> findCourseBySubject(String subject) {
         return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve()
-                .bodyToFlux(CourseName.class);
+                .bodyToFlux(CourseName.class).map(CourseName::courseName);
     }
 
 
