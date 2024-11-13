@@ -59,20 +59,22 @@ public class TeacherServices {
     }
 
     Flux<FindAllTeacherStudents> findAllMyStudents() {
-       return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects)
-                .flatMapIterable(stringSet -> stringSet).flatMap(this::findCourseBySubject).
-        flatMap(this::finaAllUniqueStudents).distinct();
+        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects).flatMapIterable(stringSet -> stringSet).flatMap(this::findCourseBySubject).flatMap(this::finaAllUniqueStudents).distinct()
+                .flatMap(e->allGrades(e.email()));
 
 
     }
 
-   private Flux<String> findCourseBySubject(String subject) {
-        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve()
-                .bodyToFlux(CourseName.class).map(CourseName::courseName);
+    private Flux<String> findCourseBySubject(String subject) {
+        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CourseName.class).map(CourseName::courseName);
     }
-    private Flux<FindAllTeacherStudents>finaAllUniqueStudents(String course){
-        return webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}",course).accept(MediaType.APPLICATION_JSON).retrieve()
-                .bodyToFlux(FindAllTeacherStudents.class);
+
+    private Flux<FindAllTeacherStudents> finaAllUniqueStudents(String course) {
+        return webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(FindAllTeacherStudents.class);
+    }
+
+    private Mono<FindAllTeacherStudents> allGrades(String email) {
+        return webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(FindAllTeacherStudents.class);
     }
 
     private Mono<String> name() {

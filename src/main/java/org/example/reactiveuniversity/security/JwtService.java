@@ -48,8 +48,8 @@ class JwtService implements TokenProvider {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        long currentTimeMillis = System.currentTimeMillis();
-        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername()).claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).map(role -> role.substring("ROLE_".length())).toArray()).issuedAt(new Date(currentTimeMillis)).expiration(new Date(currentTimeMillis + tokenExpiration*10000)).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
+        long currentTimeMillis = System.currentTimeMillis();                                                                                                                                                             //TODO + tokenExpiration*10000
+        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername()).claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).map(role -> role.substring("ROLE_".length())).toArray()).issuedAt(new Date(currentTimeMillis)).expiration(new Date(currentTimeMillis *2)).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
     }
 
     private <T> T extractClaim(String jwt, Function<Claims, T> claimResolver) {

@@ -32,8 +32,8 @@ public class GradesController {
 
     @GetMapping("/{email}")
     @ResponseStatus(HttpStatus.OK)
-    Mono<StudentGrades> teacherGrades(@PathVariable String email, @RequestParam String subject) {
-        return gradesServices.gradesForTeacher(email, subject);
+    Flux<StudentGrades> teacherGrades(@PathVariable String email) {
+        return gradesServices.gradesForTeacher(email);
     }
 
 }

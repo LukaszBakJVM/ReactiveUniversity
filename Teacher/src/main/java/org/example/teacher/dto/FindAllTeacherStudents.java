@@ -1,4 +1,7 @@
 package org.example.teacher.dto;
 
-public record FindAllTeacherStudents(String firstName, String lastName,String course){
+import java.util.List;
+
+public record FindAllTeacherStudents(String firstName, String lastName,String email, String course, String subject,
+                                     List<String> grades) {
 }
