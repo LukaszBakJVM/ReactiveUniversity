@@ -12,6 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 public class TeacherServices {
@@ -59,8 +60,7 @@ public class TeacherServices {
     }
 
     Flux<FindAllTeacherStudents> findAllMyStudents() {
-        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects).flatMapIterable(stringSet -> stringSet).flatMap(this::findCourseBySubject).flatMap(this::finaAllUniqueStudents).distinct()
-                .flatMap(e->allGrades(e.email()));
+        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects).flatMapIterable(stringSet -> stringSet).flatMap(this::findCourseBySubject).flatMap(this::finaAllUniqueStudents).distinct().flatMap(e -> allGrades(e.email()).map(grades -> new FindAllTeacherStudents(new Student(e.firstName(), e.lastName(), e.email(), e.course()), grades)));
 
 
     }
@@ -69,12 +69,12 @@ public class TeacherServices {
         return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CourseName.class).map(CourseName::courseName);
     }
 
-    private Flux<FindAllTeacherStudents> finaAllUniqueStudents(String course) {
-        return webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(FindAllTeacherStudents.class);
+    private Flux<Student> finaAllUniqueStudents(String course) {
+        return webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(Student.class);
     }
 
-    private Mono<FindAllTeacherStudents> allGrades(String email) {
-        return webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(FindAllTeacherStudents.class);
+    Mono<List<Grades>> allGrades(String email) {
+        return webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(Grades.class).collectList();
     }
 
     private Mono<String> name() {
