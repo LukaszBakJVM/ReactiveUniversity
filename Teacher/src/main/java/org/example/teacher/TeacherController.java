@@ -47,7 +47,7 @@ public class TeacherController {
     Flux<TeacherPublicInfo> teacherPublicInfoBySubject(@PathVariable String subject) {
         return teacherServices.teacherPublicInfo(subject);
     }
-    @GetMapping("/aa")
+    @GetMapping("/my-students")
     @ResponseStatus(HttpStatus.OK)
     Flux<FindAllTeacherStudents>findAllTeacherStudents(){
         return teacherServices.findAllMyStudents();
