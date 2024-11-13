@@ -25,6 +25,9 @@ public class GradesMapper {
     StudentGrades studentGrades(Grades grades) {
         return new StudentGrades(grades.getSubject(), grades.getGradesDescription(), grades.getTeacher());
     }
+    StudentGrades gradesForTeacher(Grades grades){
+        return new StudentGrades(grades.getSubject(),grades.getGradesDescription(),grades.getTeacher());
+    }
 
 }
 

@@ -1,9 +1,6 @@
 package org.example.student.grades;
 
-import org.example.student.grades.dto.GradesRequest;
-import org.example.student.grades.dto.GradesResponse;
-import org.example.student.grades.dto.StudentGrades;
-import org.example.student.grades.dto.Teacher;
+import org.example.student.grades.dto.*;
 import org.example.student.security.token.TokenStore;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -47,6 +44,9 @@ public class GradesServices {
 
     Flux<StudentGrades> findOwnGrades() {
         return name().map(repository::findByEmail).flatMapMany(grades -> grades).map(mapper::studentGrades);
+    }
+    Mono<StudentGrades>gradesForTeacher(String studentEmail, String subject){
+        return repository.findByEmailAndSubject(studentEmail,subject).map(mapper::gradesForTeacher);
     }
 
 

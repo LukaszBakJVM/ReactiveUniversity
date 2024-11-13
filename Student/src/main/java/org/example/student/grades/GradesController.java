@@ -30,4 +30,10 @@ public class GradesController {
         return gradesServices.findOwnGrades();
     }
 
+    @GetMapping("/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    Mono<StudentGrades> teacherGrades(@PathVariable String email, @RequestParam String subject) {
+        return gradesServices.gradesForTeacher(email, subject);
+    }
+
 }
