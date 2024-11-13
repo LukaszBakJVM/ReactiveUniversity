@@ -60,7 +60,7 @@ public class TeacherServices {
     }
 
     Flux<FindAllTeacherStudents> findAllMyStudents() {
-        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects).flatMapIterable(stringSet -> stringSet).flatMap(this::findCourseBySubject).flatMap(this::finaAllUniqueStudents).distinct().flatMap(e -> allGrades(e.email()).map(grades -> new FindAllTeacherStudents(new Student(e.firstName(), e.lastName(), e.email(), e.course()), grades)));
+        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects).flatMapMany(Flux::fromIterable).flatMap(this::findCourseBySubject).flatMap(this::finaAllUniqueStudents).distinct().flatMap(e -> allGrades(e.email()).map(grades -> new FindAllTeacherStudents(new Student(e.firstName(), e.lastName(), e.email(), e.course()), grades)));
 
 
     }
