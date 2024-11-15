@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.security.tokenstore;
+package org.example.reactiveuniversity.security.token;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;

@@ -15,7 +15,7 @@ public class TokenEventListener {
     }
 
     @EventListener
-    public void onTokenUpdated(TokenUpdatedEvent event) {
+    public void readFile(TokenUpdatedEvent event) {
         logger.info("Reading file: {}",event.getFileName());
         tokenStore.read();
     }

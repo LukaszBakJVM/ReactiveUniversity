@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.security.tokenstore;
+package org.example.reactiveuniversity.security.token;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,7 @@ public class TokenEventListener {
         this.tokenStore = tokenStore;
     }
     @EventListener
-    public void onTokenUpdated(TokenUpdatedEvent event) {
+    public void readFile(TokenUpdatedEvent event) {
         logger.info("Reading file: {}",event.getFileName());
         tokenStore.read();
     }

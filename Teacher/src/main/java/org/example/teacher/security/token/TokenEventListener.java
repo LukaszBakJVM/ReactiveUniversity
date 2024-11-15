@@ -8,15 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenEventListener {
     private final TokenStore tokenStore;
-   private final Logger logger =  LoggerFactory.getLogger(TokenEventListener.class);
+    private final Logger logger = LoggerFactory.getLogger(TokenEventListener.class);
 
     public TokenEventListener(TokenStore tokenStore) {
         this.tokenStore = tokenStore;
     }
-
-    @EventListener
-    public void onTokenUpdated(TokenUpdatedEvent event) {
-        logger.info("Reading file: {}",event.getFileName());
+   @EventListener
+    void readFile(TokenUpdatedEvent event){
+        logger.info("Read file {}",event.getFileName());
         tokenStore.read();
-    }
+}
 }
