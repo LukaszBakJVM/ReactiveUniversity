@@ -2,6 +2,7 @@ package org.example.teacher;
 
 import org.example.teacher.dto.*;
 import org.example.teacher.exception.UsernameNotFoundException;
+import org.example.teacher.security.token.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -20,16 +21,18 @@ public class TeacherServices {
     private final TeacherMapper teacherMapper;
     private final TeacherRepository teacherRepository;
     private final WebClient.Builder webClient;
+    private final TokenStore tokenStore;
     @Value("${student}")
     private String studentUrl;
     @Value("${course}")
     private String courseUrl;
 
 
-    public TeacherServices(TeacherMapper teacherMapper, TeacherRepository teacherRepository, WebClient.Builder webClient) {
+    public TeacherServices(TeacherMapper teacherMapper, TeacherRepository teacherRepository, WebClient.Builder webClient, TokenStore tokenStore) {
         this.teacherMapper = teacherMapper;
         this.teacherRepository = teacherRepository;
         this.webClient = webClient;
+        this.tokenStore = tokenStore;
     }
 
     Mono<WriteNewTeacherDto> createTeacher(WriteNewTeacherDto dto) {
@@ -74,7 +77,8 @@ public class TeacherServices {
     }
 
     Mono<List<Grades>> allGrades(String email) {
-        return webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(Grades.class).collectList();
+        String authorization = "Authorization";
+        return name().flatMap(n -> webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).header(authorization, "Bearer %s".formatted(tokenStore.getToken(n))).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(Grades.class).collectList());
     }
 
     private Mono<String> name() {

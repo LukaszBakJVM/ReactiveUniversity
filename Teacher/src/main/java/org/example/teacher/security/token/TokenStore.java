@@ -1,4 +1,4 @@
-package org.example.student.security.token;
+package org.example.teacher.security.token;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
