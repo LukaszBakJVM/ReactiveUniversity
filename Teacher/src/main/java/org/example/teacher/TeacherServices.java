@@ -58,7 +58,7 @@ public class TeacherServices {
         return teacherRepository.findAll().map(teacherMapper::teacherPrivateInfo);
     }
 
-    Flux<TeacherPublicInfo> teacherPublicInfo(String subjectName) {
+    Mono<TeacherPublicInfo> teacherPublicInfo(String subjectName) {
         return teacherRepository.findTeacherBySubjectNameContains(subjectName).map(teacherMapper::teacherPublicInfo);
     }
 

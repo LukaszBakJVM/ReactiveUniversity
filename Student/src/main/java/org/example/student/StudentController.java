@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/student")
 public class StudentController {
@@ -53,11 +55,19 @@ public class StudentController {
     Flux<StudentEmail> studentsEmail(@PathVariable String email) {
         return studentServices.findStudentsByEmails(email);
     }
+
     @GetMapping("/studentInfo/{course}")
     @ResponseStatus(HttpStatus.OK)
-    Flux<StudentInfoWithCourse>infoWithCourse(@PathVariable String course){
+    Flux<StudentInfoWithCourse> infoWithCourse(@PathVariable String course) {
         return studentServices.studentInfoByCourse(course);
 
     }
+
+    @GetMapping("/teachers")
+    Mono<List<Teacher>>getMyTeachers() {
+        return studentServices.findMyTeachers();
+    }
+
+
 
 }

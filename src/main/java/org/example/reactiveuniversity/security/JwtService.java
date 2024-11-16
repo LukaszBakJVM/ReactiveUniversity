@@ -22,9 +22,9 @@ class JwtService implements TokenProvider {
 
     @Value("${jws.sharedKey}")
     private String secretKey;
+    private final long thirtyDaysTokenDuration = 30L * 24 * 60 * 60 * 1000;
 
-    @Value("${jwt.token-expiration-seconds}")
-    private long tokenExpiration;
+
 
     String extractUsername(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
@@ -48,8 +48,8 @@ class JwtService implements TokenProvider {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        long currentTimeMillis = System.currentTimeMillis();                                                                                                                                                             //TODO + tokenExpiration*10000
-        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername()).claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).map(role -> role.substring("ROLE_".length())).toArray()).issuedAt(new Date(currentTimeMillis)).expiration(new Date(currentTimeMillis *2)).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
+        long currentTimeMillis = System.currentTimeMillis();
+        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername()).claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).map(role -> role.substring("ROLE_".length())).toArray()).issuedAt(new Date(currentTimeMillis)).expiration(new Date(currentTimeMillis +thirtyDaysTokenDuration)).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
     }
 
     private <T> T extractClaim(String jwt, Function<Claims, T> claimResolver) {
