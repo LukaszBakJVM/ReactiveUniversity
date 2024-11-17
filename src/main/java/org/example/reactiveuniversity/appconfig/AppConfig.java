@@ -21,6 +21,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.nio.file.Files;
 
@@ -46,9 +47,10 @@ public class AppConfig {
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, ServerAuthenticationConverter authenticationConverter) {
         AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
         authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
+        http.formLogin(l->l.loginPage("login-page"));
 
-        http.authorizeExchange(e -> e.pathMatchers(HttpMethod.POST, "/user/registration").hasRole("Office").pathMatchers(HttpMethod.POST, "/login").permitAll().pathMatchers(HttpMethod.GET, "/user/role").hasRole("Office").pathMatchers("/webjars/**").permitAll().pathMatchers("/v3/api-docs/**")
-                .permitAll().anyExchange().authenticated());
+        http.authorizeExchange(e -> e.pathMatchers(HttpMethod.POST, "/user/registration").hasRole("Office").pathMatchers(HttpMethod.POST, "/login").permitAll().pathMatchers(HttpMethod.GET, "/user/role").hasRole("Office").
+                anyExchange().permitAll());
         http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
         return http.build();
     }
@@ -67,6 +69,16 @@ public class AppConfig {
     @Bean
     public ReactiveAuditorAware<String> auditorProvider() {
         return () -> ReactiveSecurityContextHolder.getContext().map(securityContext -> securityContext.getAuthentication().getName());
+    }
+
+    @Bean
+    public ClassLoaderTemplateResolver thymeleafTemplateResolver() {
+        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
+        resolver.setPrefix("templates/");
+        resolver.setSuffix(".html");
+        resolver.setTemplateMode("HTML");
+        resolver.setCacheable(false);
+        return resolver;
     }
 
 
