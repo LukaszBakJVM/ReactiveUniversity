@@ -23,6 +23,11 @@ public class Handler {
     public Error wrongCredentials(WrongCredentialsException ex) {
         return new Error(HttpStatus.FORBIDDEN, ex.getMessage());
     }
+    @ExceptionHandler(ReadWriteFileException.class)
+    @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
+    public Error fileException(ReadWriteFileException ex) {
+        return new Error(HttpStatus.FAILED_DEPENDENCY, ex.getMessage());
+    }
 
 
 }

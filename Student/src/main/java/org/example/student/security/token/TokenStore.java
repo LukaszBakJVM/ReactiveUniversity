@@ -1,5 +1,6 @@
 package org.example.student.security.token;
 
+import org.example.student.exception.ReadWriteFileException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,7 @@ public class TokenStore {
 
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw  new ReadWriteFileException("Read token file error");
         }
 
     }
