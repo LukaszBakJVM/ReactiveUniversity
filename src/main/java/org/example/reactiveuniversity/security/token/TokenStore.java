@@ -29,7 +29,6 @@ public class TokenStore {
 
 
     public void setToken(String email, String token) {
-
         tokenMap.put(email, token);
         writeToken(tokenMap);
 
