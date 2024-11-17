@@ -39,12 +39,9 @@ public class AppConfig {
         AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
         authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
-        http.authorizeExchange(requests -> requests.pathMatchers(HttpMethod.POST, "/office").hasRole("Office").pathMatchers(HttpMethod.GET, "/office/{email}").hasAnyRole("Office").anyExchange().authenticated());
+        http.authorizeExchange(requests -> requests.pathMatchers(HttpMethod.POST, "/office").hasRole("Office").pathMatchers(HttpMethod.GET, "/office/{email}").hasAnyRole("Office").pathMatchers("/webjars/**").permitAll().pathMatchers("/v3/api-docs/**").permitAll().anyExchange().authenticated());
 
-        http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).
-                httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).
-                formLogin(ServerHttpSecurity.FormLoginSpec::disable).
-                csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
+        http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
         return http.build();
 
 
