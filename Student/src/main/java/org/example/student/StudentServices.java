@@ -1,6 +1,7 @@
 package org.example.student;
 
 import org.example.student.dto.*;
+import org.example.student.exception.ConnectionException;
 import org.example.student.exception.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -8,6 +9,7 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -65,21 +67,19 @@ public class StudentServices {
         return studentRepository.findByCourse(course).map(studentMapper::studentInfoWithCourse);
     }
 
-    Mono<List<Teacher>>findMyTeachers() {
-        return name().flatMap(email -> studentRepository.findByEmail(email).map(Student::getCourse)
-                .flatMap(this::findSubjectsByCourse).map(SubjectsByCourse::subjects).flatMapMany(Flux::fromIterable)
-                .flatMap(this::findTeachersBySubjects).distinct().collectList());
+    Mono<List<Teacher>> findMyTeachers() {
+        return name().flatMap(email -> studentRepository.findByEmail(email).map(Student::getCourse).flatMap(this::findSubjectsByCourse).map(SubjectsByCourse::subjects).flatMapMany(Flux::fromIterable).flatMap(this::findTeachersBySubjects).distinct().collectList());
 
 
     }
 
 
     Mono<SubjectsByCourse> findSubjectsByCourse(String course) {
-        return webClient.baseUrl(courseUrl).build().get().uri("/course/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(SubjectsByCourse.class);
+        return webClient.baseUrl(courseUrl).build().get().uri("/course/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(SubjectsByCourse.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : course ")));
     }
 
     Mono<Teacher> findTeachersBySubjects(String subject) {
-        return webClient.baseUrl(teacherUrl).build().get().uri("/teacher/info/{subject}", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(Teacher.class);
+        return webClient.baseUrl(teacherUrl).build().get().uri("/teacher/info/{subject}", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(Teacher.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : teacher")));
     }
 
 

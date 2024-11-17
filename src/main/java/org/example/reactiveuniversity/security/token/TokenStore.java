@@ -1,5 +1,7 @@
 package org.example.reactiveuniversity.security.token;
 
+import jakarta.annotation.PostConstruct;
+import org.example.reactiveuniversity.exception.ReadWriteFileException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -20,8 +22,14 @@ public class TokenStore {
         this.publisher = publisher;
     }
 
+    @PostConstruct
+    void initMap() {
+        read();
+    }
+
 
     public void setToken(String email, String token) {
+
         tokenMap.put(email, token);
         writeToken(tokenMap);
 
@@ -40,7 +48,7 @@ public class TokenStore {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ReadWriteFileException("Write token file error");
         }
     }
 
@@ -51,7 +59,7 @@ public class TokenStore {
 
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ReadWriteFileException("Read token file error");
         }
 
     }

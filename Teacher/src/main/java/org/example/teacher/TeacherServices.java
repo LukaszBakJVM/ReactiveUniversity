@@ -73,16 +73,16 @@ public class TeacherServices {
     }
 
     private Flux<String> findCourseBySubject(String subject) {
-        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CourseName.class).map(CourseName::courseName).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
+        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CourseName.class).map(CourseName::courseName).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : course")));
     }
 
     private Flux<Student> finaAllUniqueStudents(String course) {
-        return webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(Student.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
+        return webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(Student.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : student")));
     }
 
     Mono<List<Grades>> allGrades(String email) {
         String authorization = "Authorization";
-        return name().flatMap(n -> webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).header(authorization, "Bearer %s".formatted(tokenStore.getToken(n))).accept(MediaType.APPLICATION_JSON).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToFlux(Grades.class).collectList()).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
+        return name().flatMap(n -> webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).header(authorization, "Bearer %s".formatted(tokenStore.getToken(n))).accept(MediaType.APPLICATION_JSON).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToFlux(Grades.class).collectList()).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : grades")));
     }
 
     private Mono<String> name() {

@@ -15,5 +15,11 @@ public class Handler {
         return new Error(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(ConnectionException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Error connectionException(ConnectionException ex) {
+        return new Error(HttpStatus.INTERNAL_SERVER_ERROR,ex.getMessage());
+    }
+
 
 }
