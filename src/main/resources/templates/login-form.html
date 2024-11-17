@@ -15,7 +15,7 @@
 
 <script>
     document.getElementById('login-form').addEventListener('submit', async function(event) {
-        event.preventDefault(); // Zablokuj domyślne przesłanie formularza
+        event.preventDefault();
 
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
@@ -32,8 +32,8 @@
             });
 
             if (response.ok) {
-                const token = await response.text(); // Odebranie tokena JWT jako tekst
-                localStorage.setItem('authToken', token); // Zapisanie tokena w localStorage
+                const token = await response.text();
+                localStorage.setItem('authToken', token);
                 alert('Zalogowano pomyślnie. Twój token został zapisany.');
             } else {
                 alert('Niepoprawne dane logowania.');
