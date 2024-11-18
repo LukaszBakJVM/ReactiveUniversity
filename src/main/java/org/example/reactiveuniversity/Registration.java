@@ -28,11 +28,11 @@ public class Registration {
     @CreatedDate
     private Instant timeStamp;
 
-     @LastModifiedBy
-     private String lastModifiedBy;
+    @LastModifiedBy
+    private String lastModifiedBy;
 
-     @LastModifiedDate
-      private Instant lastModifiedDate;
+    @LastModifiedDate
+    private Instant lastModifiedDate;
 
 
     public long getId() {

@@ -16,7 +16,7 @@ public class RestLoginController {
     }
 
 
-    @PostMapping("/restLogin")
+    @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     Mono<String> token(@RequestBody Login login) {
         return services.token(login);

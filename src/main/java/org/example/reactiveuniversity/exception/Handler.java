@@ -49,12 +49,12 @@ public class Handler {
     public Error connectionException(ConnectionException ex) {
         return new Error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
+
     @ExceptionHandler(ReadWriteFileException.class)
     @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
     public Error fileException(ReadWriteFileException ex) {
         return new Error(HttpStatus.FAILED_DEPENDENCY, ex.getMessage());
     }
-
 
 
 }

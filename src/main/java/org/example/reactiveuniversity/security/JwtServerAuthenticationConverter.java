@@ -15,8 +15,8 @@ import java.util.List;
 @Component
 class JwtServerAuthenticationConverter implements ServerAuthenticationConverter {
 
-    private final JwtService jwtService;
     private static final String BEARER = "Bearer ";
+    private final JwtService jwtService;
 
     JwtServerAuthenticationConverter(JwtService jwtService) {
         this.jwtService = jwtService;
