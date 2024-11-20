@@ -1,7 +1,7 @@
-- office  login:password
+- registration  login:password
 - lukasz.bak@interiowy.pl:lukasz
--
-- **[Swagger UI - API Documentation](http://51.79.251.86:8090/webjars/swagger-ui/index.html)**
+
+- **[Swagger UI - API Documentation (Registration) ](http://51.79.251.86:8090/webjars/swagger-ui/index.html)**
 
 - **[Swagger UI - API Documentation](http://51.79.251.86:8081/webjars/swagger-ui/index.html)**
 
