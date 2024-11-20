@@ -8,4 +8,4 @@
 
 - **[Swagger UI - API Documentation](http://51.79.251.86:8084/webjars/swagger-ui/index.html)**
 
-- - **[Swagger UI - API Documentation](http://51.79.251.86:8085/webjars/swagger-ui/index.html)**
+ - **[Swagger UI - API Documentation](http://51.79.251.86:8085/webjars/swagger-ui/index.html)**
