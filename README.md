@@ -6,7 +6,7 @@
 -  <host>:<port>/user/registration  ->register  new person (role office,teacher,student)  ->? only user with role office allowed access
 
  - login endpoint
- -curl -X POST http://51.79.251.86:8090/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
+ - curl -X POST http://51.79.251.86:8090/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
    
 - available roles
 - curl -X GET http://51.79.251.86:8090/user/role -H "Authorization: Bearer use login enpoint"
