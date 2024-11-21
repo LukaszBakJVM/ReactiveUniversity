@@ -3,7 +3,7 @@
 
 - **[Swagger UI - API Documentation (Registration) ](http://51.79.251.86:8090/webjars/swagger-ui/index.html)**
 
-- host:port/user/registration  ->register  new person (role office,teacher,student)  ->? only user with role office allowed access
+- host:port/user/registration  ->register  new person (role office,teacher,student)  -> only user with role office allowed access
 
  - login endpoint
  - curl -X POST http://51.79.251.86:8090/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
