@@ -1,3 +1,14 @@
+School management program. A teacher can have many students and a student can have many teachers.
+The teacher has the following fields: name, surname, email and subjects he teaches.
+The student has the following fields: name, surname, email and field of study.
+
+The login used was Bearer token. 
+Based on the token, the teacher checks which students.
+
+Based on the token, the student checks which teachers, grades and subjects.
+
+
+
 When registering firstName ,lastName and email 
 is sent to the appropriate microservice depending on the role.
 
