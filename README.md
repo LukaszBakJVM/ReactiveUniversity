@@ -9,10 +9,10 @@
  -curl -X POST http://51.79.251.86:8090/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
    
 - available roles
-- curl -X GET http://51.79.251.86:8090/user/role -H "Authorization: Bearer <use login enpoint>"
+- curl -X GET http://51.79.251.86:8090/user/role -H "Authorization: Bearer use login enpoint"
 
 
-- curl -X POST http://51.79.251.86:8090/user/registration -H "Content-Type: application/json" -H "Authorization: Beare r<use login enpoint> " -d "{
+- curl -X POST http://51.79.251.86:8090/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer use login enpoint " -d "{
     \"firstName\":\"John\",
     \"lastName\": \"Doe\",
     \"email\": \"johndoe@example.com\",
