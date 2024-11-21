@@ -26,7 +26,7 @@ is sent to the appropriate microservice depending on the role.
   error
    - DuplicateEmailException ->  when you try to re-register email
    - CustomValidationException.java -> when  validation (email, firstName or lastName is smaller than 3 letter
-   - ConnectionException.java  -> when   connection between is down.
+   - ConnectionException.java  -> when   connection between microservices  is down.
      
 - 
 
