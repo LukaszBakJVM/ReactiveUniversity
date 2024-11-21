@@ -3,7 +3,7 @@
 
 - **[Swagger UI - API Documentation (Registration) ](http://51.79.251.86:8090/webjars/swagger-ui/index.html)**
 
-- host:port/user/registration  ->register  new person (role office,teacher,student)  -> only user with role office allowed access
+
 
  - login endpoint
  - curl -X POST http://51.79.251.86:8090/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
@@ -11,7 +11,7 @@
 - available roles -> only user with role office allowed access
 - curl -X GET http://51.79.251.86:8090/user/role -H "Authorization: Bearer use login enpoint"
 
-
+- registration controler ->  register  new person (role office,teacher,student)  -> only user with role office allowed access
 - curl -X POST http://51.79.251.86:8090/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer use login enpoint " -d "{
     \"firstName\":\"John\",
     \"lastName\": \"Doe\",
