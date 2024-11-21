@@ -1,3 +1,6 @@
+When registering firstName ,lastName and email 
+is sent to the appropriate microservice depending on the role.
+
 - registration  login:password
 - lukasz.bak@interiowy.pl:lukasz  ->  role office
 
@@ -19,6 +22,12 @@
     \"password\": \"yourpassword\",
     \"role\": \"Teacher\"
   }"
+
+  error
+   - DuplicateEmailException ->  when you try to re-register email
+   - CustomValidationException.java -> when  validation (email, firstName or lastName is smaller than 3 letter
+   - ConnectionException.java  -> when   connection between is down.
+     
 - 
 
 
