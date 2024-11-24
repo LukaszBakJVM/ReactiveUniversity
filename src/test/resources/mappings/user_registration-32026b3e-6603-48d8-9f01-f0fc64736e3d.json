@@ -1,0 +1,33 @@
+{
+  "id" : "32026b3e-6603-48d8-9f01-f0fc64736e3d",
+  "name" : "user_registration",
+  "request" : {
+    "url" : "/user/registration",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\r\n    \"firstName\":\"test1\",\r\n    \"lastName\":\"test2\",\r\n    \"email\":\"email@test\",\r\n    \"password\":\"password\",\r\n    \"role\":\"Teacher\"\r\n}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 500,
+    "body" : "{\"status\":\"INTERNAL_SERVER_ERROR\",\"message\":\"Connection Error\"}",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "32026b3e-6603-48d8-9f01-f0fc64736e3d",
+  "persistent" : true,
+  "scenarioName" : "scenario-1-user-registration",
+  "requiredScenarioState" : "Started",
+  "newScenarioState" : "scenario-1-user-registration-2",
+  "insertionIndex" : 5
+}

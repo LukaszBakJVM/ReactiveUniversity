@@ -1,0 +1,27 @@
+{
+  "id" : "e4f52868-c9d9-4c24-b661-0965ad4305d1",
+  "name" : "user_role",
+  "request" : {
+    "url" : "/user/role",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[\"Office\",\"Teacher\",\"Student\"]",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "e4f52868-c9d9-4c24-b661-0965ad4305d1",
+  "persistent" : true,
+  "scenarioName" : "scenario-2-user-role",
+  "requiredScenarioState" : "scenario-2-user-role-4",
+  "insertionIndex" : 7
+}

@@ -1,0 +1,33 @@
+{
+  "id" : "468dd9a8-013c-472b-ae04-ed7f5e7b79c1",
+  "name" : "user_registration",
+  "request" : {
+    "url" : "/user/registration",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\r\n    \"firstName\":\"test1\",\r\n    \"lastName\":\"test2\",\r\n    \"email\":\"email@test\",\r\n    \"password\":\"password\",\r\n    \"role\":\"Teacher\"\r\n}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 403,
+    "body" : "Access Denied",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "text/plain"
+    }
+  },
+  "uuid" : "468dd9a8-013c-472b-ae04-ed7f5e7b79c1",
+  "persistent" : true,
+  "scenarioName" : "scenario-1-user-registration",
+  "requiredScenarioState" : "scenario-1-user-registration-4",
+  "newScenarioState" : "scenario-1-user-registration-5",
+  "insertionIndex" : 2
+}

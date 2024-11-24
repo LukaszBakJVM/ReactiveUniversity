@@ -1,0 +1,30 @@
+{
+  "id" : "d77e0ddd-710e-414d-9abe-28da92ee4904",
+  "name" : "user_registration",
+  "request" : {
+    "url" : "/user/registration",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\r\n    \"firstName\":\"test1\",\r\n    \"lastName\":\"test2\",\r\n    \"email\":\"email\",\r\n    \"password\":\"password\",\r\n    \"role\":\"Teacher\"\r\n}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 400,
+    "body" : "{\"status\":\"BAD_REQUEST\",\"message\":\"Enter valid email\"}",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "d77e0ddd-710e-414d-9abe-28da92ee4904",
+  "persistent" : true,
+  "insertionIndex" : 6
+}

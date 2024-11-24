@@ -1,0 +1,27 @@
+{
+  "id" : "88d48367-815e-46e8-833d-3462a251e038",
+  "name" : "user_role",
+  "request" : {
+    "url" : "/user/role",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 401,
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "WWW-Authenticate" : "Basic realm=\"Realm\"",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0"
+    }
+  },
+  "uuid" : "88d48367-815e-46e8-833d-3462a251e038",
+  "persistent" : true,
+  "scenarioName" : "scenario-2-user-role",
+  "requiredScenarioState" : "Started",
+  "newScenarioState" : "scenario-2-user-role-2",
+  "insertionIndex" : 10
+}
