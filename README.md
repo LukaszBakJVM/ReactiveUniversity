@@ -20,7 +20,9 @@ is sent to the appropriate microservice depending on the role.
 
 
  - login endpoint
+  ```bash
  - curl -X POST http://51.79.251.86:8090/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
+````
    
 - available roles -> only user with role office allowed access
 - curl -X GET http://51.79.251.86:8090/user/role -H "Authorization: Bearer use login enpoint"
