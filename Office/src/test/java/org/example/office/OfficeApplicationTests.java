@@ -35,7 +35,6 @@ class OfficeApplicationTests {
     @Autowired
     OfficeRepository officeRepository;
 
-    // Response response = new Response();
 
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
