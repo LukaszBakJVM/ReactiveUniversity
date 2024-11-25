@@ -70,12 +70,23 @@ class ReactiveUniversityApplicationTests {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
         RegistrationDto registration = registration("firstNameOK", "lastNameOk", "email@emialOk.pl", "password", "Office");
 
-        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().
-
-                isCreated().expectBody().json(response.registrationDto);
+        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isCreated().expectBody().json(response.registrationDto);
 
         Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
         StepVerifier.create(byEmail).expectNextCount(1).verifyComplete();
+
+    }
+
+    @Test
+    void createPersonOffice_shouldThrowCustomValidationException_whenUserIsAuthorizedOffice() {
+
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+        RegistrationDto registration = registration("firstNameOK", "lastNameOk", "emailemial.pl", "password", "Office");
+
+        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isBadRequest().expectBody().json(response.validation);
+
+        Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
+        StepVerifier.create(byEmail).expectNextCount(0).verifyComplete();
 
     }
 
@@ -90,9 +101,7 @@ class ReactiveUniversityApplicationTests {
         save().subscribe();
 
 
-        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().
-
-                isEqualTo(HttpStatus.CONFLICT).expectBody().json(response.duplicateEmail);
+        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isEqualTo(HttpStatus.CONFLICT).expectBody().json(response.duplicateEmail);
 
         Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
         StepVerifier.create(byEmail).expectNextCount(1).verifyComplete();
@@ -107,9 +116,7 @@ class ReactiveUniversityApplicationTests {
         RegistrationDto registration = registration("firstNameOK", "lastNameOk", "email@emialOk.pl", "password", "Office");
 
 
-        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().
-
-                isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR).expectBody().json(response.connectionError);
+        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR).expectBody().json(response.connectionError);
 
         Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
         StepVerifier.create(byEmail).expectNextCount(0).verifyComplete();
