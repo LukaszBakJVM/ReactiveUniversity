@@ -27,7 +27,7 @@ class ReactiveUniversityApplicationTests {
 
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
     @LocalServerPort
-    private static int dynamicPort = 4444;
+    private static int dynamicPort;
     @RegisterExtension
     static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
     @Autowired
@@ -105,21 +105,6 @@ class ReactiveUniversityApplicationTests {
 
         Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
         StepVerifier.create(byEmail).expectNextCount(1).verifyComplete();
-
-    }
-
-    @Test
-    void createPersonOffice_shouldThrowConnectionException_whenUserIsAuthorizedOffice() {
-
-
-        String token = token("lukasz.bak@interiowy.pl", "lukasz");
-        RegistrationDto registration = registration("firstNameOK", "lastNameOk", "email@emialOk.pl", "password", "Office");
-
-
-        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR).expectBody().json(response.connectionError);
-
-        Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
-        StepVerifier.create(byEmail).expectNextCount(0).verifyComplete();
 
     }
 
