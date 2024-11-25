@@ -27,12 +27,12 @@ is sent to the appropriate microservice depending on the role.
     available roles -> only user with role office allowed access
     
   ```bash
- curl -X GET mojeip.dynu.net:8090/user/role -H "Authorization: Bearer use login enpoint"
+ curl -X GET mojeip.dynu.net:8090/user/role -H "Authorization: Bearer <token>"
  ````
 
 - registration controler ->  register  new person (role office,teacher,student)  -> only user with role office allowed access
 ```bash
- curl -X POST mojeip.dynu.net:8090/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer use login enpoint " -d "{
+ curl -X POST mojeip.dynu.net:8090/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
     \"firstName\":\"John\",
     \"lastName\": \"Doe\",
     \"email\": \"johndoe@example.com\",
