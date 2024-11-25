@@ -1,0 +1,30 @@
+{
+  "id" : "488923e2-0065-49f4-9539-1b36ce4768c5",
+  "name" : "teacher",
+  "request" : {
+    "url" : "/teacher",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\r\n    \"firstName\":\"testteacher\",\r\n    \"lastName\":\"test2\",\r\n    \"email\":\"emailteacher@test\"\r\n    \r\n}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "body" : "{\"firstName\":\"testteacher\",\"lastName\":\"test2\",\"email\":\"emailteacher@test\"}",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "488923e2-0065-49f4-9539-1b36ce4768c5",
+  "persistent" : true
+
+}
