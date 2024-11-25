@@ -1,0 +1,30 @@
+{
+  "id" : "fce95aa3-080f-4532-a9e0-94e448a3fa55",
+  "name" : "office",
+  "request" : {
+    "url" : "/office",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\r\n    \"firstName\":\"testoffice\",\r\n    \"lastName\":\"test2\",\r\n    \"email\":\"emailoffice@test\"\r\n}\r\n   ",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "body" : "{\"firstName\":\"testoffice\",\"lastName\":\"test2\",\"email\":\"emailoffice@test\"}",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "fce95aa3-080f-4532-a9e0-94e448a3fa55",
+  "persistent" : true,
+  "insertionIndex" : 8
+}

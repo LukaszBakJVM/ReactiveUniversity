@@ -27,7 +27,7 @@ class ReactiveUniversityApplicationTests {
 
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
     @LocalServerPort
-    private static int dynamicPort;
+    private static int dynamicPort=4444;
     @RegisterExtension
     static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
     @Autowired
@@ -66,9 +66,10 @@ class ReactiveUniversityApplicationTests {
     // TODO  INTERNAL_SERVER_ERROR
     @Test
     void createPersonOffice_shouldReturnCreated_whenUserIsAuthorizedOffice() {
+        String a = String.format("http://localhost:%s", wireMockServer.getPort());
 
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
-        RegistrationDto registration = registration("firstNameOK", "lastNameOk", "email@emialOk.pl", "password", "Office");
+        RegistrationDto registration = registration("testoffice", "test2", "emailoffice@test", "password", "Office");
 
         webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isCreated().expectBody().json(response.registrationDto);
 
@@ -158,10 +159,11 @@ class ReactiveUniversityApplicationTests {
 
     private String token(String email, String password) {
 
-        String authBase = String.format("http://localhost:%s/login", wireMockServer.getPort());
+        String authBase = String.format("http://localhost:%s", wireMockServer.getPort());
+
 
         Login login = new Login(email, password);
-        return webTestClient.post().uri(authBase).bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
+        return webTestClient.post().uri(authBase+"/login").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
 
 
     }

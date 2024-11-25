@@ -1,7 +1,7 @@
 package org.example.reactiveuniversity;
 
 public class Response {
-    String registrationDto = "{\"firstName\":\"firstName\",\"lastName\":\"lastName\",\"email\":\"email@emial.pl\",\"role\":\"Teacher\"}";
+    String registrationDto = "{\"firstName\":\"testoffice\",\"lastName\":\"test2\",\"email\":\"emailoffice@test\",\"role\":\"Office\"}";
 
 
     Registration save() {
