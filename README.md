@@ -23,7 +23,9 @@ is sent to the appropriate microservice depending on the role.
   ```bash
   curl -X POST mojeip.dynu.net:8090/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
 ````
+
     available roles -> only user with role office allowed access
+    
   ```bash
  curl -X GET mojeip.dynu.net:8090/user/role -H "Authorization: Bearer use login enpoint"
  ````
