@@ -27,7 +27,7 @@ class ReactiveUniversityApplicationTests {
 
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema.sql");
     @LocalServerPort
-    private static int dynamicPort=4444;
+    private static int dynamicPort = 4444;
     @RegisterExtension
     static WireMockExtension wireMockServer = WireMockExtension.newInstance().options(wireMockConfig().port(dynamicPort)).build();
     @Autowired
@@ -39,7 +39,7 @@ class ReactiveUniversityApplicationTests {
 
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
-        registry.add("baseUrl", wireMockServer::baseUrl);
+        registry.add("office", wireMockServer::baseUrl);
         registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort() + "/" + postgreSQLContainer.getDatabaseName());
         registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
         registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
@@ -63,10 +63,9 @@ class ReactiveUniversityApplicationTests {
 
     }
 
-    // TODO  INTERNAL_SERVER_ERROR
     @Test
     void createPersonOffice_shouldReturnCreated_whenUserIsAuthorizedOffice() {
-        String a = String.format("http://localhost:%s", wireMockServer.getPort());
+
 
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
         RegistrationDto registration = registration("testoffice", "test2", "emailoffice@test", "password", "Office");
@@ -163,7 +162,7 @@ class ReactiveUniversityApplicationTests {
 
 
         Login login = new Login(email, password);
-        return webTestClient.post().uri(authBase+"/login").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
+        return webTestClient.post().uri(authBase + "/login").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
 
 
     }
