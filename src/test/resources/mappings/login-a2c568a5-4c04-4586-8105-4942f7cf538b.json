@@ -1,18 +1,18 @@
 {
-  "id" : "6b451358-a296-4fbb-adf7-625de9b5b7ef",
+  "id" : "a2c568a5-4c04-4586-8105-4942f7cf538b",
   "name" : "login",
   "request" : {
     "url" : "/login",
     "method" : "POST",
     "bodyPatterns" : [ {
-      "equalToJson" : "{\r\n    \"email\":\"student2@interia.pl\",\r\n    \"password\": \"lukasz\"\r\n}",
+      "equalToJson" : "{\r\n    \"email\":\"lukasz.bak@interiowy.pl\",\r\n    \"password\":\"lukasz\"\r\n}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]
   },
   "response" : {
     "status" : 200,
-    "body" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHVkZW50MkBpbnRlcmlhLnBsIiwicm9sZXMiOlsiU3R1ZGVudCJdLCJpYXQiOjE3MzI0NzkzMzMsImV4cCI6MTczNTA3MTMzM30.EWyEdRwzPbhQe_t0F1Mu3OGoywfOfMop3FYpsnheyBE",
+    "body" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsdWthc3ouYmFrQGludGVyaW93eS5wbCIsInJvbGVzIjpbIk9mZmljZSJdLCJpYXQiOjE3MzE4Njc4MzgsImV4cCI6MTczNDQ1OTgzOH0.VhFqaSBZ4XtepaH6L1Qg7sGK4lA7s7hY1CBxbExXStg",
     "headers" : {
       "Referrer-Policy" : "no-referrer",
       "X-Frame-Options" : "DENY",
@@ -24,7 +24,7 @@
       "Content-Type" : "text/plain;charset=UTF-8"
     }
   },
-  "uuid" : "6b451358-a296-4fbb-adf7-625de9b5b7ef",
-  "persistent" : true,
-  "insertionIndex" : 16
+  "uuid" : "a2c568a5-4c04-4586-8105-4942f7cf538b",
+  "persistent" : true
+
 }
