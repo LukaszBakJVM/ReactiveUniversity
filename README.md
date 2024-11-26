@@ -47,9 +47,15 @@ is sent to the appropriate microservice depending on the role.
    - ConnectionException.java  -> when   connection between microservices  is down.
      
 - 
-#################################################################################################################################
+############################################################################################################
 
-- **[Swagger UI - API Documentation](http://51.79.251.86:8081/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
+
+- /teacher/update
+- Assign a subject to a teacher -> only person with offoce role
+```bash
+curl -X PUT "https://example.com/api/endpoint"  -H "Authorization: Bearer <token>"  -H "Content-Type: application/json"  -d "{\"email\": \"teacher email\", \"subjects\": [\"string\", \"string1\"]}"
+````      
 
 
 
