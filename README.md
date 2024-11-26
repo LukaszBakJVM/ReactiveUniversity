@@ -83,6 +83,7 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
     ]
 }
 ````
+-/teacher/private/all
 
 ```
 [
@@ -105,7 +106,38 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
         ]
     },....]
 ```
- 
+-localhost:8081/teacher/my-students
+
+```
+[
+    {
+        "student": {
+            "firstName": "Student8",
+            "lastName": "Bak",
+            "email": "student8@interia.pl",
+            "course": "Matematyczno-Geograficzny"
+        },
+        "grades": []
+    },
+ {
+        "student": {
+            "firstName": "Student11",
+            "lastName": "Bak",
+            "email": "student11@interia.pl",
+            "course": "Medycyna"
+        },
+        "grades": [
+            {
+                "subject": "Anatomia ",
+                "grades": [
+                    "  5 odpowiedz  2024-11-12",
+                    "  5 sprawdzian  2024-11-12"
+                ]
+            }
+        ]
+    },.....
+```
+
 
 
 
