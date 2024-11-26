@@ -78,6 +78,7 @@ class ReactiveUniversityApplicationTests {
         StepVerifier.create(byEmail).expectNextCount(1).verifyComplete();
 
     }
+
     @Test
     void createPersonStudent_shouldReturnCreated_whenUserIsAuthorizedOffice() {
 
@@ -91,7 +92,6 @@ class ReactiveUniversityApplicationTests {
         StepVerifier.create(byEmail).expectNextCount(1).verifyComplete();
 
     }
-
 
 
     @Test
@@ -167,6 +167,26 @@ class ReactiveUniversityApplicationTests {
         StepVerifier.create(byEmail).expectNextCount(0).verifyComplete();
 
     }
+
+    @Test
+    void showRoles_shouldReturnRoles_whenUserIsAuthorizedOffice() {
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+        webTestClient.get().uri("/user/role").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.role);
+    }
+
+    @Test
+    void showRoles_shouldReturnForbidden_whenUserIsAuthorizedTeacher() {
+        String token = token("teacher1@interia.pl", "lukasz");
+        webTestClient.get().uri("/user/role").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isForbidden();
+
+    }
+
+    @Test
+    void showRoles_shouldReturnForbidden_whenUserIsAuthorizedStudent() {
+        String token = token("student1@interia.pl", "lukasz");
+        webTestClient.get().uri("/user/role").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isForbidden();
+    }
+
 
     private Mono<Registration> save() {
         return registrationRepository.save(response.save());

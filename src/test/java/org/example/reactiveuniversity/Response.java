@@ -18,10 +18,12 @@ public class Response {
         return registration;
     }
 
-    String connectionError = "{\"status\":\"INTERNAL_SERVER_ERROR\",\"message\":\"Connection Error\"}";
-
     String duplicateEmail = "{\"status\":\"CONFLICT\",\"message\":\"Email email@emialOk.pl already exists\"}";
+
     String validation = "{\"status\":\"BAD_REQUEST\",\"message\":\"Enter valid email\"}";
+
+    String role = "[\"Office\", \"Teacher\", \"Student\"]";
+
 
 
 }
