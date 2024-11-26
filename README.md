@@ -52,10 +52,29 @@ is sent to the appropriate microservice depending on the role.
 - **[Swagger UI - API Documentation](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
 
 - /teacher/update
-- Assign a subject to a teacher  -> only person with offoce role
+- Assign a subject to a teacher  -> only person with office role
 ```bash
-curl -X PUT "https://example.com/api/endpoint"  -H "Authorization: Bearer <token>"  -H "Content-Type: application/json"  -d "{\"email\": \"teacher email\", \"subjects\": [\"subject\", \"subject\"]}"
-````      
+curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <token>"  -H "Content-Type: application/json"  -d "{\"email\": \"teacher email\", \"subjects\": [\"subject\", \"subject1\"]}"
+````
+
+ -teacher post -> registration controler
+
+ -/teacher/private/{email} -> only person with office,teacher role
+
+ response 
+
+ ```json
+{
+    "firstName": "Teacher1",
+    "lastName": "Bak",
+    "email": "teacher1@interia.pl",
+    "subjectName": [
+        "Matematyka dla informatyków",
+        "Podstatwy Linuxa"
+    ]
+}
+````
+ 
 
 
 
