@@ -40,6 +40,8 @@ class ReactiveUniversityApplicationTests {
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
         registry.add("office", wireMockServer::baseUrl);
+        registry.add("student", wireMockServer::baseUrl);
+        registry.add("teacher", wireMockServer::baseUrl);
         registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort() + "/" + postgreSQLContainer.getDatabaseName());
         registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
         registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
@@ -70,7 +72,36 @@ class ReactiveUniversityApplicationTests {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
         RegistrationDto registration = registration("testoffice", "test2", "emailoffice@test", "password", "Office");
 
-        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isCreated().expectBody().json(response.registrationDto);
+        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isCreated().expectBody().json(response.registrationOffice);
+
+        Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
+        StepVerifier.create(byEmail).expectNextCount(1).verifyComplete();
+
+    }
+    @Test
+    void createPersonStudent_shouldReturnCreated_whenUserIsAuthorizedOffice() {
+
+
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+        RegistrationDto registration = registration("testofstudent", "test2", "emailstudent@test", "password", "Student");
+
+        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isCreated().expectBody().json(response.registrationStudent);
+
+        Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
+        StepVerifier.create(byEmail).expectNextCount(1).verifyComplete();
+
+    }
+
+
+
+    @Test
+    void createPersonTeacher_shouldReturnCreated_whenUserIsAuthorizedOffice() {
+
+
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+        RegistrationDto registration = registration("testteacher", "test2", "emailteacher@test", "password", "Teacher");
+
+        webTestClient.post().uri("/user/registration").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(registration).exchange().expectStatus().isCreated().expectBody().json(response.registrationTeacher);
 
         Mono<Registration> byEmail = registrationRepository.findByEmail(registration.email());
         StepVerifier.create(byEmail).expectNextCount(1).verifyComplete();
