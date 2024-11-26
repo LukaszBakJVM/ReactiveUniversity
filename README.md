@@ -83,6 +83,28 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
     ]
 }
 ````
+
+```
+[
+    {
+        "firstName": "Teacher",
+        "lastName": "Bak",
+        "email": "Teacher@interia.pl",
+        "subjectName": []
+    },
+    {
+        "firstName": "Teacher2",
+        "lastName": "Bak",
+        "email": "teacher2@interia.pl",
+        "subjectName": [
+            "Java",
+            "C++",
+            "Anatomia",
+            "Chemia",
+            "Biologia"
+        ]
+    },....]
+```
  
 
 
