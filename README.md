@@ -61,6 +61,10 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 
  -/teacher/private/{email} -> only person with office,teacher role
 
+ ```bash
+ curl -X GET mojeip.dynu.net:8081/teacher/private/teacher1@interia.pl -H "Authorization: Bearer <token>"
+```
+
  response 
 
  ```json
