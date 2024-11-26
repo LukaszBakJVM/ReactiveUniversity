@@ -1,0 +1,25 @@
+{
+  "id" : "d3e43674-e565-40c8-b9f2-879d4335688c",
+  "name" : "student_studentinfo_matematyczno-geograficzny",
+  "request" : {
+    "url" : "/student/studentInfo/Matematyczno-Geograficzny",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"firstName\":\"Student5\",\"lastName\":\"Bak\",\"email\":\"student5@interia.pl\",\"course\":\"Matematyczno-Geograficzny\"},{\"firstName\":\"Student6\",\"lastName\":\"Bak\",\"email\":\"student6@interia.pl\",\"course\":\"Matematyczno-Geograficzny\"},{\"firstName\":\"Student7\",\"lastName\":\"Bak\",\"email\":\"student7@interia.pl\",\"course\":\"Matematyczno-Geograficzny\"},{\"firstName\":\"Student8\",\"lastName\":\"Bak\",\"email\":\"student8@interia.pl\",\"course\":\"Matematyczno-Geograficzny\"},{\"firstName\":\"Student9\",\"lastName\":\"Bak\",\"email\":\"student9@interia.pl\",\"course\":\"Matematyczno-Geograficzny\"},{\"firstName\":\"Student10\",\"lastName\":\"Bak\",\"email\":\"student10@interia.pl\",\"course\":\"Matematyczno-Geograficzny\"}]",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "d3e43674-e565-40c8-b9f2-879d4335688c",
+  "persistent" : true
+
+}

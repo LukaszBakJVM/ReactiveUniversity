@@ -1,0 +1,25 @@
+{
+  "id" : "d26a60ca-51cf-49c6-9a3b-8eedf4d38403",
+  "name" : "course_jezyk-angielski-medyczny_name",
+  "request" : {
+    "url" : "/course/J%C4%99zyk%20Angielski%20Medyczny/name",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"courseName\":\"Medycyna\",\"subjects\":[\"Anatomia\",\"Chemia\",\"Biologia\",\"Język Angielski Medyczny\"]}]",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "d26a60ca-51cf-49c6-9a3b-8eedf4d38403",
+  "persistent" : true
+
+}

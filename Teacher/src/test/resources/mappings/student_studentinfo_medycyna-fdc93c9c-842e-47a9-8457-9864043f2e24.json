@@ -1,0 +1,25 @@
+{
+  "id" : "fdc93c9c-842e-47a9-8457-9864043f2e24",
+  "name" : "student_studentinfo_medycyna",
+  "request" : {
+    "url" : "/student/studentInfo/Medycyna",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"firstName\":\"Student11\",\"lastName\":\"Bak\",\"email\":\"student11@interia.pl\",\"course\":\"Medycyna\"},{\"firstName\":\"Student12\",\"lastName\":\"Bak\",\"email\":\"student12@interia.pl\",\"course\":\"Medycyna\"},{\"firstName\":\"Student13\",\"lastName\":\"Bak\",\"email\":\"student13@interia.pl\",\"course\":\"Medycyna\"},{\"firstName\":\"Student14\",\"lastName\":\"Bak\",\"email\":\"student14@interia.pl\",\"course\":\"Medycyna\"},{\"firstName\":\"Student15\",\"lastName\":\"Bak\",\"email\":\"student15@interia.pl\",\"course\":\"Medycyna\"},{\"firstName\":\"Student16\",\"lastName\":\"Bak\",\"email\":\"student16@interia.pl\",\"course\":\"Medycyna\"}]",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "fdc93c9c-842e-47a9-8457-9864043f2e24",
+  "persistent" : true
+
+}

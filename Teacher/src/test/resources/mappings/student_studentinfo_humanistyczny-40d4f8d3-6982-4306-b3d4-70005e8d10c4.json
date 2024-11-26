@@ -1,0 +1,25 @@
+{
+  "id" : "40d4f8d3-6982-4306-b3d4-70005e8d10c4",
+  "name" : "student_studentinfo_humanistyczny",
+  "request" : {
+    "url" : "/student/studentInfo/Humanistyczny",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"firstName\":\"Student17\",\"lastName\":\"Bak\",\"email\":\"student17@interia.pl\",\"course\":\"Humanistyczny\"},{\"firstName\":\"Student18\",\"lastName\":\"Bak\",\"email\":\"student18@interia.pl\",\"course\":\"Humanistyczny\"},{\"firstName\":\"Student19\",\"lastName\":\"Bak\",\"email\":\"student19@interia.pl\",\"course\":\"Humanistyczny\"},{\"firstName\":\"Student20\",\"lastName\":\"Bak\",\"email\":\"student20@interia.pl\",\"course\":\"Humanistyczny\"},{\"firstName\":\"Student\",\"lastName\":\"Bak\",\"email\":\"student@interia.pl\",\"course\":\"Humanistyczny\"}]",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "40d4f8d3-6982-4306-b3d4-70005e8d10c4",
+  "persistent" : true
+
+}

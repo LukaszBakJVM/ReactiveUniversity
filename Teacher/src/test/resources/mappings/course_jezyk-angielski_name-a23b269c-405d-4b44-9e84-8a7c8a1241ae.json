@@ -1,0 +1,25 @@
+{
+  "id" : "a23b269c-405d-4b44-9e84-8a7c8a1241ae",
+  "name" : "course_jezyk-angielski_name",
+  "request" : {
+    "url" : "/course/J%C4%99zyk%20Angielski/name",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"courseName\":\"Matematyczno-Geograficzny\",\"subjects\":[\"Geografia\",\"Język Angielski\",\"Matematyka Roższerzona\"]},{\"courseName\":\"Humanistyczny\",\"subjects\":[\"Język Polski\",\"Język Angielski\",\"Historia\",\"WOS\"]}]",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "a23b269c-405d-4b44-9e84-8a7c8a1241ae",
+  "persistent" : true
+
+}
