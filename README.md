@@ -51,6 +51,11 @@ is sent to the appropriate microservice depending on the role.
 
 - **[Swagger UI - API Documentation](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
 
+               email : password
+  teacher1@interia.pl:lukasz
+  ......             :lukasz
+  teacher9@interia.pl:lukasz
+
 - /teacher/update
 - Assign a subject to a teacher  -> only person with office role
 ```bash
