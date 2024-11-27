@@ -1,0 +1,25 @@
+{
+  "id" : "7375e1ef-9bbd-4656-b5b3-df158f9a459c",
+  "name" : "grades_student12interia.pl",
+  "request" : {
+    "url" : "/grades/student12%40interia.pl",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"subject\":\"Anatomia \",\"grades\":[\"  5 sprawdzian  2024-11-12\",\"  5 sprawdzian  2024-11-12\"],\"teacher\":\"Teacher2 Bak\"}]",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "7375e1ef-9bbd-4656-b5b3-df158f9a459c",
+  "persistent" : true,
+  "insertionIndex" : 63
+}

@@ -1,5 +1,7 @@
 package org.example.teacher;
 
+import java.util.Set;
+
 public class Response {
 
     String json = """
@@ -111,6 +113,14 @@ public class Response {
                     "grades": []
                 }
             ]""";
+    Teacher saveTeacher(){
+        Teacher teacher = new Teacher();
+        teacher.setFirstName("teacher4");
+        teacher.setLastName("Bak");
+        teacher.setEmail("teacher4@interia.pl");
+        teacher.setSubjectName(Set.of("Język Angielski Medyczny","Język Angielski"));
+        return teacher;
+    }
 /*[
     {
         "student": {

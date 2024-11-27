@@ -1,0 +1,25 @@
+{
+  "id" : "5c596fb3-b4e0-402e-93d7-b533f2685923",
+  "name" : "grades_student17interia.pl",
+  "request" : {
+    "url" : "/grades/student17%40interia.pl",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[]",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "5c596fb3-b4e0-402e-93d7-b533f2685923",
+  "persistent" : true,
+  "insertionIndex" : 58
+}

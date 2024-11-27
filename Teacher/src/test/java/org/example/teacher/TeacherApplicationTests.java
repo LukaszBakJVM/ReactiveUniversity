@@ -56,14 +56,15 @@ class TeacherApplicationTests {
     @BeforeEach
     void clearDatabase() {
         teacherRepository.deleteAll().subscribe();
-        //teacher4@interia.pl
+
 
     }
     @Test
     void findMyStudents_shouldReturnOk_whenUserIsAuthorized_teacherRole(){
-        String token = token("teacher1@interia.pl", "lukasz");
+        teacherRepository.save(response.saveTeacher()).subscribe();
+        String token = token("teacher4@interia.pl", "lukasz");
         webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token)
-                .accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk();
+                .accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.json);
     }
 
 

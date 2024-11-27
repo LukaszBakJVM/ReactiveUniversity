@@ -1,18 +1,18 @@
 {
-  "id" : "0e406cf3-d8ec-4105-a62d-81f6a5586a41",
+  "id" : "1e108474-9d10-4d7b-a868-feaf3fe7af0d",
   "name" : "login",
   "request" : {
     "url" : "/login",
     "method" : "POST",
     "bodyPatterns" : [ {
-      "equalToJson" : "{\r\n    \"email\":\"teacher1@interia.pl\",\r\n    \"password\": \"lukasz\"\r\n}",
+      "equalToJson" : "{\r\n    \"email\":\"teacher4@interia.pl\",\r\n    \"password\": \"lukasz\"\r\n}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]
   },
   "response" : {
     "status" : 200,
-    "body" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWFjaGVyMUBpbnRlcmlhLnBsIiwicm9sZXMiOlsiVGVhY2hlciJdLCJpYXQiOjE3MzI0NzkzOTUsImV4cCI6MTczNTA3MTM5NX0.dc0EDZrKB5SoetpQr2BOuuSn50fU1276qRL6bj1enuc",
+    "body" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWFjaGVyNEBpbnRlcmlhLnBsIiwicm9sZXMiOlsiVGVhY2hlciJdLCJpYXQiOjE3MzI3MjMwNDYsImV4cCI6MTczNTMxNTA0Nn0.oP5sgqVJGaTDwD8DqUQGXTjXlCHAN_EU12m6dRYoVQc",
     "headers" : {
       "Referrer-Policy" : "no-referrer",
       "X-Frame-Options" : "DENY",
@@ -24,6 +24,7 @@
       "Content-Type" : "text/plain;charset=UTF-8"
     }
   },
-  "uuid" : "0e406cf3-d8ec-4105-a62d-81f6a5586a41",
-  "persistent" : true
+  "uuid" : "1e108474-9d10-4d7b-a868-feaf3fe7af0d",
+  "persistent" : true,
+  "insertionIndex" : 6
 }
