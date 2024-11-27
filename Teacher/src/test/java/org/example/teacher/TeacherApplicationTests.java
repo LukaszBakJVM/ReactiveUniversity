@@ -4,10 +4,12 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -56,6 +58,12 @@ class TeacherApplicationTests {
         teacherRepository.deleteAll().subscribe();
         //teacher4@interia.pl
 
+    }
+    @Test
+    void findMyStudents_shouldReturnOk_whenUserIsAuthorized_teacherRole(){
+        String token = token("teacher1@interia.pl", "lukasz");
+        webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk();
     }
 
 
