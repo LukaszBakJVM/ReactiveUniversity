@@ -75,8 +75,30 @@ class TeacherApplicationTests {
 
         webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.findMyStudents);
 
+    }
+    @Test
+    void findMyStudents_shouldReturnForbidden_whenUserIsAuthorized_teacherOffice() {
+        String email = "lukasz.bak@interiowy.pl";
+
+        String token = token(email, "lukasz");
+
+        webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isForbidden();
+
 
     }
+    @Test
+    void findMyStudents_shouldReturnforbidden_whenUserIsAuthorized_teacherStudent() {
+        String email = "student1@interia.pl";
+
+
+
+        String token = token(email, "lukasz");
+
+        webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isForbidden();
+
+
+    }
+
     @Test
     void  writeSubjectsToTeacher_shouldReturnOk_whenUserIsAuthorized_OfficeRole(){
 
