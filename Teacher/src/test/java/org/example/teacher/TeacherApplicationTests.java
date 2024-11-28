@@ -14,6 +14,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.nio.file.Paths;
 
@@ -65,9 +67,31 @@ class TeacherApplicationTests {
 
     @Test
     void findMyStudents_shouldReturnOk_whenUserIsAuthorized_teacherRole() {
-        teacherRepository.save(response.saveTeacher()).subscribe();
-        String token = token("teacher4@interia.pl", "lukasz");
-        webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.json);
+        String email = "teacher4@interia.pl";
+
+        teacherRepository.save(response.saveTeacherForMyStudents()).subscribe();
+
+        String token = token(email, "lukasz");
+
+        webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.findMyStudents);
+
+
+    }
+    @Test
+    void  writeSubjectsToTeacher_shouldReturnOk_whenUserIsAuthorized_OfficeRole(){
+
+        String email = "teacher4@interia.pl";
+
+        teacherRepository.save(response.saveForUpdateSubjects()).subscribe();
+
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+
+        webTestClient.put().uri("/teacher/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addSubject()).exchange().expectStatus().isNoContent();
+
+        Mono<Teacher> byEmail = teacherRepository.findByEmail(email);
+
+        StepVerifier.create(byEmail).expectNextMatches( t->t.getSubjectName().contains("Matematyka") && t.getSubjectName().contains("Chemia")).verifyComplete();
+
     }
 
 

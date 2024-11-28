@@ -1,10 +1,13 @@
 package org.example.teacher;
 
+import org.example.teacher.dto.AddSchoolSubjects;
+
+import java.util.HashSet;
 import java.util.Set;
 
 public class Response {
 
-    String json = """
+    String findMyStudents = """
                         [
                 {
                     "student": {
@@ -177,12 +180,26 @@ public class Response {
                 }
             ]""";
 
-    Teacher saveTeacher() {
+
+    Teacher saveTeacherForMyStudents() {
         Teacher teacher = new Teacher();
         teacher.setFirstName("teacher4");
         teacher.setLastName("Bak");
         teacher.setEmail("teacher4@interia.pl");
         teacher.setSubjectName(Set.of("Język Angielski Medyczny", "Język Angielski"));
+        return teacher;
+    }
+
+    AddSchoolSubjects addSubject() {
+        return new AddSchoolSubjects("teacher4@interia.pl", Set.of("Matematyka", "Chemia"));
+    }
+
+    Teacher saveForUpdateSubjects() {
+        Teacher teacher = new Teacher();
+        teacher.setFirstName("teacher4");
+        teacher.setLastName("Bak");
+        teacher.setEmail("teacher4@interia.pl");
+        teacher.setSubjectName(new HashSet<>());
         return teacher;
     }
 
