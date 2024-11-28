@@ -67,14 +67,13 @@ class TeacherApplicationTests {
     void findMyStudents_shouldReturnOk_whenUserIsAuthorized_teacherRole() {
         teacherRepository.save(response.saveTeacher()).subscribe();
         String token = token("teacher4@interia.pl", "lukasz");
-        webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk();//.expectBody().json(response.json);
+        webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.json);
     }
 
 
     private String token(String email, String password) {
 
         String authBase = String.format("http://localhost:%s", wireMockServer.getPort());
-
 
         Login login = new Login(email, password);
         return webTestClient.post().uri(authBase + "/login").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
