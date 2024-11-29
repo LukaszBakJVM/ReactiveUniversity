@@ -85,6 +85,12 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 ````
 -/teacher/private/all
 
+ ```bash
+ curl -X GET mojeip.dynu.net:8081/teacher/private/all -H "Authorization: Bearer <token>"
+```
+
+
+
 ```
 [
     {
@@ -106,7 +112,8 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
         ]
     },....]
 ```
--localhost:8081/teacher/my-students
+
+ curl -X GET mojeip.dynu.net:8081/teacher/my-students -H "Authorization: Bearer <token>"
 
 ```
 [
