@@ -221,13 +221,11 @@ public class Response {
     String infoSubject = """
 
             {
-                "firstName":"Teacher2",
-                    "lastName":"Bak",
-                    "subjectName": [
-                "Java",
-                        "C++",
-                        "Anatomia",
-                        "Chemia",
+                 "firstName": "teacher1",
+                    "lastName": "Bak",
+            
+                       "subjectName": [
+                        "Fizyka",
                         "Biologia"
                         ]
             }

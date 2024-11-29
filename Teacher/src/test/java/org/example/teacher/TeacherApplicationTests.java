@@ -207,8 +207,16 @@ class TeacherApplicationTests {
                 .exchange().expectStatus().isOk().expectBody().json(response.allTeachers);
 
 
+    }
+    @Test
+    void getTeacherBySubject_shouldReturnOk(){
+        teacherRepository.save(response.saveTeacher()).subscribe();
+        teacherRepository.save(response.saveTeacher1()).subscribe();
 
+        String subject =  "Fizyka";
 
+        webTestClient.get().uri("/teacher/info/{subject}",subject).accept(MediaType.APPLICATION_JSON).exchange().expectStatus()
+                .isOk().expectBody().json(response.infoSubject);
     }
 
 
