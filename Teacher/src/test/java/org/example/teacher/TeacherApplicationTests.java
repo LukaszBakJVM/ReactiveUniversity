@@ -69,11 +69,22 @@ class TeacherApplicationTests {
     void findMyStudents_shouldReturnOk_whenUserIsAuthorized_teacherRole() {
         String email = "teacher4@interia.pl";
 
-        teacherRepository.save(response.saveTeacherForMyStudents()).subscribe();
+        teacherRepository.save(response.saveTeacher()).subscribe();
 
         String token = token(email, "lukasz");
 
         webTestClient.get().uri("teacher/my-students").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.findMyStudents);
+
+    }
+    @Test
+    void   getTeacherPrivateInformation_shouldReturnOk_whenUserIsAuthorized_TeacherRole(){
+        String email = "teacher4@interia.pl";
+        teacherRepository.save(response.saveTeacher1()).subscribe();
+        String teacherEmail = "teacher1@interia.pl";
+
+        String token = token(email, "lukasz");
+        webTestClient.get().uri("/teacher/private/{email}",teacherEmail).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk().expectBody().json(response.teacherPrivateInfo);
 
     }
     @Test
@@ -87,7 +98,7 @@ class TeacherApplicationTests {
 
     }
     @Test
-    void findMyStudents_shouldReturnforbidden_whenUserIsAuthorized_teacherStudent() {
+    void findMyStudents_shouldReturnForbidden_whenUserIsAuthorized_teacherStudent() {
         String email = "student1@interia.pl";
 
 
@@ -102,7 +113,6 @@ class TeacherApplicationTests {
     @Test
     void  writeSubjectsToTeacher_shouldReturnOk_whenUserIsAuthorized_OfficeRole(){
 
-        String email = "teacher4@interia.pl";
 
         teacherRepository.save(response.saveForUpdateSubjects()).subscribe();
 
@@ -110,11 +120,60 @@ class TeacherApplicationTests {
 
         webTestClient.put().uri("/teacher/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addSubject()).exchange().expectStatus().isNoContent();
 
-        Mono<Teacher> byEmail = teacherRepository.findByEmail(email);
+        Mono<Teacher> byEmail = teacherRepository.findByEmail("teacher4@interia.pl");
 
         StepVerifier.create(byEmail).expectNextMatches( t->t.getSubjectName().contains("Matematyka") && t.getSubjectName().contains("Chemia")).verifyComplete();
 
     }
+    @Test
+    void  writeSubjectsToTeacher_shouldReturnForbidden_whenUserIsAuthorized_StudentRole(){
+
+        String email = "student1@interia.pl";
+
+        teacherRepository.save(response.saveForUpdateSubjects()).subscribe();
+
+        String token = token(email, "lukasz");
+
+        webTestClient.put().uri("/teacher/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addSubject()).exchange().expectStatus().isForbidden();
+
+    }
+    @Test
+    void  writeSubjectsToTeacher_shouldReturnForbidden_whenUserIsAuthorized_OfficeTeacher(){
+
+        String email = "teacher4@interia.pl";
+
+        teacherRepository.save(response.saveForUpdateSubjects()).subscribe();
+
+        String token = token(email, "lukasz");
+
+        webTestClient.put().uri("/teacher/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addSubject()).exchange().expectStatus().isForbidden();
+
+    }
+    @Test
+    void   getTeacherPrivateInformation_shouldReturnOk_whenUserIsAuthorized_OfficeRole(){
+        String email = "lukasz.bak@interiowy.pl";
+        teacherRepository.save(response.saveTeacher1()).subscribe();
+        String teacherEmail = "teacher1@interia.pl";
+
+        String token = token(email, "lukasz");
+        webTestClient.get().uri("/teacher/private/{email}",teacherEmail).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isOk().expectBody().json(response.teacherPrivateInfo);
+
+    }
+    @Test
+    void   getTeacherPrivateInformation_shouldReturnForbidden_whenUserIsAuthorized_StudentRole(){
+        String email = "student1@interia.pl";
+        teacherRepository.save(response.saveTeacher()).subscribe();
+        String teacherEmail = "teacher1@interia.pl";
+
+        String token = token(email, "lukasz");
+        webTestClient.get().uri("/teacher/private/{email}",teacherEmail).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON)
+                .exchange().expectStatus().isForbidden();
+
+    }
+
+
+
 
 
     private String token(String email, String password) {

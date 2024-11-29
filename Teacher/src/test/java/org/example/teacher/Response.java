@@ -180,14 +180,68 @@ public class Response {
                 }
             ]""";
 
+    String teacherPrivateInfo = """
+                      {
+                "firstName": "teacher1",
+                "lastName": "Bak",
+                "email": "teacher1@interia.pl",
+                "subjectName": [
+                    "Biologia",
+                     "Fizyka"
+                ]
+            }""";
 
-    Teacher saveTeacherForMyStudents() {
+    String allTeachers = """
+            [
+            {
+                "firstName": "Teacher",
+                    "lastName": "Bak",
+                    "email": "Teacher@interia.pl",
+                    "subjectName": []
+            },
+            {
+                "firstName": "Teacher5",
+                    "lastName": "Bak",
+                    "email": "teacher5@interia.pl",
+                    "subjectName": [
+                         "Język Angielski Medyczny",
+                         "Język Angielski"
+                     ]
+                 }
+             ]""";
+
+
+    String infoSubject = """
+            {
+                "firstName": "Teacher2",
+                "lastName": "Bak",
+                "subjectName": [
+                    "Java",
+                    "C++",
+                    "Anatomia",
+                    "Chemia",
+                    "Biologia"
+                ]
+            }""";
+
+
+    Teacher saveTeacher() {
         Teacher teacher = new Teacher();
         teacher.setFirstName("teacher4");
         teacher.setLastName("Bak");
         teacher.setEmail("teacher4@interia.pl");
         teacher.setSubjectName(Set.of("Język Angielski Medyczny", "Język Angielski"));
         return teacher;
+    }
+
+    Teacher saveTeacher1() {
+        Teacher teacher = new Teacher();
+        teacher.setFirstName("teacher1");
+        teacher.setLastName("Bak");
+        teacher.setEmail("teacher1@interia.pl");
+        teacher.setSubjectName(Set.of("Fizyka", "Biologia"));
+        return teacher;
+
     }
 
     AddSchoolSubjects addSubject() {
