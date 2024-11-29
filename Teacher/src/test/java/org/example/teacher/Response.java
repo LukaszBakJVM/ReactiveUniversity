@@ -193,36 +193,45 @@ public class Response {
 
     String allTeachers = """
             [
-            {
-                "firstName": "Teacher",
+             {
+                    "firstName": "teacher4",
                     "lastName": "Bak",
-                    "email": "Teacher@interia.pl",
-                    "subjectName": []
-            },
-            {
-                "firstName": "Teacher5",
-                    "lastName": "Bak",
-                    "email": "teacher5@interia.pl",
+                    "email": "teacher4@interia.pl",
                     "subjectName": [
-                         "Język Angielski Medyczny",
-                         "Język Angielski"
-                     ]
-                 }
-             ]""";
+                        "Język Angielski Medyczny",
+                        "Język Angielski"
+                    ]
+                },
+                {
+                    "firstName": "teacher1",
+                    "lastName": "Bak",
+                    "email": "teacher1@interia.pl",
+                    "subjectName": [
+                        "Fizyka",
+                        "Biologia"
+            
+                    ]
+                }
+            
+            
+            
+            ]""";
 
 
     String infoSubject = """
+
             {
-                "firstName": "Teacher2",
-                "lastName": "Bak",
-                "subjectName": [
-                    "Java",
-                    "C++",
-                    "Anatomia",
-                    "Chemia",
-                    "Biologia"
-                ]
-            }""";
+                "firstName":"Teacher2",
+                    "lastName":"Bak",
+                    "subjectName": [
+                "Java",
+                        "C++",
+                        "Anatomia",
+                        "Chemia",
+                        "Biologia"
+                        ]
+            }
+            """;
 
 
     Teacher saveTeacher() {
