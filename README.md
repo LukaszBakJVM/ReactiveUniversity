@@ -120,6 +120,7 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 
 ```
  response
+
 ```json
 [
     {
