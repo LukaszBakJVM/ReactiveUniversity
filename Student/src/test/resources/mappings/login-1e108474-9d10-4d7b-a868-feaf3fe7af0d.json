@@ -1,0 +1,30 @@
+{
+  "id" : "1e108474-9d10-4d7b-a868-feaf3fe7af0d",
+  "name" : "login",
+  "request" : {
+    "url" : "/login",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\r\n    \"email\":\"teacher4@interia.pl\",\r\n    \"password\": \"lukasz\"\r\n}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWFjaGVyNEBpbnRlcmlhLnBsIiwicm9sZXMiOlsiVGVhY2hlciJdLCJpYXQiOjE3MzI3MjMwNDYsImV4cCI6MTczNTMxNTA0Nn0.oP5sgqVJGaTDwD8DqUQGXTjXlCHAN_EU12m6dRYoVQc",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "text/plain;charset=UTF-8"
+    }
+  },
+  "uuid" : "1e108474-9d10-4d7b-a868-feaf3fe7af0d",
+  "persistent" : true
+
+}

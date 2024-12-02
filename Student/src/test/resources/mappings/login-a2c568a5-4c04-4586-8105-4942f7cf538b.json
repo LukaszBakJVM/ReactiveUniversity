@@ -1,0 +1,30 @@
+{
+  "id" : "a2c568a5-4c04-4586-8105-4942f7cf538b",
+  "name" : "login",
+  "request" : {
+    "url" : "/login",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\r\n    \"email\":\"lukasz.bak@interiowy.pl\",\r\n    \"password\":\"lukasz\"\r\n}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsdWthc3ouYmFrQGludGVyaW93eS5wbCIsInJvbGVzIjpbIk9mZmljZSJdLCJpYXQiOjE3MzE4Njc4MzgsImV4cCI6MTczNDQ1OTgzOH0.VhFqaSBZ4XtepaH6L1Qg7sGK4lA7s7hY1CBxbExXStg",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "text/plain;charset=UTF-8"
+    }
+  },
+  "uuid" : "a2c568a5-4c04-4586-8105-4942f7cf538b",
+  "persistent" : true
+
+}

@@ -15,9 +15,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class StudentApplicationTests {
+public class GradesTest {
 
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema-student.sql");
+    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest").withInitScript("schema-grades.sql");
     @LocalServerPort
     private static int dynamicPort;
     @RegisterExtension
@@ -48,6 +48,5 @@ class StudentApplicationTests {
     static void stopPostgres() {
         postgreSQLContainer.stop();
     }
-
 
 }
