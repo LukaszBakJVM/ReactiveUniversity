@@ -26,7 +26,7 @@ is sent to the appropriate microservice depending on the role.
 
     available roles -> only user with role office allowed access
     
-  ```bash
+ ```bash
  curl -X GET mojeip.dynu.net:8090/user/role -H "Authorization: Bearer <token>"
  ````
 
@@ -85,6 +85,12 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 ````
 -/teacher/private/all
 
+ ```bash
+ curl -X GET mojeip.dynu.net:8081/teacher/private/all -H "Authorization: Bearer <token>"
+```
+
+ response 
+
 ```
 [
     {
@@ -106,9 +112,15 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
         ]
     },....]
 ```
--localhost:8081/teacher/my-students
 
+
+```bash
+ curl -X GET mojeip.dynu.net:8081/teacher/my-students -H "Authorization: Bearer <token>"
 ```
+
+ response
+
+```json
 [
     {
         "student": {
