@@ -54,7 +54,7 @@ class StudentApplicationTests {
     }
 
     @Test
-    void writeCourseToStudent__shouldReturnNoContent_whenUserIsAuthorized_StudentRole() {
+    void writeCourseToStudent__shouldReturnNoContent_whenUserIsAuthorized_OfficeRole() {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
         studentRepository.save(response.saveToCourse()).subscribe();
         webTestClient.put().uri("/student/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addCourse()).exchange().expectStatus().isNoContent();
@@ -62,6 +62,24 @@ class StudentApplicationTests {
         Mono<Student> byEmail = studentRepository.findByEmail("student@email.com");
 
         StepVerifier.create(byEmail).expectNextMatches(s -> s.getCourse().equals("Medycyna")).verifyComplete();
+
+    }
+    @Test
+    void writeCourseToStudent__shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
+        String token = token("student1@interia.pl", "lukasz");
+        studentRepository.save(response.saveToCourse()).subscribe();
+        webTestClient.put().uri("/student/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addCourse()).exchange().expectStatus().isForbidden();
+
+
+
+    }
+    @Test
+    void writeCourseToStudent__shouldReturnForbiddent_whenUserIsAuthorized_TeacherRole() {
+        String token = token("teacher4@interia.pl", "lukasz");
+        studentRepository.save(response.saveToCourse()).subscribe();
+        webTestClient.put().uri("/student/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addCourse()).exchange().expectStatus().isForbidden();
+
+
 
     }
 
