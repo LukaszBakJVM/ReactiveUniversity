@@ -1,7 +1,6 @@
 package org.example.office;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
-import org.example.office.dto.WriteNewPersonOffice;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -32,6 +31,7 @@ class OfficeApplicationTests {
     WebTestClient webTestClient;
     @Autowired
     OfficeRepository officeRepository;
+    Response response = new Response();
 
 
     @DynamicPropertySource
@@ -58,9 +58,9 @@ class OfficeApplicationTests {
     void createPersonOffice_shouldReturnCreated_whenUserIsAuthorized_OfficeRole() {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
-        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isCreated().expectBody().jsonPath("$.ok").isEqualTo("Created");
+        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(response.writeNewPersonOffice()).exchange().expectStatus().isCreated().expectBody().json(response.json);
 
-        Mono<Office> byEmail = officeRepository.findByEmail(writeNewPersonOffice().email());
+        Mono<Office> byEmail = officeRepository.findByEmail(response.writeNewPersonOffice().email());
         StepVerifier.create(byEmail).expectNextMatches(office -> office.getFirstName().equals("firstName") && office.getLastName().equals("lastName") && office.getEmail().equals("email@email.com")).verifyComplete();
 
 
@@ -70,19 +70,16 @@ class OfficeApplicationTests {
     void createPersonOffice_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
         String token = token("teacher4@interia.pl", "lukasz");
 
-        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isForbidden();
+        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(response.writeNewPersonOffice()).exchange().expectStatus().isForbidden();
     }
 
     @Test
     void createPersonOffice_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
-        String token = token("teacher4@interia.pl", "lukasz");
+        String token = token("student1@interia.pl", "lukasz");
 
-        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isForbidden();
+        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(response.writeNewPersonOffice()).exchange().expectStatus().isForbidden();
     }
 
-    private WriteNewPersonOffice writeNewPersonOffice() {
-        return new WriteNewPersonOffice("firstName", "lastName", "email@email.com");
-    }
 
     private String token(String username, String password) {
 
