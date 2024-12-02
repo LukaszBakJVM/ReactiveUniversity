@@ -1,27 +1,27 @@
 {
   "id" : "a2c568a5-4c04-4586-8105-4942f7cf538b",
-  "name" : "auth",
+  "name" : "login",
   "request" : {
-    "url" : "/auth",
+    "url" : "/login",
     "method" : "POST",
     "bodyPatterns" : [ {
-      "equalToJson" : "{\r\n    \"username\":\"lukasz.bak@interiowy.pl\",\r\n    \"password\":\"lukasz\"\r\n}",
+      "equalToJson" : "{\r\n    \"email\":\"lukasz.bak@interiowy.pl\",\r\n    \"password\":\"lukasz\"\r\n}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]
   },
   "response" : {
     "status" : 200,
-    "base64Body" : "eyJ0b2tlbiI6ImV5SmhiR2NpT2lKSVV6STFOaUo5LmV5SmxlSEFpT2pFM016RTROamt3TURrc0luTjFZaUk2SW14MWEyRnplaTVpWVd0QWFXNTBaWEpwYjNkNUxuQnNJaXdpWVhWMGFHOXlhWFJwWlhNaU9sc2lVazlNUlY5UFptWnBZMlVpWFgwLlBKTGpNeGF6WGEyLWRmV3lxalJmT1l4bmlZRHhKcFlCa21ubURLMlRLc28ifQ==",
+    "body" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsdWthc3ouYmFrQGludGVyaW93eS5wbCIsInJvbGVzIjpbIk9mZmljZSJdLCJpYXQiOjE3MzE4Njc4MzgsImV4cCI6MTczNDQ1OTgzOH0.VhFqaSBZ4XtepaH6L1Qg7sGK4lA7s7hY1CBxbExXStg",
     "headers" : {
-      "Keep-Alive" : "timeout=60",
+      "Referrer-Policy" : "no-referrer",
       "X-Frame-Options" : "DENY",
       "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
       "X-Content-Type-Options" : "nosniff",
       "Expires" : "0",
       "Pragma" : "no-cache",
       "X-XSS-Protection" : "0",
-      "Date" : "Fri, 18 Oct 2024 17:43:29 GMT"
+      "Content-Type" : "text/plain;charset=UTF-8"
     }
   },
   "uuid" : "a2c568a5-4c04-4586-8105-4942f7cf538b",

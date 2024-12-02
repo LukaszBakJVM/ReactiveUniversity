@@ -67,7 +67,7 @@ class CourseApplicationTests {
 
     @Test
     void createCourse_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
-        String token = token("teacher@interiowy.pl", "lukasz");
+        String token = token("teacher4@interia.pl", "lukasz");
 
         webTestClient.post().uri("/course").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isForbidden();
 
@@ -76,7 +76,7 @@ class CourseApplicationTests {
 
     @Test
     void createCourse_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
-        String token = token("student@interiowy.pl", "lukasz");
+        String token = token("teacher4@interia.pl", "lukasz");
 
         webTestClient.post().uri("/course").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isForbidden();
 
@@ -85,8 +85,8 @@ class CourseApplicationTests {
 
 
     @Test
-    void createCourse_shouldReturnForbidden_whenUserIsNotAuthorized() {
-        webTestClient.post().uri("/course").contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isForbidden();
+    void createCourse_shouldReturnUnauthorized_whenUserIsNotAuthorized() {
+        webTestClient.post().uri("/course").contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isUnauthorized();
     }
 
     @Test
@@ -105,7 +105,7 @@ class CourseApplicationTests {
     void deleteCourse_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
 
         String courseName = "delete";
-        String token = token("teacher@interiowy.pl", "lukasz");
+        String token = token("teacher4@interia.pl", "lukasz");
 
         webTestClient.delete().uri("/course/{courseName}", courseName).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isForbidden();
 
@@ -133,11 +133,11 @@ class CourseApplicationTests {
 
     private String token(String username, String password) {
 
-        String authBase = String.format("http://localhost:%s/auth", wireMockServer.getPort());
+        String authBase = String.format("http://localhost:%s/login", wireMockServer.getPort());
 
         Login login = new Login(username, password);
-        String responseBody = webTestClient.post().uri(authBase).bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
-        return responseBody.split(":", 2)[1].replace("\"", "");
+       return webTestClient.post().uri(authBase).bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
+
 
     }
 

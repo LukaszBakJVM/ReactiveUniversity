@@ -1,4 +1,4 @@
 package org.example.course;
 
-public record Login(String username,String password) {
+public record Login(String email,String password) {
 }
