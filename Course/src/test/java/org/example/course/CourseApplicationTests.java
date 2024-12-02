@@ -76,7 +76,7 @@ class CourseApplicationTests {
 
     @Test
     void createCourse_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
-        String token = token("teacher4@interia.pl", "lukasz");
+        String token = token("student1@interia.pl", "lukasz");
 
         webTestClient.post().uri("/course").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(courseDto()).exchange().expectStatus().isForbidden();
 

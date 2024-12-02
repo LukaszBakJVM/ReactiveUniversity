@@ -58,7 +58,7 @@ class OfficeApplicationTests {
     void createPersonOffice_shouldReturnCreated_whenUserIsAuthorized_OfficeRole() {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
-        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isOk().expectBody().jsonPath("$.ok").isEqualTo("Created");
+        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isCreated().expectBody().jsonPath("$.ok").isEqualTo("Created");
 
         Mono<Office> byEmail = officeRepository.findByEmail(writeNewPersonOffice().email());
         StepVerifier.create(byEmail).expectNextMatches(office -> office.getFirstName().equals("firstName") && office.getLastName().equals("lastName") && office.getEmail().equals("email@email.com")).verifyComplete();
@@ -68,11 +68,16 @@ class OfficeApplicationTests {
 
     @Test
     void createPersonOffice_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
-        String token = token("teacher@interiowy.pl", "lukasz");
+        String token = token("teacher4@interia.pl", "lukasz");
 
         webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isForbidden();
+    }
 
+    @Test
+    void createPersonOffice_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
+        String token = token("teacher4@interia.pl", "lukasz");
 
+        webTestClient.post().uri("/office").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).bodyValue(writeNewPersonOffice()).exchange().expectStatus().isForbidden();
     }
 
     private WriteNewPersonOffice writeNewPersonOffice() {
@@ -81,7 +86,7 @@ class OfficeApplicationTests {
 
     private String token(String username, String password) {
 
-        String authBase = String.format("http://localhost:%s/auth", wireMockServer.getPort());
+        String authBase = String.format("http://localhost:%s/login", wireMockServer.getPort());
 
         Login login = new Login(username, password);
         return webTestClient.post().uri(authBase).bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
