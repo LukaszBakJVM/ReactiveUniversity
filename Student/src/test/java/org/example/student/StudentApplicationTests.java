@@ -3,14 +3,18 @@ package org.example.student;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
@@ -47,6 +51,28 @@ class StudentApplicationTests {
     @AfterAll
     static void stopPostgres() {
         postgreSQLContainer.stop();
+    }
+
+    @Test
+    void writeCourseToStudent__shouldReturnNoContent_whenUserIsAuthorized_StudentRole() {
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+        studentRepository.save(response.saveToCourse()).subscribe();
+        webTestClient.put().uri("/student/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addCourse()).exchange().expectStatus().isNoContent();
+
+        Mono<Student> byEmail = studentRepository.findByEmail("student@email.com");
+
+        StepVerifier.create(byEmail).expectNextMatches(s -> s.getCourse().equals("Medycyna")).verifyComplete();
+
+    }
+
+    private String token(String email, String password) {
+
+        String authBase = String.format("http://localhost:%s", wireMockServer.getPort());
+
+        Login login = new Login(email, password);
+        return webTestClient.post().uri(authBase + "/login").bodyValue(login).exchange().returnResult(String.class).getResponseBody().blockFirst();
+
+
     }
 
 
