@@ -64,20 +64,28 @@ class StudentApplicationTests {
         StepVerifier.create(byEmail).expectNextMatches(s -> s.getCourse().equals("Medycyna")).verifyComplete();
 
     }
+
     @Test
-    void writeCourseToStudent__shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
+    void writeCourseToStudent_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
         String token = token("student1@interia.pl", "lukasz");
         webTestClient.put().uri("/student/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addCourse()).exchange().expectStatus().isForbidden();
 
 
-
     }
+
     @Test
     void writeCourseToStudent__shouldReturnForbiddent_whenUserIsAuthorized_TeacherRole() {
         String token = token("teacher4@interia.pl", "lukasz");
         webTestClient.put().uri("/student/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addCourse()).exchange().expectStatus().isForbidden();
 
+    }
 
+    @Test
+    void getStudentsByCourse_shouldReturnOk() {
+
+        String courseName = "Biol-Chem";
+
+        webTestClient.get().uri("student/studentInfo/{course}", courseName).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.findStudentByCourse);
 
     }
 

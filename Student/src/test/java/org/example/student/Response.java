@@ -6,6 +6,28 @@ import java.util.List;
 
 public class Response {
 
+    String findStudentByCourse = """
+    [
+        {
+            "firstName": "student4",
+            "lastName": "StudentLastName4",
+            "email": "student4@email.com",
+            "course": "Biol-Chem"
+        },
+        {
+            "firstName": "student3",
+            "lastName": "StudentLastName3",
+            "email": "student3@email.com",
+            "course": "Biol-Chem"
+        }
+        ]
+    """;
+
+
+
+
+
+
     AddCourse addCourse() {
         return new AddCourse("Medycyna", "student@email.com");
     }
@@ -41,6 +63,7 @@ public class Response {
         student.setFirstName("student3");
         student.setLastName("StudentLastName3");
         student.setEmail("student3@email.com");
+        student.setCourse("Biol-Chem");
         return student;
     }
     Student save4() {
@@ -48,6 +71,7 @@ public class Response {
         student.setFirstName("student4");
         student.setLastName("StudentLastName4");
         student.setEmail("student4@email.com");
+        student.setCourse("Biol-Chem");
         return student;
     }
 }
