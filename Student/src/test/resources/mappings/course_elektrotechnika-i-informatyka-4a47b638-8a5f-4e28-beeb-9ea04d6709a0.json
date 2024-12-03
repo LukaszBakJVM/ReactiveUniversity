@@ -3,14 +3,8 @@
   "name": "course_elektrotechnika-i-informatyka",
   "request": {
     "url": "/course/Elektrotechnika%20i%20Informatyka",
-    "method": "GET",
-    "bodyPatterns": [
-      {
-        "equalToJson": "{\r\n    \"email\":\"teacher4@interia.pl\",\r\n    \"subjects\":\r\n    [\"Język Angielski Medyczny\",\"Język Angielski\"\r\n\r\n    ]\r\n}",
-        "ignoreArrayOrder": true,
-        "ignoreExtraElements": true
-      }
-    ]
+    "method": "GET"
+
   },
   "response": {
     "status": 200,

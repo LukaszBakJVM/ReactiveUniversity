@@ -2,7 +2,7 @@
   "id": "ecae95d2-61b0-4e73-89d1-9cc66aa34935",
   "name": "teacher_info_c",
   "request": {
-    "url": "/teacher/info/C++",
+    "url": "/teacher/info/C%2B%2B",
     "method": "GET"
   },
   "response": {

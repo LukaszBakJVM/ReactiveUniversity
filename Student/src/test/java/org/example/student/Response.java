@@ -23,6 +23,10 @@ public class Response {
         ]
     """;
 
+    String myTeachers = """
+            [{"firstName":"Teacher2","lastName":"Bak"},{"firstName":"Teacher1","lastName":"Bak"}]
+            """;
+
 
 
 
@@ -34,7 +38,7 @@ public class Response {
 
 
     List<Student>saveStudents(){
-        return List.of(save(),save2(),save3(),save4(),save1());
+        return List.of(save(),save2(),save3(),save4(),save1(),save5());
     }
 
     Student save() {
@@ -72,6 +76,14 @@ public class Response {
         student.setLastName("StudentLastName4");
         student.setEmail("student4@email.com");
         student.setCourse("Biol-Chem");
+        return student;
+    }
+    Student save5() {
+        Student student = new Student();
+        student.setFirstName("Student4");
+        student.setLastName("Bak");
+        student.setEmail("student1@interia.pl");
+        student.setCourse("Elektrotechnika i Informatyka");
         return student;
     }
 }

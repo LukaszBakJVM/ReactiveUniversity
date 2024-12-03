@@ -35,7 +35,8 @@ class StudentApplicationTests {
 
     @DynamicPropertySource
     static void registerDynamicProperties(DynamicPropertyRegistry registry) {
-        registry.add("baseUrl", wireMockServer::baseUrl);
+        registry.add("teacherUrl", wireMockServer::baseUrl);
+        registry.add("courseUrl", wireMockServer::baseUrl);
         registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgreSQLContainer.getHost() + ":" + postgreSQLContainer.getFirstMappedPort() + "/" + postgreSQLContainer.getDatabaseName());
         registry.add("spring.r2dbc.username", postgreSQLContainer::getUsername);
         registry.add("spring.r2dbc.password", postgreSQLContainer::getPassword);
@@ -74,9 +75,18 @@ class StudentApplicationTests {
     }
 
     @Test
-    void writeCourseToStudent__shouldReturnForbiddent_whenUserIsAuthorized_TeacherRole() {
+    void writeCourseToStudent_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
         String token = token("teacher4@interia.pl", "lukasz");
         webTestClient.put().uri("/student/update").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(response.addCourse()).exchange().expectStatus().isForbidden();
+
+    }
+    @Test
+    void  getMyTeachers_shouldReturnOk_whenUserIsAuthorized_StudentRole(){
+        //TODO delete
+        studentRepository.saveAll(response.saveStudents()).subscribe();
+        String token = token("student1@interia.pl", "lukasz");
+        webTestClient.get().uri("/student/teachers").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.myTeachers);
+
 
     }
 
