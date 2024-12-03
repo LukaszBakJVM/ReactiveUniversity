@@ -1,0 +1,31 @@
+{
+  "id": "4a47b638-8a5f-4e28-beeb-9ea04d6709a0",
+  "name": "course_elektrotechnika-i-informatyka",
+  "request": {
+    "url": "/course/Elektrotechnika%20i%20Informatyka",
+    "method": "GET",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\r\n    \"email\":\"teacher4@interia.pl\",\r\n    \"subjects\":\r\n    [\"Język Angielski Medyczny\",\"Język Angielski\"\r\n\r\n    ]\r\n}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"courseName\":\"Elektrotechnika i Informatyka\",\"subjects\":[\"Java\",\"C++\",\"Matematyka dla informatyków\",\"Podstatwy Linuxa\"]}",
+    "headers": {
+      "Referrer-Policy": "no-referrer",
+      "X-Frame-Options": "DENY",
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options": "nosniff",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "X-XSS-Protection": "0",
+      "Content-Type": "application/json"
+    }
+  },
+  "uuid": "4a47b638-8a5f-4e28-beeb-9ea04d6709a0",
+  "persistent": true
+}

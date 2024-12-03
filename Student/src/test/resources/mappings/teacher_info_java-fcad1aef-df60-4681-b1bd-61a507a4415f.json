@@ -1,0 +1,24 @@
+{
+  "id": "fcad1aef-df60-4681-b1bd-61a507a4415f",
+  "name": "teacher_info_java",
+  "request": {
+    "url": "/teacher/info/Java",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"firstName\":\"Teacher2\",\"lastName\":\"Bak\",\"subjectName\":[\"Java\",\"C++\",\"Anatomia\",\"Chemia\",\"Biologia\"]}",
+    "headers": {
+      "Referrer-Policy": "no-referrer",
+      "X-Frame-Options": "DENY",
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options": "nosniff",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "X-XSS-Protection": "0",
+      "Content-Type": "application/json"
+    }
+  },
+  "uuid": "fcad1aef-df60-4681-b1bd-61a507a4415f",
+  "persistent": true
+}

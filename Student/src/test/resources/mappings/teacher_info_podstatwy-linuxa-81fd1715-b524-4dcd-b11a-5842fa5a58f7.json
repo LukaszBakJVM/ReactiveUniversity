@@ -1,0 +1,24 @@
+{
+  "id": "81fd1715-b524-4dcd-b11a-5842fa5a58f7",
+  "name": "teacher_info_podstatwy-linuxa",
+  "request": {
+    "url": "/teacher/info/Podstatwy%20Linuxa",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"firstName\":\"Teacher1\",\"lastName\":\"Bak\",\"subjectName\":[\"Matematyka dla informatyków\",\"Podstatwy Linuxa\"]}",
+    "headers": {
+      "Referrer-Policy": "no-referrer",
+      "X-Frame-Options": "DENY",
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options": "nosniff",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "X-XSS-Protection": "0",
+      "Content-Type": "application/json"
+    }
+  },
+  "uuid": "81fd1715-b524-4dcd-b11a-5842fa5a58f7",
+  "persistent": true
+}

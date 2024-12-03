@@ -1,0 +1,24 @@
+{
+  "id": "ecae95d2-61b0-4e73-89d1-9cc66aa34935",
+  "name": "teacher_info_c",
+  "request": {
+    "url": "/teacher/info/C++",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"firstName\":\"Teacher2\",\"lastName\":\"Bak\",\"subjectName\":[\"Java\",\"C++\",\"Anatomia\",\"Chemia\",\"Biologia\"]}",
+    "headers": {
+      "Referrer-Policy": "no-referrer",
+      "X-Frame-Options": "DENY",
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options": "nosniff",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "X-XSS-Protection": "0",
+      "Content-Type": "application/json"
+    }
+  },
+  "uuid": "ecae95d2-61b0-4e73-89d1-9cc66aa34935",
+  "persistent": true
+}
