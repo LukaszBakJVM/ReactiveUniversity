@@ -82,8 +82,6 @@ class StudentApplicationTests {
     }
     @Test
     void  getMyTeachers_shouldReturnOk_whenUserIsAuthorized_StudentRole(){
-        //TODO delete
-        studentRepository.saveAll(response.saveStudents()).subscribe();
         String token = token("student1@interia.pl", "lukasz");
         webTestClient.get().uri("/student/teachers").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.myTeachers);
 
