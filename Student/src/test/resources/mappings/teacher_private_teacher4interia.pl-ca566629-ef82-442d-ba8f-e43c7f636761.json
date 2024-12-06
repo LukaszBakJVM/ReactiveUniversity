@@ -1,0 +1,25 @@
+{
+  "id" : "ca566629-ef82-442d-ba8f-e43c7f636761",
+  "name" : "teacher_private_teacher4interia.pl",
+  "request" : {
+    "url" : "/teacher/private/teacher4%40interia.pl",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"firstName\":\"Teacher4\",\"lastName\":\"Bak\",\"email\":\"teacher4@interia.pl\",\"subjectName\":[\"Język Angielski Medyczny\",\"Język Angielski\"]}",
+    "headers" : {
+      "Referrer-Policy" : "no-referrer",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "X-Content-Type-Options" : "nosniff",
+      "Expires" : "0",
+      "Pragma" : "no-cache",
+      "X-XSS-Protection" : "0",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "ca566629-ef82-442d-ba8f-e43c7f636761",
+  "persistent" : true
+
+}

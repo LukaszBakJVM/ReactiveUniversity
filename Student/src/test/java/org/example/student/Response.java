@@ -1,6 +1,7 @@
 package org.example.student;
 
 import org.example.student.dto.AddCourse;
+import org.example.student.grades.dto.GradesRequest;
 
 import java.util.List;
 
@@ -27,8 +28,10 @@ public class Response {
             [{"firstName":"Teacher2","lastName":"Bak"},{"firstName":"Teacher1","lastName":"Bak"}]
             """;
 
+    GradesRequest gradesRequest(){
+        return new GradesRequest("student3@email.com","Chemia","5+ Sprawdzian");
 
-
+    }
 
 
 
