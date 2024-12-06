@@ -62,6 +62,8 @@ class TeacherApplicationTests {
     @BeforeEach
     void clearDatabase() {
         teacherRepository.deleteAll().subscribe();
+        teacherRepository.save(response.saveTeacher()).subscribe();
+        teacherRepository.save(response.saveTeacher1()).subscribe();
 
     }
 
@@ -69,7 +71,7 @@ class TeacherApplicationTests {
     void findMyStudents_shouldReturnOk_whenUserIsAuthorized_teacherRole() {
         String email = "teacher4@interia.pl";
 
-        teacherRepository.save(response.saveTeacher()).subscribe();
+
 
         String token = token(email, "lukasz");
 
@@ -80,7 +82,7 @@ class TeacherApplicationTests {
     @Test
     void getTeacherPrivateInformation_shouldReturnOk_whenUserIsAuthorized_TeacherRole() {
         String email = "teacher4@interia.pl";
-        teacherRepository.save(response.saveTeacher1()).subscribe();
+
         String teacherEmail = "teacher1@interia.pl";
 
         String token = token(email, "lukasz");
@@ -105,8 +107,7 @@ class TeacherApplicationTests {
 
         String email = "teacher4@interia.pl";
 
-        teacherRepository.save(response.saveTeacher()).subscribe();
-        teacherRepository.save(response.saveTeacher1()).subscribe();
+
 
         String token = token(email, "lukasz");
 
@@ -129,7 +130,7 @@ class TeacherApplicationTests {
     void writeSubjectsToTeacher_shouldReturnOk_whenUserIsAuthorized_OfficeRole() {
 
 
-        teacherRepository.save(response.saveForUpdateSubjects()).subscribe();
+
 
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
@@ -146,7 +147,7 @@ class TeacherApplicationTests {
 
         String email = "student1@interia.pl";
 
-        teacherRepository.save(response.saveForUpdateSubjects()).subscribe();
+
 
         String token = token(email, "lukasz");
 
@@ -159,7 +160,7 @@ class TeacherApplicationTests {
 
         String email = "teacher4@interia.pl";
 
-        teacherRepository.save(response.saveForUpdateSubjects()).subscribe();
+
 
         String token = token(email, "lukasz");
 
@@ -170,7 +171,7 @@ class TeacherApplicationTests {
     @Test
     void getTeacherPrivateInformation_shouldReturnOk_whenUserIsAuthorized_OfficeRole() {
         String email = "lukasz.bak@interiowy.pl";
-        teacherRepository.save(response.saveTeacher1()).subscribe();
+
         String teacherEmail = "teacher1@interia.pl";
 
         String token = token(email, "lukasz");
@@ -181,7 +182,7 @@ class TeacherApplicationTests {
     @Test
     void getTeacherPrivateInformation_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
         String email = "student1@interia.pl";
-        teacherRepository.save(response.saveTeacher()).subscribe();
+
         String teacherEmail = "teacher1@interia.pl";
 
         String token = token(email, "lukasz");
@@ -201,8 +202,7 @@ class TeacherApplicationTests {
 
         String email = "lukasz.bak@interiowy.pl";
 
-        teacherRepository.save(response.saveTeacher()).subscribe();
-        teacherRepository.save(response.saveTeacher1()).subscribe();
+
 
         String token = token(email, "lukasz");
 
@@ -213,8 +213,6 @@ class TeacherApplicationTests {
 
     @Test
     void getTeacherBySubject_shouldReturnOk() {
-        teacherRepository.save(response.saveTeacher()).subscribe();
-        teacherRepository.save(response.saveTeacher1()).subscribe();
 
         String subject = "Fizyka";
 
