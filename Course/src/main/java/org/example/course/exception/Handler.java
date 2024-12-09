@@ -14,4 +14,12 @@ public class Handler {
     public Error duplicateEmail(DuplicateCourseException ex) {
         return new Error(HttpStatus.CONFLICT, ex.getMessage());
     }
+
+    @ExceptionHandler(CourseNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Error courseNotFound(CourseNotFoundException ex) {
+        return new Error(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+
 }
