@@ -66,7 +66,7 @@ public class GradesTest {
     }
 
     @AfterEach
-    void cleanDataBase() {
+    void clearDataBase() {
         studentRepository.deleteAll().subscribe();
         gradesRepository.deleteAll().subscribe();
     }
