@@ -52,6 +52,11 @@ class CourseApplicationTests {
     static void stopPostgres() {
         postgreSQLContainer.stop();
     }
+    @BeforeEach
+    void  writeToDatabase(){
+        courseRepository.saveAll(response.save).subscribe();
+
+    }
 
     @AfterEach
     void clearDatabase(){
@@ -95,7 +100,7 @@ class CourseApplicationTests {
 
     @Test
     void deleteCourse_shouldReturnNoContent_whenUserIsAuthorized_OfficeRole() {
-        courseRepository.save(response.delete()).subscribe();
+
 
 
         String courseName = "deleteCourse";
