@@ -4,9 +4,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.example.student.grades.Grades;
 import org.example.student.grades.GradesRepository;
 import org.example.student.grades.dto.GradesRequest;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,9 +59,21 @@ public class GradesTest {
         postgreSQLContainer.stop();
     }
 
+    @BeforeEach
+    void writeToDatabase() {
+        studentRepository.saveAll(response.saveStudents()).subscribe();
+        gradesRepository.saveAll(response.saveGrades).subscribe();
+    }
+
+    @AfterEach
+    void cleanDataBase() {
+        studentRepository.deleteAll().subscribe();
+        gradesRepository.deleteAll().subscribe();
+    }
+
     @Test
     void writeGradesToStudent_shouldReturnCreated_whenUserIsAuthorized_TeacherRole() {
-        studentRepository.saveAll(response.saveStudents()).subscribe();
+
         String teacherEmail = "teacher4@interia.pl";
         GradesRequest gradesRequest = response.gradesRequest();
         String token = token(teacherEmail, "lukasz");
@@ -72,7 +82,14 @@ public class GradesTest {
 
         Mono<Grades> byEmailAndSubject = gradesRepository.findByEmailAndSubject(gradesRequest.email(), gradesRequest.subject());
 
-        StepVerifier.create(byEmailAndSubject).expectNextMatches(g->g.getGradesDescription().size()==1&&g.getTeacher().equals("Teacher4 Bak")).verifyComplete();
+        StepVerifier.create(byEmailAndSubject).expectNextMatches(g -> g.getGradesDescription().size() == 1 && g.getTeacher().equals("Teacher4 Bak")).verifyComplete();
+    }
+
+    @Test
+    void findMyGrades_shouldReturnOk_whenUserIsAuthorized_StudentRole() {
+        String token = token("student1@interia.pl", "lukasz");
+        webTestClient.get().uri("/grades/my-grades").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isOk().expectBody().json(response.gradesResponseJson);
+
     }
 
 
