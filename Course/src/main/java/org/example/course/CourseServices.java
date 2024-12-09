@@ -30,7 +30,8 @@ public class CourseServices {
     }
 
     Mono<Void> deleteCourse(String courseName) {
-        return courseRepository.deleteByCourseName(courseName).switchIfEmpty(Mono.error(new CourseNotFoundException(String.format("Course %s not found, delete error", courseName))));
+        return courseRepository.findByCourseName(courseName).switchIfEmpty(Mono.error(new CourseNotFoundException(String.format("Course %s not found, delete error", courseName))))
+                .flatMap(c->courseRepository.deleteByCourseName(courseName));
     }
 
     Flux<CourseDto> findAll() {
