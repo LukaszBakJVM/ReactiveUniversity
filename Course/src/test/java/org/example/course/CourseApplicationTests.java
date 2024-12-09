@@ -2,9 +2,7 @@ package org.example.course;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.example.course.dto.CourseDto;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,6 +53,12 @@ class CourseApplicationTests {
         postgreSQLContainer.stop();
     }
 
+    @AfterEach
+    void clearDatabase(){
+        courseRepository.deleteAll().subscribe();
+
+    }
+
 
     @Test
     void createCourse_shouldReturnCreated_whenUserIsAuthorized_OfficeRole() {
@@ -91,8 +95,10 @@ class CourseApplicationTests {
 
     @Test
     void deleteCourse_shouldReturnNoContent_whenUserIsAuthorized_OfficeRole() {
+        courseRepository.save(response.delete()).subscribe();
 
-        String courseName = "delete";
+
+        String courseName = "deleteCourse";
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
         webTestClient.delete().uri("/course/{courseName}", courseName).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isNoContent();
@@ -100,9 +106,21 @@ class CourseApplicationTests {
         StepVerifier.create(byCourseName).expectNextCount(0).verifyComplete();
 
     }
+    @Test
+    void deleteCourse_shouldReturnNotFound_whenUserIsAuthorized_OfficeRoleAndCourseDontExist() {
+
+
+        String courseName = "dontExist";
+        String token = token("lukasz.bak@interiowy.pl", "lukasz");
+
+        webTestClient.delete().uri("/course/{courseName}", courseName).header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).exchange().expectStatus().isNotFound().expectBody().json(response.courseNotFound);
+
+
+    }
 
     @Test
     void deleteCourse_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
+
 
         String courseName = "delete";
         String token = token("teacher4@interia.pl", "lukasz");
