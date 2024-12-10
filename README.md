@@ -53,7 +53,7 @@ is sent to the appropriate microservice depending on the role.
 - 
 #############################################################################################
 
-- **[Swagger UI - API Documentation (Registration)](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation (Teacher)](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
 
                email : password
   teacher1@interia.pl:lukasz
@@ -165,10 +165,10 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 
 
 
-- **[Swagger UI - API Documentation](http://51.79.251.86:8082/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation](http://mojeip.dynu.net:8082/webjars/swagger-ui/index.html)**
 
-- **[Swagger UI - API Documentation](http://51.79.251.86:8083/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation](http://mojeip.dynu.net:8083/webjars/swagger-ui/index.html)**
 
-- **[Swagger UI - API Documentation](http://51.79.251.86:8084/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation](http://mojeip.dynu.net:8084/webjars/swagger-ui/index.html)**
 
- - **[Swagger UI - API Documentation](http://51.79.251.86:8085/webjars/swagger-ui/index.html)**
+ - **[Swagger UI - API Documentation](http://mojeip.dynu.net:8085/webjars/swagger-ui/index.html)**
