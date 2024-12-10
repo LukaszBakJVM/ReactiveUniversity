@@ -16,7 +16,7 @@ is sent to the appropriate microservice depending on the role.
 - lukasz.bak@interiowy.pl:lukasz  ->  role office
 
 [**__Swagger UI - API Documentation (Registration)__**](http://mojeip.dynu.net:8090/webjars/swagger-ui/index.html)
-[<span style="color:red;">**Swagger UI - API Documentation (Registration)**</span>](http://mojeip.dynu.net:8090/webjars/swagger-ui/index.html)
+
 
 
 
