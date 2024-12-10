@@ -163,10 +163,22 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 #########################################################################
 
 
-
-
-
 - **[Swagger UI - API Documentation (Subject)](http://mojeip.dynu.net:8083/webjars/swagger-ui/index.html)**
+
+- Post /subject  -> only person with office role
+
+ ```bash
+ curl -X POST mojeip.dynu.net:8083/subject -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
+    \"subject\":\"sunjectName\" }"
+  
+````
+
+
+-Get /subject/all   find all subjects 
+```bash
+ curl -X GET mojeip.dynu.net:8083/subject/all -H "Content-Type: application/json"
+
+  
 
 - **[Swagger UI - API Documentation (Course)](http://mojeip.dynu.net:8084/webjars/swagger-ui/index.html)**
 
