@@ -177,6 +177,7 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 -Get /subject/all   find all subjects 
 ```bash
  curl -X GET mojeip.dynu.net:8083/subject/all -H "Content-Type: application/json"
+````
 
   
 
