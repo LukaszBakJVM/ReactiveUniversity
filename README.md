@@ -51,9 +51,9 @@ is sent to the appropriate microservice depending on the role.
    - ConnectionException.java  -> when   connection between microservices  is down.
      
 - 
-############################################################################################################################
+#############################################################################################
 
-- **[Swagger UI - API Documentation](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation (Registration)](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
 
                email : password
   teacher1@interia.pl:lukasz
