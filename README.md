@@ -154,18 +154,16 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
     },.....]
 ```
 
-
-
-
-
-
-
-
-
-
-
+#########################################################################
 
 - **[Swagger UI - API Documentation (Office)](http://mojeip.dynu.net:8082/webjars/swagger-ui/index.html)**
+
+- See - registration controler
+  #########################################################################
+
+
+
+
 
 - **[Swagger UI - API Documentation (Subject)](http://mojeip.dynu.net:8083/webjars/swagger-ui/index.html)**
 
