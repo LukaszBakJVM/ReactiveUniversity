@@ -2,7 +2,7 @@ package org.example.teacher;
 
 import org.example.teacher.dto.AddSchoolSubjects;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Response {
@@ -230,9 +230,10 @@ public class Response {
                         ]
             }
             """;
+    List<Teacher> saveTeachers = List.of(save(), save1());
 
 
-    Teacher saveTeacher() {
+    private Teacher save() {
         Teacher teacher = new Teacher();
         teacher.setFirstName("teacher4");
         teacher.setLastName("Bak");
@@ -241,7 +242,7 @@ public class Response {
         return teacher;
     }
 
-    Teacher saveTeacher1() {
+    private Teacher save1() {
         Teacher teacher = new Teacher();
         teacher.setFirstName("teacher1");
         teacher.setLastName("Bak");
@@ -255,13 +256,5 @@ public class Response {
         return new AddSchoolSubjects("teacher4@interia.pl", Set.of("Matematyka", "Chemia"));
     }
 
-    Teacher saveForUpdateSubjects() {
-        Teacher teacher = new Teacher();
-        teacher.setFirstName("teacher4");
-        teacher.setLastName("Bak");
-        teacher.setEmail("teacher4@interia.pl");
-        teacher.setSubjectName(new HashSet<>());
-        return teacher;
-    }
 
 }

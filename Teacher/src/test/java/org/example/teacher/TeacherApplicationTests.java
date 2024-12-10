@@ -1,10 +1,7 @@
 package org.example.teacher;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,11 +57,13 @@ class TeacherApplicationTests {
     }
 
     @BeforeEach
-    void clearDatabase() {
-        teacherRepository.deleteAll().subscribe();
-        teacherRepository.save(response.saveTeacher()).subscribe();
-        teacherRepository.save(response.saveTeacher1()).subscribe();
+    void writeToDatabase() {
+        teacherRepository.saveAll(response.saveTeachers).subscribe();
 
+    }
+    @AfterEach
+    void clearDatabase(){
+        teacherRepository.deleteAll().subscribe();
     }
 
     @Test
