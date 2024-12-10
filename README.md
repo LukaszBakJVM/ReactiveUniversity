@@ -15,7 +15,8 @@ is sent to the appropriate microservice depending on the role.
 - registration  login:password
 - lukasz.bak@interiowy.pl:lukasz  ->  role office
 
-- *******[__Swagger UI - API Documentation (Registration)__ ](http://mojeip.dynu.net:8090/webjars/swagger-ui/index.html)**
+[**__Swagger UI - API Documentation (Registration)__**](http://mojeip.dynu.net:8090/webjars/swagger-ui/index.html)
+
 
 
 
