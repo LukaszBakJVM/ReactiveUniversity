@@ -209,8 +209,14 @@ curl -X DELETE "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: a
   - get course/{subject}/name
   - find courses containing  some subject
  ```bash
-curl -X GET "http://mojeip.dynu.net:8084/course/Geografia/name" -H "Content-Type: application/json"
+curl -X GET "http://mojeip.dynu.net:8084/course/{subject}/name" -H "Content-Type: application/json"
 ```
+- get course/{course}
+- show show what subjects are included in the course
+ ```bash
+curl -X GET "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json"
+```
+
 
 
     
