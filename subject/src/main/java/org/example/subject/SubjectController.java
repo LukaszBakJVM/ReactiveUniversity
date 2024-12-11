@@ -2,7 +2,6 @@ package org.example.subject;
 
 import org.example.subject.dto.SubjectDto;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -30,8 +29,8 @@ public class SubjectController {
 
     @DeleteMapping("/{subjectName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    Mono<ResponseEntity<Void>> deleteSubjectByName(@PathVariable String subjectName) {
-        return subjectServices.deleteSubject(subjectName).then(Mono.just(ResponseEntity.noContent().build()));
+    Mono<Void> deleteSubjectByName(@PathVariable String subjectName) {
+        return subjectServices.deleteSubject(subjectName);
     }
 
 
