@@ -169,10 +169,12 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 
  ```bash
  curl -X POST mojeip.dynu.net:8083/subject -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
-    \"subject\":\"sunjectName\" }"
-  
+    \"subject\":\"subjectName\" }"
+  ````
+Delete  subject/{subjectName} -> only person with office role
+```bash 
+curl -X DELETE "http://mojeip.dynu.net:8083/subject/{subjectName}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
 ````
-
 
 -Get /subject/all   find all subjects 
 ```bash
