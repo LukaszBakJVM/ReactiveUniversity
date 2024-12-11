@@ -180,9 +180,27 @@ curl -X DELETE "http://mojeip.dynu.net:8083/subject/{subjectName}" -H "Content-T
 ```bash
  curl -X GET mojeip.dynu.net:8083/subject/all -H "Content-Type: application/json"
 ````
+########################################################################
 
-  
+  - **[Swagger UI - API Documentation (Course)](http://mojeip.dynu.net:8084/webjars/swagger-ui/index.html)**
 
-- **[Swagger UI - API Documentation (Course)](http://mojeip.dynu.net:8084/webjars/swagger-ui/index.html)**
+- Post /course  -> only person with office role
+
+ ```bash
+curl -X POST "http://mojeip.dynu.net:8084/course" -H "Content-Type: application/json" -d "{\"courseName\": \"Course Name\", \"subjects\": [\"subject1\", \"subject2\", \"subject3\"]}"
+
+ ````
+Delete  subject/{subjectName} -> only person with office role
+```bash 
+curl -X DELETE "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
+````
+
+  - 
+
+
+
+
+
+
 
  - **[Swagger UI - API Documentation(Student)](http://mojeip.dynu.net:8085/webjars/swagger-ui/index.html)**
