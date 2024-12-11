@@ -201,6 +201,19 @@ curl -X POST "http://mojeip.dynu.net:8084/course" -H "Content-Type: application/
 ```bash 
 curl -X DELETE "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
 ````
+- Get course/all
+- all courses
+  ```bash
+  curl -X GET "http://mojeip.dynu.net:8084/course/all" -H "Content-Type: application/json"
+  ```
+  - get course/{subject}/name
+  - find courses containing  some subject
+ ```bash
+curl -X GET "http://mojeip.dynu.net:8084/course/Geografia/name" -H "Content-Type: application/json"
+```
+
+
+    
 
   - 
 
