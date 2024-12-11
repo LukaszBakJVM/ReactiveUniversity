@@ -15,7 +15,11 @@ is sent to the appropriate microservice depending on the role.
 - registration  login:password
 - lukasz.bak@interiowy.pl:lukasz  ->  role office
 
-- **[Swagger UI - API Documentation (Registration) ](http://mojeip.dynu.net:8090/webjars/swagger-ui/index.html)**
+[**__Swagger UI - API Documentation (Registration)__**](http://mojeip.dynu.net:8090/webjars/swagger-ui/index.html)
+
+
+
+
 
 
 
@@ -47,9 +51,9 @@ is sent to the appropriate microservice depending on the role.
    - ConnectionException.java  -> when   connection between microservices  is down.
      
 - 
-############################################################################################################################
+#############################################################################################
 
-- **[Swagger UI - API Documentation](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation (Teacher)](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
 
                email : password
   teacher1@interia.pl:lukasz
@@ -65,6 +69,7 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
  -teacher post -> look registration controler
 
  -/teacher/private/{email} -> only person with office,teacher role
+ private information about teacher 
 
  ```bash
  curl -X GET mojeip.dynu.net:8081/teacher/private/teacher1@interia.pl -H "Authorization: Bearer <token>"
@@ -113,7 +118,8 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
     },....]
 ```
 
-
+Get /teacher/my-students    information about  what students the teacher has
+information based on email from token
 ```bash
  curl -X GET mojeip.dynu.net:8081/teacher/my-students -H "Authorization: Bearer <token>"
 ```
@@ -150,6 +156,53 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
     },.....]
 ```
 
+#########################################################################
+
+- **[Swagger UI - API Documentation (Office)](http://mojeip.dynu.net:8082/webjars/swagger-ui/index.html)**
+
+- look - registration controler
+- 
+#########################################################################
+
+
+- **[Swagger UI - API Documentation (Subject)](http://mojeip.dynu.net:8083/webjars/swagger-ui/index.html)**
+
+- Post /subject  -> only person with office role
+- create new subject
+
+ ```bash
+ curl -X POST mojeip.dynu.net:8083/subject -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
+    \"subject\":\"subjectName\" }"
+  ````
+Delete  subject/{subjectName} -> only person with office role
+delete subject
+```bash 
+curl -X DELETE "http://mojeip.dynu.net:8083/subject/{subjectName}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
+````
+
+-Get /subject/all   find all subjects 
+find all subject
+```bash
+ curl -X GET mojeip.dynu.net:8083/subject/all -H "Content-Type: application/json"
+````
+########################################################################
+
+  - **[Swagger UI - API Documentation (Course)](http://mojeip.dynu.net:8084/webjars/swagger-ui/index.html)**
+
+- Post /course  -> only person with office role
+- create new course
+
+ ```bash
+curl -X POST "http://mojeip.dynu.net:8084/course" -H "Content-Type: application/json" -d "{\"courseName\": \"Course Name\", \"subjects\": [\"subject1\", \"subject2\", \"subject3\"]}"
+
+ ````
+Delete  subject/{subjectName} -> only person with office role
+delete course
+```bash 
+curl -X DELETE "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
+````
+
+  - 
 
 
 
@@ -157,14 +210,4 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 
 
 
-
-
-
-
-- **[Swagger UI - API Documentation](http://51.79.251.86:8082/webjars/swagger-ui/index.html)**
-
-- **[Swagger UI - API Documentation](http://51.79.251.86:8083/webjars/swagger-ui/index.html)**
-
-- **[Swagger UI - API Documentation](http://51.79.251.86:8084/webjars/swagger-ui/index.html)**
-
- - **[Swagger UI - API Documentation](http://51.79.251.86:8085/webjars/swagger-ui/index.html)**
+ - **[Swagger UI - API Documentation(Student)](http://mojeip.dynu.net:8085/webjars/swagger-ui/index.html)**
