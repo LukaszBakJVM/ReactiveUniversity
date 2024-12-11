@@ -196,8 +196,8 @@ find all subject
 curl -X POST "http://mojeip.dynu.net:8084/course" -H "Content-Type: application/json" -d "{\"courseName\": \"Course Name\", \"subjects\": [\"subject1\", \"subject2\", \"subject3\"]}"
 
  ````
-Delete  subject/{subjectName} -> only person with office role
-delete course
+- Delete  subject/{subjectName} -> only person with office role
+- delete course
 ```bash 
 curl -X DELETE "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
 ````
