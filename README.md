@@ -66,7 +66,7 @@ is sent to the appropriate microservice depending on the role.
 curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <token>"  -H "Content-Type: application/json"  -d "{\"email\": \"teacher email\", \"subjects\": [\"subject\", \"subject1\"]}"
 ````
 
- -teacher post -> look registration controler
+ -teacher post -> look registration controller
 
  -/teacher/private/{email} -> only person with office,teacher role
  private information about teacher 
@@ -160,7 +160,7 @@ information based on email from token
 
 - **[Swagger UI - API Documentation (Office)](http://mojeip.dynu.net:8082/webjars/swagger-ui/index.html)**
 
-- look - registration controler
+- look - registration controller
 - 
 #########################################################################
 
@@ -212,21 +212,16 @@ curl -X DELETE "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: a
 curl -X GET "http://mojeip.dynu.net:8084/course/{subject}/name" -H "Content-Type: application/json"
 ```
 - get course/{course}
-- show show what subjects are included in the course
+- show  what subjects are included in the course
  ```bash
 curl -X GET "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json"
 ```
 
-
-
-    
-
-  - 
-
-
-
-
-
-
-
- - **[Swagger UI - API Documentation(Student)](http://mojeip.dynu.net:8085/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation(Student)](http://mojeip.dynu.net:8085/webjars/swagger-ui/index.html)**
+  email : password
+  student@interia.pl:lukasz
+  ......             :lukasz
+  student20@interia.pl:lukasz
+- Post student -> look registration controller
+- 
+- 
