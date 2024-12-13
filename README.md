@@ -171,7 +171,7 @@ information based on email from token
 - create new subject
 
  ```bash
- curl -X POST mojeip.dynu.net:8083/subject -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
+ curl -X POST mojeip.dynu.net:8083/subject  -H "Authorization: Bearer <token> " -d "{
     \"subject\":\"subjectName\" }"
   ````
 Delete  /subject/{subjectName} -> only person with office role
@@ -193,28 +193,28 @@ find all subject
 - create new course
 
  ```bash
-curl -X POST "http://mojeip.dynu.net:8084/course" -H "Content-Type: application/json" -d "{\"courseName\": \"Course Name\", \"subjects\": [\"subject1\", \"subject2\", \"subject3\"]}"
+curl -X POST "mojeip.dynu.net:8084/course"  -H "Authorization: Bearer <token>" -d "{\"courseName\": \"Course Name\", \"subjects\": [\"subject1\", \"subject2\", \"subject3\"]}"
 
  ````
 - Delete  /subject/{subjectName} -> only person with office role
 - delete /course
 ```bash 
-curl -X DELETE "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
+curl -X DELETE "mojeip.dynu.net:8084/course/{course}" -H "Authorization: Bearer <token>"
 ````
 - Get /course/all
 - all courses
   ```bash
-  curl -X GET "http://mojeip.dynu.net:8084/course/all" -H "Content-Type: application/json"
+  curl -X GET "mojeip.dynu.net:8084/course/all" -H "Content-Type: application/json"
   ```
   - get /course/{subject}/name
   - find courses containing  some subject
  ```bash
-curl -X GET "http://mojeip.dynu.net:8084/course/{subject}/name" -H "Content-Type: application/json"
+curl -X GET "mojeip.dynu.net:8084/course/{subject}/name" -H "Content-Type: application/json"
 ```
 - get course/{course}
 - show  what subjects are included in the course
  ```bash
-curl -X GET "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json"
+curl -X GET "mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json"
 ```
 
 - **[Swagger UI - API Documentation(Student)](http://mojeip.dynu.net:8085/webjars/swagger-ui/index.html)**
@@ -225,9 +225,10 @@ curl -X GET "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: appl
 - Post /student -> look registration controller
 - 
 -Put /student/update  -> only person with office role
--write course to student
+
+write course to student
 ```
-curl -X PUT "http://mojeip.dynu.net:8085/student/update" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d "{
+curl -X PUT "mojeip.dynu.net:8085/student/update" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d "{
     "course": "course name",
     "studentEmail": "student email"
 }"
@@ -236,25 +237,25 @@ curl -X PUT "http://mojeip.dynu.net:8085/student/update" -H "Content-Type: appli
 -Get /student/{email}
 - get student information by email
 ```
-curl -X GET "http://mojeip.dynu.net:8085/student/{email}" -H "Content-Type: application/json"
+curl -X GET "mojeip.dynu.net:8085/student/{email}" -H "Content-Type: application/json"
 ```
 -
 - Get /student/assigned 
 - get students with course
 ```
-curl -X GET "http://mojeip.dynu.net:8085/student/assigned" -H "Content-Type: application/json"
+curl -X GET "mojeip.dynu.net:8085/student/assigned" -H "Content-Type: application/json"
 ```
 
 - Get /student/unassigned
 - get students without course
 ``` 
-curl -X GET "http://mojeip.dynu.net:8085/student/unassigned" -H "Content-Type: application/json"
+curl -X GET "mojeip.dynu.net:8085/student/unassigned" -H "Content-Type: application/json"
 ```
 -
 -Get /student/studentInfo/{course}
 -get students by course
 ``` 
-curl -X GET "http://mojeip.dynu.net:8085/student/studentInfo/{course}" -H "Content-Type: application/json"
+curl -X GET "mojeip.dynu.net:8085/student/studentInfo/{course}" -H "Content-Type: application/json"
 ```
 -
 -Get /student/teachers
@@ -262,3 +263,24 @@ curl -X GET "http://mojeip.dynu.net:8085/student/studentInfo/{course}" -H "Conte
 ``` 
 curl -X GET mojeip.dynu.net:8085/student/teachers -H "Authorization: Bearer <token>"
 ```
+
+-
+-
+Post  /grades  -> only person with Teacher role
+
+write grades to student
+
+``` 
+curl -X POST "mojeip.dynu.net:8085/grades" -H "Authorization: Bearer <token>" -d "{\"email\": \"student email\",  \"subject\": \"example subject\",\"gradesDescription\": \"  example description\"}"
+```
+-
+Get /grades/my-grades
+
+get my grades  based on token
+
+``` 
+curl -X GET mojeip.dynu.net:8085/grades/my-grades -H "Authorization: Bearer <token>"
+```
+
+
+
