@@ -180,7 +180,7 @@ delete subject
 curl -X DELETE "http://mojeip.dynu.net:8083/subject/{subjectName}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
 ````
 
--Get /subject/all   find all subjects 
+-Get /subject/all  
 find all subject
 ```bash
  curl -X GET mojeip.dynu.net:8083/subject/all -H "Content-Type: application/json"
