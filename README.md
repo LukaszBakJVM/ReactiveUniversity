@@ -34,7 +34,7 @@ is sent to the appropriate microservice depending on the role.
  curl -X GET mojeip.dynu.net:8090/user/role -H "Authorization: Bearer <token>"
  ````
 
-- registration controler ->  register  new person (role office,teacher,student)  -> only user with role office allowed access
+- registration controller ->  register  new person (role office,teacher,student)  -> only user with role office allowed access
 ```bash
  curl -X POST mojeip.dynu.net:8090/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
     \"firstName\":\"John\",
@@ -174,7 +174,7 @@ information based on email from token
  curl -X POST mojeip.dynu.net:8083/subject -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
     \"subject\":\"subjectName\" }"
   ````
-Delete  subject/{subjectName} -> only person with office role
+Delete  /subject/{subjectName} -> only person with office role
 delete subject
 ```bash 
 curl -X DELETE "http://mojeip.dynu.net:8083/subject/{subjectName}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
@@ -196,17 +196,17 @@ find all subject
 curl -X POST "http://mojeip.dynu.net:8084/course" -H "Content-Type: application/json" -d "{\"courseName\": \"Course Name\", \"subjects\": [\"subject1\", \"subject2\", \"subject3\"]}"
 
  ````
-- Delete  subject/{subjectName} -> only person with office role
-- delete course
+- Delete  /subject/{subjectName} -> only person with office role
+- delete /course
 ```bash 
 curl -X DELETE "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
 ````
-- Get course/all
+- Get /course/all
 - all courses
   ```bash
   curl -X GET "http://mojeip.dynu.net:8084/course/all" -H "Content-Type: application/json"
   ```
-  - get course/{subject}/name
+  - get /course/{subject}/name
   - find courses containing  some subject
  ```bash
 curl -X GET "http://mojeip.dynu.net:8084/course/{subject}/name" -H "Content-Type: application/json"
@@ -222,6 +222,43 @@ curl -X GET "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: appl
   student@interia.pl:lukasz
   ......             :lukasz
   student20@interia.pl:lukasz
-- Post student -> look registration controller
+- Post /student -> look registration controller
 - 
-- 
+-Put /student/update  -> only person with office role
+-write course to student
+```
+curl -X PUT "http://mojeip.dynu.net:8085/student/update" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d "{
+    "course": "course name",
+    "studentEmail": "student email"
+}"
+```
+-
+-Get /student/{email}
+- get student information by email
+```
+curl -X GET "http://mojeip.dynu.net:8085/student/{email}" -H "Content-Type: application/json"
+```
+-
+- Get /student/assigned 
+- get students with course
+```
+curl -X GET "http://mojeip.dynu.net:8085/student/assigned" -H "Content-Type: application/json"
+```
+
+- Get /student/unassigned
+- get students without course
+``` 
+curl -X GET "http://mojeip.dynu.net:8085/student/unassigned" -H "Content-Type: application/json"
+```
+-
+-Get /student/studentInfo/{course}
+-get students by course
+``` 
+curl -X GET "http://mojeip.dynu.net:8085/student/studentInfo/{course}" -H "Content-Type: application/json"
+```
+-
+-Get /student/teachers
+-get my teachers find teachers who teach me based on token
+``` 
+curl -X GET mojeip.dynu.net:8085/student/teachers -H "Authorization: Bearer <token>"
+```
