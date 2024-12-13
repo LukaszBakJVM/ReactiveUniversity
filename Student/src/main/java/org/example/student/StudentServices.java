@@ -59,9 +59,6 @@ public class StudentServices {
         return studentRepository.findAll().filter(c -> c.getCourse() == null).map(studentMapper::studentInfoWithoutCourse);
     }
 
-    Flux<StudentEmail> findStudentsByEmails(String emailContaining) {
-        return studentRepository.findByEmailContaining(emailContaining).map(studentMapper::email);
-    }
 
     Flux<StudentInfoWithCourse> studentInfoByCourse(String course) {
         return studentRepository.findByCourse(course).map(studentMapper::studentInfoWithCourse);
@@ -74,11 +71,11 @@ public class StudentServices {
     }
 
 
-  private   Mono<SubjectsByCourse> findSubjectsByCourse(String course) {
+    private Mono<SubjectsByCourse> findSubjectsByCourse(String course) {
         return webClient.baseUrl(courseUrl).build().get().uri("/course/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(SubjectsByCourse.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : course ")));
     }
 
-  private   Mono<Teacher> findTeachersBySubjects(String subject) {
+    private Mono<Teacher> findTeachersBySubjects(String subject) {
         return webClient.baseUrl(teacherUrl).build().get().uri("/teacher/info/{subject}", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(Teacher.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : teacher")));
     }
 

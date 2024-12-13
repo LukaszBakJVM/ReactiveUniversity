@@ -50,11 +50,6 @@ public class StudentController {
         return studentServices.allStudentsWithoutCourse();
     }
 
-    @GetMapping("/write-grades/{email}")
-    @ResponseStatus(HttpStatus.OK)
-    Flux<StudentEmail> studentsEmail(@PathVariable String email) {
-        return studentServices.findStudentsByEmails(email);
-    }
 
     @GetMapping("/studentInfo/{course}")
     @ResponseStatus(HttpStatus.OK)
@@ -64,10 +59,9 @@ public class StudentController {
     }
 
     @GetMapping("/teachers")
-    Mono<List<Teacher>>getMyTeachers() {
+    Mono<List<Teacher>> getMyTeachers() {
         return studentServices.findMyTeachers();
     }
-
 
 
 }
