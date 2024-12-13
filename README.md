@@ -218,10 +218,10 @@ curl -X GET "http://mojeip.dynu.net:8084/course/{course}" -H "Content-Type: appl
 ```
 
 - **[Swagger UI - API Documentation(Student)](http://mojeip.dynu.net:8085/webjars/swagger-ui/index.html)**
-  email : password
-  student@interia.pl:lukasz
+-  email : password
+-  student@interia.pl:lukasz
   ......             :lukasz
-  student20@interia.pl:lukasz
+-  student20@interia.pl:lukasz
 - Post /student -> look registration controller
 - 
 -Put /student/update  -> only person with office role
