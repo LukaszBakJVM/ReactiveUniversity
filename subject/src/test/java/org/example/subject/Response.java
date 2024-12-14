@@ -1,11 +1,17 @@
 package org.example.subject;
 
+import org.example.subject.dto.SubjectDto;
+
 import java.util.List;
 
 public class Response {
     String allSubjects = """
             [{"subject":"Biologia"},{"subject":"Fizyka"},{"subject":"Matematyka"},{"subject":"Chemia"}]
             """;
+
+    SubjectDto subjectDto (){
+        return new SubjectDto("Geografia");
+    }
 
 
     List<Subject>saveSubjects = List.of(save(),save1(),save2(),save3());
