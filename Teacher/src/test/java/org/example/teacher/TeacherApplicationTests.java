@@ -67,7 +67,7 @@ class TeacherApplicationTests {
     }
 
     @Test
-    void findMyStudents_shouldReturnOk_whenUserIsAuthorized_teacherRole() {
+    void findMyStudents_shouldReturnOk_whenUserIsAuthorized_TeacherRole() {
         String email = "teacher4@interia.pl";
 
 
@@ -91,7 +91,7 @@ class TeacherApplicationTests {
 
 
     @Test
-    void findMyStudents_shouldReturnForbidden_whenUserIsAuthorized_teacherOffice() {
+    void findMyStudents_shouldReturnForbidden_whenUserIsAuthorized_OfficeRole() {
         String email = "lukasz.bak@interiowy.pl";
 
         String token = token(email, "lukasz");
@@ -114,7 +114,7 @@ class TeacherApplicationTests {
     }
 
     @Test
-    void findMyStudents_shouldReturnForbidden_whenUserIsAuthorized_teacherStudent() {
+    void findMyStudents_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
         String email = "student1@interia.pl";
 
 
@@ -155,7 +155,7 @@ class TeacherApplicationTests {
     }
 
     @Test
-    void writeSubjectsToTeacher_shouldReturnForbidden_whenUserIsAuthorized_OfficeTeacher() {
+    void writeSubjectsToTeacher_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
 
         String email = "teacher4@interia.pl";
 
