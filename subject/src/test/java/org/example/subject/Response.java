@@ -9,9 +9,14 @@ public class Response {
             [{"subject":"Biologia"},{"subject":"Fizyka"},{"subject":"Matematyka"},{"subject":"Chemia"}]
             """;
 
-    SubjectDto subjectDto (){
+    SubjectDto createSubject (){
         return new SubjectDto("Geografia");
     }
+    String responseCreateSubject= """
+            {
+            "subject":"Geografia"
+            }
+            """;
 
 
     List<Subject>saveSubjects = List.of(save(),save1(),save2(),save3());

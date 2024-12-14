@@ -65,14 +65,14 @@ class SubjectApplicationTests {
     void writeNewSubjects_shouldReturnCreated_whenUserIsAuthorized_OfficeRole() {
         String token = token("lukasz.bak@interiowy.pl", "lukasz");
 
-        SubjectDto body = response.subjectDto();
-        webTestClient.post().uri("/subject").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(body).exchange().expectStatus().isCreated();
+        SubjectDto body = response.createSubject();
+        webTestClient.post().uri("/subject").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(body).exchange().expectStatus().isCreated().expectBody().json(response.responseCreateSubject);
     }
 
     @Test
     void writeNewSubjects_shouldReturnForbidden_whenUserIsAuthorized_TeacherRole() {
         String token = token("teacher1@interia.pl", "lukasz");
-        SubjectDto body = response.subjectDto();
+        SubjectDto body = response.createSubject();
 
         webTestClient.post().uri("/subject").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(body).exchange().expectStatus().isForbidden();
 
@@ -81,7 +81,7 @@ class SubjectApplicationTests {
     @Test
     void writeNewSubjects_shouldReturnForbidden_whenUserIsAuthorized_StudentRole() {
         String token = token("student1@interia.pl", "lukasz");
-        SubjectDto body = response.subjectDto();
+        SubjectDto body = response.createSubject();
 
         webTestClient.post().uri("/subject").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(body).exchange().expectStatus().isForbidden();
     }
