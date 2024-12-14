@@ -12,6 +12,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
@@ -67,6 +69,9 @@ class SubjectApplicationTests {
 
         SubjectDto body = response.createSubject();
         webTestClient.post().uri("/subject").header("Authorization", "Bearer " + token).accept(MediaType.APPLICATION_JSON).bodyValue(body).exchange().expectStatus().isCreated().expectBody().json(response.responseCreateSubject);
+
+        Mono<Subject> geografia = subjectRepository.findBySubject("Geografia");
+        StepVerifier.create(geografia).expectNextMatches(s->s.getSubject().equals("Geografia")).verifyComplete();
     }
 
     @Test
