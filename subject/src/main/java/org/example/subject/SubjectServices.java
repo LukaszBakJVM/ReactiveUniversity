@@ -2,6 +2,7 @@ package org.example.subject;
 
 import org.example.subject.dto.SubjectDto;
 import org.example.subject.exception.DuplicateSubjectException;
+import org.example.subject.exception.SubjectNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,7 +29,7 @@ public class SubjectServices {
     }
 
     Mono<Void> deleteSubject(String subject) {
-        return subjectRepository.deleteBySubject(subject);
+        return subjectRepository.findBySubject(subject).switchIfEmpty(Mono.error(new SubjectNotFoundException(String.format("Subject %s not found", subject)))).flatMap(s -> subjectRepository.deleteBySubject(subject));
     }
 
 
