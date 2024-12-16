@@ -9,7 +9,6 @@ import org.example.reactiveuniversity.exception.CustomValidationException;
 import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.example.reactiveuniversity.security.Login;
 import org.example.reactiveuniversity.security.token.TokenStore;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,6 @@ public class RegistrationService {
     private final TokenStore tokenStore;
 
     private final KafkaProducerServices kafkaProducerService;
-
 
 
     public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenStore tokenStore, KafkaProducerServices kafkaProducerService) {

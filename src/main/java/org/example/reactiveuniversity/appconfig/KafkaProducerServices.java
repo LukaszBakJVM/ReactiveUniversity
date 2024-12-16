@@ -19,6 +19,6 @@ public class KafkaProducerServices {
 
         Message<Object> kafkaMessage = MessageBuilder.withPayload(body).setHeader("Authorization", token).build();
 
-        kafkaTemplate.send(topic, kafkaMessage.getPayload());
+        kafkaTemplate.send(topic, kafkaMessage);
     }
 }
