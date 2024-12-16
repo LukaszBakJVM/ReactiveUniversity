@@ -1,22 +1,20 @@
 package org.example.reactiveuniversity;
 
 import jakarta.validation.ConstraintViolation;
+import org.example.reactiveuniversity.appconfig.KafkaProducerServices;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
-import org.example.reactiveuniversity.exception.*;
+import org.example.reactiveuniversity.exception.CustomValidationException;
+import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.example.reactiveuniversity.security.Login;
 import org.example.reactiveuniversity.security.token.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
@@ -31,21 +29,18 @@ public class RegistrationService {
     private final RegistrationMapper registrationMapper;
     private final LocalValidatorFactoryBean validation;
     private final TokenStore tokenStore;
-    private final WebClient.Builder webclient;
-    @Value("${teacher}")
-    private String teacherUrl;
-    @Value("${student}")
-    private String studentUrl;
-    @Value("${office}")
-    private String officeUrl;
+
+    private final KafkaProducerServices kafkaProducerService;
 
 
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenStore tokenStore, WebClient.Builder webclient) {
+
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenStore tokenStore, KafkaProducerServices kafkaProducerService) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
         this.tokenStore = tokenStore;
-        this.webclient = webclient;
+
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     List<String> role() {
@@ -83,18 +78,20 @@ public class RegistrationService {
 
 
     private Mono<Void> writeUser(String role, WriteNewPerson body, String token) {
-        String authorization = "Authorization";
-        String header = "Bearer %s".formatted(token);
-        String url = switch (role) {
-            case "Office" -> officeUrl + "/office";
-            case "Teacher" -> teacherUrl + "/teacher";
-            case "Student" -> studentUrl + "/student";
-            default -> throw new WrongRoleException("Unknown Error");
-        };
-
-        return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
+        return Mono.fromRunnable(() -> {
+            switch (role) {
+                case "Office" -> kafkaProducerService.sendMessage("office-topic", body, token);
+                case "Teacher" -> kafkaProducerService.sendMessage("teacher-topic", body, token);
+                case "Student" -> kafkaProducerService.sendMessage("student-topic", body, token);
+                default -> throw new CustomValidationException("Invalid role");
+            }
+        });
     }
 }
+
+
+
+
 
 
 
