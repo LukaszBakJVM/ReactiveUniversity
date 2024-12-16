@@ -2,9 +2,9 @@ package org.example.reactiveuniversity.appconfig;
 
 
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class KafkaProducerServices {
@@ -14,11 +14,14 @@ public class KafkaProducerServices {
         this.kafkaTemplate = kafkaTemplate;
     }
 
+    public Mono<Void> sendMessage(String topic, Object body, String token) {
 
-    public void sendMessage(String topic, Object body, String token) {
+        String header = "Bearer %s".formatted(token);
 
-        Message<Object> kafkaMessage = MessageBuilder.withPayload(body).setHeader("Authorization", token).build();
 
-        kafkaTemplate.send(topic, kafkaMessage);
+        var kafkaMessage = MessageBuilder.withPayload(body).setHeader("Authorization", header).build();
+
+
+        return Mono.fromFuture(() -> kafkaTemplate.send(topic, kafkaMessage)).then();
     }
 }
