@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class KafkaProducerServices {
-    private final KafkaTemplate<String, WriteNewPerson> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public KafkaProducerServices(KafkaTemplate<String, WriteNewPerson> kafkaTemplate) {
+    public KafkaProducerServices(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
 
-    public void sendMessage(String topic, WriteNewPerson body, String token) {
+    public void sendMessage(String topic, Object body, String token) {
 
-        Message<WriteNewPerson> kafkaMessage = MessageBuilder.withPayload(body).setHeader("Authorization", token).build();
+        Message<Object> kafkaMessage = MessageBuilder.withPayload(body).setHeader("Authorization", token).build();
 
         kafkaTemplate.send(topic, kafkaMessage.getPayload());
     }
