@@ -1,7 +1,6 @@
 package org.example.reactiveuniversity.appconfig;
 
 
-import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
