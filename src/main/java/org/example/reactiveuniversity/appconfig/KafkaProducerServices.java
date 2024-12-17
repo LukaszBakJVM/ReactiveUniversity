@@ -2,7 +2,6 @@ package org.example.reactiveuniversity.appconfig;
 
 
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -15,13 +14,6 @@ public class KafkaProducerServices {
     }
 
     public Mono<Void> sendMessage(String topic, Object body, String token) {
-
-        String header = "Bearer %s".formatted(token);
-
-
-        var kafkaMessage = MessageBuilder.withPayload(body).setHeader("Authorization", header).build();
-
-
-        return Mono.fromFuture(() -> kafkaTemplate.send(topic, kafkaMessage)).then();
+        return Mono.fromFuture(() -> kafkaTemplate.send(topic, body)).then();
     }
 }
