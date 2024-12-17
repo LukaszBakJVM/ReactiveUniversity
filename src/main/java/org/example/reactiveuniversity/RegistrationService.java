@@ -76,17 +76,14 @@ public class RegistrationService {
 
 
     public Mono<Void> writeUser(String role, WriteNewPerson body, String token) {
-        return Mono.defer(() -> {
-            switch (role) {
-                case "Office":
-                    return kafkaProducerService.sendMessage("office-topic", body, token); // Wysyłanie wiadomości do "office-topic"
-                case "Teacher":
-                    return kafkaProducerService.sendMessage("teacher-topic", body, token); // Wysyłanie wiadomości do "teacher-topic"
-                case "Student":
-                    return kafkaProducerService.sendMessage("student-topic", body, token); // Wysyłanie wiadomości do "student-topic"
-                default:
-                    return Mono.error(new CustomValidationException("Invalid role"));
-            }
+        return Mono.defer(() -> switch (role) {
+            case "Office" ->
+                    kafkaProducerService.sendMessage("office-topic", body, token);
+            case "Teacher" ->
+                    kafkaProducerService.sendMessage("teacher-topic", body, token);
+            case "Student" ->
+                    kafkaProducerService.sendMessage("student-topic", body, token);
+            default -> Mono.error(new CustomValidationException("Invalid role"));
         });
     }
 }
