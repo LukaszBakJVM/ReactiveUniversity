@@ -2,6 +2,7 @@ package org.example.office;
 
 
 import org.example.office.dto.WriteNewPersonOffice;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -22,6 +23,15 @@ public class OfficeServices {
 
     Mono<WriteNewPersonOffice> createNewPerson(WriteNewPersonOffice dto) {
         return officeRepository.save(officeMapper.dtoToOffice(dto)).map(officeMapper::officeToDto);
+    }
+
+    @KafkaListener(topics = "office-topic", groupId = "your-consumer-group")
+    public void listenStudentTopic(WriteNewPersonOffice person) {
+        Office office = officeMapper.dtoToOffice(person);
+        officeRepository.save(office).subscribe();
+
+
+        System.out.println("Received Person: " + person);
     }
 
 

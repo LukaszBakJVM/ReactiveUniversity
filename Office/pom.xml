@@ -116,6 +116,18 @@
             <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
             <version>2.6.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.0</version> <!-- Upewnij się, że masz odpowiednią wersję -->
+        </dependency>
+
+        <!-- Kafka Clients (jeśli jeszcze nie masz) -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>3.7.1</version> <!-- Upewnij się, że masz odpowiednią wersję -->
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.kafka</groupId>

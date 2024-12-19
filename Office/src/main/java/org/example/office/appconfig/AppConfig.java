@@ -1,12 +1,20 @@
 package org.example.office.appconfig;
 
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.office.dto.WriteNewPersonOffice;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -17,9 +25,12 @@ import org.springframework.security.web.server.authentication.AuthenticationWebF
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebFluxSecurity
+@EnableKafka
 public class AppConfig {
 
 
@@ -45,5 +56,23 @@ public class AppConfig {
         return http.build();
 
 
+    }
+    @Bean
+    public Map<String, Object> consumerConfig() {
+        Map<String, Object> consumerProps = new HashMap<>();
+        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "your-consumer-group");
+        consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewPersonOffice.class.getName());  // Określamy typ obiektu
+        consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");  // Możesz dodać bardziej restrykcyjne pakiety
+        return consumerProps;
+    }
+
+    @Bean
+    public ConsumerFactory<String, WriteNewPersonOffice> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                consumerConfig(),
+                new StringDeserializer(),
+                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(WriteNewPersonOffice.class))
+        );
     }
 }
