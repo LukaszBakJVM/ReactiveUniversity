@@ -62,8 +62,8 @@ public class AppConfig {
         Map<String, Object> consumerProps = new HashMap<>();
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "your-consumer-group");
-        consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewPersonOffice.class.getName());  // Określamy typ obiektu
-        consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");  // Możesz dodać bardziej restrykcyjne pakiety
+        consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewPersonOffice.class.getName());
+        consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return consumerProps;
     }
 
