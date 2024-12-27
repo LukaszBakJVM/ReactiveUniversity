@@ -4,7 +4,6 @@ import jakarta.validation.ConstraintViolation;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
-import org.example.reactiveuniversity.exception.ConnectionException;
 import org.example.reactiveuniversity.exception.CustomValidationException;
 import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.example.reactiveuniversity.security.Login;
@@ -44,18 +43,10 @@ public class RegistrationService {
             Registration registration = registrationMapper.dtoToEntity(registrationDto);
             validationRegistration(registration);
             WriteNewPerson write = registrationMapper.write(registration);
-             writeUser(registration.getRole(), write).subscribe();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            WriteNewPerson writeNewPerson = kafkaService.writeNewPerson;
-            if (!writeNewPerson.equals(write)) {
-                    return Mono.error(new ConnectionException("Connection error"));
-                }
-                return registrationRepository.save(registration).map(registrationMapper::entityToDto);
-            }));
+
+
+            return writeUser(registrationDto.role(), write).then(registrationRepository.save(registration).map(registrationMapper::entityToDto));
+        }));
 
     }
 
