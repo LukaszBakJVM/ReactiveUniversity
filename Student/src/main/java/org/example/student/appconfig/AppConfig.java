@@ -1,5 +1,8 @@
 package org.example.student.appconfig;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.example.student.dto.WriteNewPerson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +11,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.http.HttpMethod;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -19,14 +28,31 @@ import org.springframework.security.web.server.authentication.ServerAuthenticati
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Configuration
 @EnableWebFluxSecurity
 @EnableR2dbcAuditing
+@EnableKafka
 public class AppConfig {
     @Value("${teacherUrl}")
     private String baseUrl;
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+    @Value("${spring.kafka.producer.key-serializer}")
+    private String keySerializer;
+    @Value("${spring.kafka.producer.value-serializer}")
+    private String valueSerializer;
+
+
+    @Value("${spring.kafka.consumer.key-deserializer}")
+    private String keydeserializer;
+    @Value("spring.kafka.consumer.value-deserializer")
+    private String valuedeserializer;
+    @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
+    private String trustedPacked;
 
 
     @Bean
@@ -55,6 +81,31 @@ public class AppConfig {
     @Bean
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder().baseUrl(baseUrl);
+    }
+
+    @Bean
+    public Map<String, Object> consumerConfig() {
+        Map<String, Object> consumerProps = new HashMap<>();
+        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "your-consumer-group");
+        consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewPerson.class.getName());
+        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keydeserializer);
+        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valuedeserializer);
+        consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPacked);
+        return consumerProps;
+    }
+
+
+    @Bean
+    public KafkaTemplate<String, Object> kafkaTemplateObject() {
+
+        Map<String, Object> producerProps = new HashMap<>();
+        producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer);
+        producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer);
+        producerProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
+        ProducerFactory<String, Object> producerFactory = new DefaultKafkaProducerFactory<>(producerProps);
+        return new KafkaTemplate<>(producerFactory);
     }
 
 

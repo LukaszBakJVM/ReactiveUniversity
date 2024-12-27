@@ -1,6 +1,9 @@
 package org.example.teacher;
 
-import org.example.teacher.dto.*;
+import org.example.teacher.dto.AddSchoolSubjects;
+import org.example.teacher.dto.FindAllTeacherStudents;
+import org.example.teacher.dto.TeacherPrivateInfo;
+import org.example.teacher.dto.TeacherPublicInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +21,6 @@ public class TeacherController {
 
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    Mono<WriteNewTeacherDto> addNewTeacher(@RequestBody WriteNewTeacherDto dto) {
-        return teacherServices.createTeacher(dto);
-
-    }
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)

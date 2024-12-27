@@ -1,6 +1,9 @@
 package org.example.student;
 
-import org.example.student.dto.*;
+import org.example.student.dto.AddCourse;
+import org.example.student.dto.StudentInfoWithCourse;
+import org.example.student.dto.StudentInfoWithoutCourse;
+import org.example.student.dto.Teacher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -18,11 +21,6 @@ public class StudentController {
         this.studentServices = studentServices;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    Mono<WriteNewPerson> addStudent(@RequestBody WriteNewPerson student) {
-        return studentServices.createStudent(student);
-    }
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -5,9 +5,13 @@ import org.example.teacher.exception.ConnectionException;
 import org.example.teacher.exception.UsernameNotFoundException;
 import org.example.teacher.exception.WrongCredentialsException;
 import org.example.teacher.security.token.TokenStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
@@ -26,24 +30,22 @@ public class TeacherServices {
     private final TeacherRepository teacherRepository;
     private final WebClient.Builder webClient;
     private final TokenStore tokenStore;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final Logger logger = LoggerFactory.getLogger(TeacherServices.class);
     @Value("${student}")
     private String studentUrl;
     @Value("${course}")
     private String courseUrl;
 
 
-    public TeacherServices(TeacherMapper teacherMapper, TeacherRepository teacherRepository, WebClient.Builder webClient, TokenStore tokenStore) {
+    public TeacherServices(TeacherMapper teacherMapper, TeacherRepository teacherRepository, WebClient.Builder webClient, TokenStore tokenStore, KafkaTemplate<String, Object> kafkaTemplate) {
         this.teacherMapper = teacherMapper;
         this.teacherRepository = teacherRepository;
         this.webClient = webClient;
         this.tokenStore = tokenStore;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    Mono<WriteNewTeacherDto> createTeacher(WriteNewTeacherDto dto) {
-        return teacherRepository.save(teacherMapper.dtoToEntity(dto)).map(teacherMapper::entityToDto);
-
-
-    }
 
     Mono<AddSchoolSubjects> addSchoolSubjects(AddSchoolSubjects schoolSubjects) {
         return teacherRepository.findByEmail(schoolSubjects.email()).flatMap(teacher -> {
@@ -89,6 +91,19 @@ public class TeacherServices {
         return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
 
 
+    }
+
+    @KafkaListener(topics = "teacher-topic", groupId = "your-consumer-group")
+    private void listenTeacherTopic(WriteNewTeacherDto person) {
+        logger.info("Received Person: {}", person);
+        Teacher teacher = teacherMapper.dtoToEntity(person);
+        teacherRepository.save(teacher).subscribe();
+        sendMessage("response", person).subscribe();
+        logger.info("send to registration {}", person);
+    }
+
+    private Mono<Void> sendMessage(String topic, Object body) {
+        return Mono.fromFuture(() -> kafkaTemplate.send(topic, body)).then();
     }
 }
 
