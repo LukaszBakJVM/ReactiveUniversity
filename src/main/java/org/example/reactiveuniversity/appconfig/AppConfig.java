@@ -1,7 +1,10 @@
 package org.example.reactiveuniversity.appconfig;
 
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +15,9 @@ import org.springframework.data.domain.ReactiveAuditorAware;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.http.HttpMethod;
 import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.core.*;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -47,6 +50,14 @@ public class AppConfig {
     private String keySerializer;
     @Value("${spring.kafka.producer.value-serializer}")
     private String valueSerializer;
+
+
+    @Value("${spring.kafka.consumer.key-deserializer}")
+    private String keydeserializer;
+    @Value("spring.kafka.consumer.value-deserializer")
+    private String valuedeserializer;
+    @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
+    private String trustedPacked;
 
     @Bean
     public ApplicationRunner initializeDatabase(DatabaseClient databaseClient) {
@@ -96,6 +107,27 @@ public class AppConfig {
 
         ProducerFactory<String, Object> producerFactory = new DefaultKafkaProducerFactory<>(producerProps);
         return new KafkaTemplate<>(producerFactory);
+    }
+
+    @Bean
+    public Map<String, Object> consumerConfig() {
+        Map<String, Object> consumerProps = new HashMap<>();
+        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "your-consumer-group");
+        consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewPerson.class.getName());
+        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,keydeserializer);
+        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,valuedeserializer);
+        consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPacked);
+        return consumerProps;
+    }
+
+    @Bean
+    public ConsumerFactory<String, WriteNewPerson> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                consumerConfig(),
+                new StringDeserializer(),
+                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(WriteNewPerson.class))
+        );
     }
 
 

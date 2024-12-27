@@ -1,22 +1,18 @@
 package org.example.reactiveuniversity;
 
 import jakarta.validation.ConstraintViolation;
-import org.example.reactiveuniversity.appconfig.KafkaProducerServices;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
+import org.example.reactiveuniversity.exception.ConnectionException;
 import org.example.reactiveuniversity.exception.CustomValidationException;
 import org.example.reactiveuniversity.exception.DuplicateEmailException;
 import org.example.reactiveuniversity.security.Login;
-import org.example.reactiveuniversity.security.token.TokenStore;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import reactor.core.publisher.Mono;
 
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -27,18 +23,14 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
     private final LocalValidatorFactoryBean validation;
-    private final TokenStore tokenStore;
-
-    private final KafkaProducerServices kafkaProducerService;
+    private final KafkaServices kafkaService;
 
 
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenStore tokenStore, KafkaProducerServices kafkaProducerService) {
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, KafkaServices kafkaService) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
-        this.tokenStore = tokenStore;
-
-        this.kafkaProducerService = kafkaProducerService;
+        this.kafkaService = kafkaService;
     }
 
     List<String> role() {
@@ -52,12 +44,21 @@ public class RegistrationService {
             Registration registration = registrationMapper.dtoToEntity(registrationDto);
             validationRegistration(registration);
             WriteNewPerson write = registrationMapper.write(registration);
-            Mono<String> name = ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
+             writeUser(registration.getRole(), write).subscribe();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            WriteNewPerson writeNewPerson = kafkaService.writeNewPerson;
+            if (!writeNewPerson.equals(write)) {
+                    return Mono.error(new ConnectionException("Connection error"));
+                }
+                return registrationRepository.save(registration).map(registrationMapper::entityToDto);
+            }));
 
-
-            return name.flatMap(e -> writeUser(registrationDto.role(), write, tokenStore.getToken(e)).then(registrationRepository.save(registration).map(registrationMapper::entityToDto)));
-        }));
     }
+
 
     public Mono<Login> login(String email) {
         return registrationRepository.findByEmail(email).map(registrationMapper::login);
@@ -75,14 +76,11 @@ public class RegistrationService {
     }
 
 
-    public Mono<Void> writeUser(String role, WriteNewPerson body, String token) {
+    public Mono<Void> writeUser(String role, WriteNewPerson body) {
         return Mono.defer(() -> switch (role) {
-            case "Office" ->
-                    kafkaProducerService.sendMessage("office-topic", body, token);
-            case "Teacher" ->
-                    kafkaProducerService.sendMessage("teacher-topic", body, token);
-            case "Student" ->
-                    kafkaProducerService.sendMessage("student-topic", body, token);
+            case "Office" -> kafkaService.sendMessage("office-topic", body);
+            case "Teacher" -> kafkaService.sendMessage("teacher-topic", body);
+            case "Student" -> kafkaService.sendMessage("student-topic", body);
             default -> Mono.error(new CustomValidationException("Invalid role"));
         });
     }
