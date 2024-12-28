@@ -44,7 +44,7 @@ public class AppConfig {
 
     @Value("${spring.kafka.consumer.key-deserializer}")
     private String keydeserializer;
-    @Value("spring.kafka.consumer.value-deserializer")
+    @Value("${spring.kafka.consumer.value-deserializer}")
     private String valuedeserializer;
     @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
     private String trustedPacked;
