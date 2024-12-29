@@ -40,12 +40,12 @@ public class AppConfig {
     private String valueSerializer;
 
 
-    @Value("${spring.kafka.consumer.key-deserializer}")
-    private String keydeserializer;
-    @Value("${spring.kafka.consumer.value-deserializer}")
-    private String valuedeserializer;
-    @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
-    private String trustedPacked;
+    //@Value("${spring.kafka.consumer.key-deserializer}")
+   // private String keydeserializer;
+  //  @Value("${spring.kafka.consumer.value-deserializer}")
+  //  private String valuedeserializer;
+  //  @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
+  //  private String trustedPacked;
 
 
 
@@ -81,9 +81,9 @@ public class AppConfig {
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "your-consumer-group");
         consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewTeacherDto.class.getName());
-        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keydeserializer);
-        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valuedeserializer);
-        consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPacked);
+       // consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keydeserializer);
+       // consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valuedeserializer);
+       // consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPacked);
         return consumerProps;
     }
 

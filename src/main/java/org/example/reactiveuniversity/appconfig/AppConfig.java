@@ -52,12 +52,12 @@ public class AppConfig {
     private String valueSerializer;
 
 
-    @Value("${spring.kafka.consumer.key-deserializer}")
-    private String keydeserializer;
-    @Value("spring.kafka.consumer.value-deserializer")
-    private String valuedeserializer;
-    @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
-    private String trustedPacked;
+   // @Value("${spring.kafka.consumer.key-deserializer}")
+   // private String keydeserializer;
+   // @Value("${spring.kafka.consumer.value-deserializer}")
+   // private String valuedeserializer;
+   // @Value("${spring.kafka.consumer.properties.spring.json.trusted.packages}")
+   // private String trustedPacked;
 
     @Bean
     public ApplicationRunner initializeDatabase(DatabaseClient databaseClient) {
@@ -75,8 +75,7 @@ public class AppConfig {
         authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
 
-        http.authorizeExchange(e -> e.pathMatchers(HttpMethod.POST, "/user/registration").hasRole("Office").pathMatchers(HttpMethod.POST, "/login").permitAll().pathMatchers(HttpMethod.GET, "/user/role").hasRole("Office").
-                anyExchange().permitAll());
+        http.authorizeExchange(e -> e.pathMatchers(HttpMethod.POST, "/user/registration").hasRole("Office").pathMatchers(HttpMethod.POST, "/login").permitAll().pathMatchers(HttpMethod.GET, "/user/role").hasRole("Office").anyExchange().permitAll());
         http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
         return http.build();
     }
@@ -103,7 +102,7 @@ public class AppConfig {
         producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer);
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer);
-        producerProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS,false);
+        producerProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
 
         ProducerFactory<String, Object> producerFactory = new DefaultKafkaProducerFactory<>(producerProps);
         return new KafkaTemplate<>(producerFactory);
@@ -115,21 +114,16 @@ public class AppConfig {
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "your-consumer-group");
         consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewPerson.class.getName());
-        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,keydeserializer);
-        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,valuedeserializer);
-        consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPacked);
+        // consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,keydeserializer);
+        // consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,valuedeserializer);
+        // consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPacked);
         return consumerProps;
     }
 
     @Bean
     public ConsumerFactory<String, WriteNewPerson> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(
-                consumerConfig(),
-                new StringDeserializer(),
-                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(WriteNewPerson.class))
-        );
+        return new DefaultKafkaConsumerFactory<>(consumerConfig(), new StringDeserializer(), new ErrorHandlingDeserializer<>(new JsonDeserializer<>(WriteNewPerson.class)));
     }
-
 
 
 }
