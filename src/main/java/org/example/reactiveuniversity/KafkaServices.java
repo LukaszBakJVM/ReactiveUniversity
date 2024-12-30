@@ -1,6 +1,7 @@
 package org.example.reactiveuniversity;
 
 
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,9 @@ public class KafkaServices {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public Mono<Void> sendMessage(String topic, Object body) {
-       return Mono.fromFuture(()-> kafkaTemplate.send(topic, body)).then();
+    public Mono<Void> sendMessage(String topic, String key,Object body) {
+        ProducerRecord<String, Object> record = new ProducerRecord<>(topic, null, key, body);
+        return Mono.fromFuture(()-> kafkaTemplate.send(record)).then();
     }
 
     @KafkaListener(topics = "response", groupId = "your-consumer-group")

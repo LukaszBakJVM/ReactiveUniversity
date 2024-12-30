@@ -1,5 +1,8 @@
 package org.example.teacher;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.example.teacher.dto.*;
 import org.example.teacher.exception.ConnectionException;
 import org.example.teacher.exception.UsernameNotFoundException;
@@ -69,7 +72,7 @@ public class TeacherServices {
     }
 
     Flux<FindAllTeacherStudents> findAllMyStudents() {
-        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).map(TeacherSubjects::subjects).flatMapMany(Flux::fromIterable).flatMap(this::findCourseBySubject).flatMap(this::finaAllUniqueStudents).distinct().flatMap(e -> allGrades(e.email()).map(grades -> new FindAllTeacherStudents(new Student(e.firstName(), e.lastName(), e.email(), e.course()), grades)));
+        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).flatMapIterable(TeacherSubjects::subjects).flatMap(this::findCourseBySubject).flatMap(this::finaAllUniqueStudents).distinct().flatMap(e -> allGrades(e.email()).map(grades -> new FindAllTeacherStudents(new Student(e.firstName(), e.lastName(), e.email(), e.course()), grades)));
 
 
     }
@@ -94,17 +97,37 @@ public class TeacherServices {
     }
 
     @KafkaListener(topics = "teacher-topic", groupId = "your-consumer-group")
-    private void listenTeacherTopic(WriteNewTeacherDto person) {
-        logger.info("Received Person: {}", person);
-        Teacher teacher = teacherMapper.dtoToEntity(person);
-        teacherRepository.save(teacher).subscribe();
-        sendMessage("response", person).subscribe();
-        logger.info("send to registration {}", person);
+    private void listenTeacherTopic(ConsumerRecord<String, String> record) {
+        String topicKey = "WriteNewPerson";
+        String key = record.key();
+        if (key.equals(topicKey)) {
+            logger.info("Received Person: {}", record.value());
+            WriteNewTeacherDto deserialization = deserialization(record.value());
+            Teacher teacher = teacherMapper.dtoToEntity(deserialization);
+            teacherRepository.save(teacher).subscribe();
+            sendMessage("response", teacher).subscribe();
+            logger.info("send to registration {}", teacher);
+        } else {
+            logger.info("my key  {} , received key {}", topicKey, key);
+        }
+
     }
 
     private Mono<Void> sendMessage(String topic, Object body) {
         return Mono.fromFuture(() -> kafkaTemplate.send(topic, body)).then();
     }
+
+    private WriteNewTeacherDto deserialization(String json) {
+        ObjectMapper obj = new ObjectMapper();
+        try {
+            return obj.readValue(json, WriteNewTeacherDto.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+
+        }
+    }
+
+
 }
 
 

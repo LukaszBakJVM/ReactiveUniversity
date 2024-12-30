@@ -113,7 +113,7 @@ public class AppConfig {
         Map<String, Object> consumerProps = new HashMap<>();
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "your-consumer-group");
-        consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewPerson.class.getName());
+       // consumerProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, WriteNewPerson.class.getName());
         // consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,keydeserializer);
         // consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,valuedeserializer);
         // consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, trustedPacked);

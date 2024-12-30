@@ -69,9 +69,9 @@ public class RegistrationService {
 
     public Mono<Void> writeUser(String role, WriteNewPerson body) {
         return Mono.defer(() -> switch (role) {
-            case "Office" -> kafkaService.sendMessage("office-topic", body);
-            case "Teacher" -> kafkaService.sendMessage("teacher-topic", body);
-            case "Student" -> kafkaService.sendMessage("student-topic", body);
+            case "Office" -> kafkaService.sendMessage("office-topic","WriteNewPerson", body);
+            case "Teacher" -> kafkaService.sendMessage("teacher-topic","WriteNewPerson", body);
+            case "Student" -> kafkaService.sendMessage("student-topic","WriteNewPerson", body);
             default -> Mono.error(new CustomValidationException("Invalid role"));
         });
     }
