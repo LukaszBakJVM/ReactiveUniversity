@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TeacherServices {
@@ -71,8 +72,8 @@ public class TeacherServices {
         return teacherRepository.findTeacherBySubjectNameContains(subjectName).map(teacherMapper::teacherPublicInfo);
     }
 
-    Flux<Void> findAllMyStudents() {
-        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).flatMapIterable(TeacherSubjects::subjects).flatMap(this::produceSubjects);
+    Mono<Void> findAllMyStudents() {
+        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).flatMap(s->produceSubjects(s.subjects()));
     }
 
 
@@ -113,8 +114,8 @@ public class TeacherServices {
 
     }
 
-    private Mono<Void> produceSubjects(String subjects) {
-        return Mono.fromFuture(() -> kafkaTemplate.send("subjects", "setSubjects", subjects)).then();
+    private Mono<Void> produceSubjects(Set<String> subjects) {
+        return Mono.fromFuture(() -> kafkaTemplate.send("subjects-topic", "setSubjects", subjects)).then();
 
     }
 

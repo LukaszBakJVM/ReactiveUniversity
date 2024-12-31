@@ -47,7 +47,7 @@ public class TeacherController {
 
     @GetMapping("/my-students")
     @ResponseStatus(HttpStatus.OK)
-    Flux<Void> findAllTeacherStudents() {
+    Mono<Void> findAllTeacherStudents() {
         return teacherServices.findAllMyStudents();
     }
 
