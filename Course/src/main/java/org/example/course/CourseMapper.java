@@ -14,7 +14,6 @@ public class CourseMapper {
     }
 
     CourseDto entityToDto(Course course) {
-
         return new CourseDto(course.getCourseName(), course.getSubjectName());
     }
 
