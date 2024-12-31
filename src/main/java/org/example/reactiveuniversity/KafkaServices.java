@@ -1,6 +1,9 @@
 package org.example.reactiveuniversity;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.slf4j.Logger;
@@ -12,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class KafkaServices {
-   WriteNewPerson writeNewPerson;
+
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final Logger logger = LoggerFactory.getLogger(KafkaServices.class);
 
@@ -21,15 +24,32 @@ public class KafkaServices {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public Mono<Void> sendMessage(String topic, String key,Object body) {
+    public Mono<Void> sendMessage(String topic, String key, Object body) {
         ProducerRecord<String, Object> record = new ProducerRecord<>(topic, null, key, body);
-        return Mono.fromFuture(()-> kafkaTemplate.send(record)).then();
+        return Mono.fromFuture(() -> kafkaTemplate.send(record)).then();
     }
 
     @KafkaListener(topics = "response", groupId = "your-consumer-group")
-    private void listenResponseTopic(WriteNewPerson person) {
-        writeNewPerson = person;
-        logger.info("Received Person: {}", person);
+    private void listenResponseTopic(ConsumerRecord<String, String> record) {
+        String topicKey = "WritePerson";
+        String key = record.key();
+        if (key.equals(topicKey)) {
+            WriteNewPerson person = deserialization(record.value());
+            logger.info("Received Person: {}", person);
+
+        } else {
+            logger.info("Received key: {}", record.key());
+        }
+    }
+
+    private WriteNewPerson deserialization(String json) {
+        ObjectMapper obj = new ObjectMapper();
+        try {
+            return obj.readValue(json, WriteNewPerson.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+
+        }
     }
 
 

@@ -71,11 +71,10 @@ public class TeacherServices {
         return teacherRepository.findTeacherBySubjectNameContains(subjectName).map(teacherMapper::teacherPublicInfo);
     }
 
-    Flux<FindAllTeacherStudents> findAllMyStudents() {
-        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).flatMapIterable(TeacherSubjects::subjects).flatMap(this::findCourseBySubject).flatMap(this::finaAllUniqueStudents).distinct().flatMap(e -> allGrades(e.email()).map(grades -> new FindAllTeacherStudents(new Student(e.firstName(), e.lastName(), e.email(), e.course()), grades)));
-
-
+    Flux<Void> findAllMyStudents() {
+        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).flatMapIterable(TeacherSubjects::subjects).flatMap(this::produceSubjects);
     }
+
 
     private Flux<String> findCourseBySubject(String subject) {
         return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CourseName.class).map(CourseName::courseName).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : course")));
@@ -105,7 +104,8 @@ public class TeacherServices {
             WriteNewTeacherDto deserialization = deserialization(record.value());
             Teacher teacher = teacherMapper.dtoToEntity(deserialization);
             teacherRepository.save(teacher).subscribe();
-            sendMessage("response", teacher).subscribe();
+            WriteNewTeacherDto writeNewTeacherDto = teacherMapper.entityToDto(teacher);
+            sendMessage("response", "WritePerson", writeNewTeacherDto).subscribe();
             logger.info("send to registration {}", teacher);
         } else {
             logger.info("my key  {} , received key {}", topicKey, key);
@@ -113,8 +113,13 @@ public class TeacherServices {
 
     }
 
-    private Mono<Void> sendMessage(String topic, Object body) {
-        return Mono.fromFuture(() -> kafkaTemplate.send(topic, body)).then();
+    private Mono<Void> produceSubjects(String subjects) {
+        return Mono.fromFuture(() -> kafkaTemplate.send("subjects", "setSubjects", subjects)).then();
+
+    }
+
+    private Mono<Void> sendMessage(String topic, String key, Object body) {
+        return Mono.fromFuture(() -> kafkaTemplate.send(topic, key, body)).then();
     }
 
     private WriteNewTeacherDto deserialization(String json) {
