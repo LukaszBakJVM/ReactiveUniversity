@@ -4,16 +4,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.example.course.dto.SubjectsCourseDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
+@Service
 public class KafkaMessage {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final CourseRepository repository;
     private final CourseMapper mapper;
+    private final Logger logger = LoggerFactory.getLogger(KafkaMessage.class);
 
     public KafkaMessage(KafkaTemplate<String, Object> kafkaTemplate, CourseRepository repository, CourseMapper mapper) {
         this.kafkaTemplate = kafkaTemplate;
@@ -26,7 +33,10 @@ public class KafkaMessage {
    void listenSubjectTopic(ConsumerRecord<String, String> record) {
         String topicKey = "setSubjects";
         if (record.key().equals(topicKey)){
-        //     deserialization(record.value()).subjects().stream().map(repository::findBySubject).flatMap(e -> e.flux().toStream().flatMap(SubjectDto::subject));
+            Set<String> deserialization = deserialization(record.value());
+
+
+
 
 
         }
@@ -38,9 +48,13 @@ public class KafkaMessage {
     }
 
     private Set<String>  deserialization(String json) {
+
         ObjectMapper obj = new ObjectMapper();
         try {
-            return obj.readValue(json, SubjectsCourseDto.class).subjects();
+
+            Set<String> subjects  = obj.readValue(json, HashSet.class);
+            logger.info(subjects.toString());
+            return subjects;
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
