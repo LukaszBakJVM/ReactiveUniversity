@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,7 @@ public class StudentServices {
     private final StudentMapper studentMapper;
     private final StudentRepository studentRepository;
     private final WebClient.Builder webClient;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+
     private final Logger logger = LoggerFactory.getLogger(StudentServices.class);
     @Value("${courseUrl}")
     private String courseUrl;
@@ -35,11 +33,11 @@ public class StudentServices {
     private String teacherUrl;
 
 
-    public StudentServices(StudentMapper studentMapper, StudentRepository studentRepository, WebClient.Builder webClient, KafkaTemplate<String, Object> kafkaTemplate) {
+    public StudentServices(StudentMapper studentMapper, StudentRepository studentRepository, WebClient.Builder webClient) {
         this.studentMapper = studentMapper;
         this.studentRepository = studentRepository;
         this.webClient = webClient;
-        this.kafkaTemplate = kafkaTemplate;
+
     }
 
 
@@ -89,17 +87,5 @@ public class StudentServices {
 
     }
 
-    @KafkaListener(topics = "student-topic", groupId = "your-consumer-group")
-    private void listenStudentTopic(WriteNewPerson person) {
-        logger.info("Received Person: {}", person);
-        Student student = studentMapper.dtoToStudent(person);
-        studentRepository.save(student).subscribe();
-        sendMessage("response", person).subscribe();
-        logger.info("send to registration {}", person);
 
-    }
-
-    private Mono<Void> sendMessage(String topic, Object body) {
-        return Mono.fromFuture(() -> kafkaTemplate.send(topic, body)).then();
-    }
 }

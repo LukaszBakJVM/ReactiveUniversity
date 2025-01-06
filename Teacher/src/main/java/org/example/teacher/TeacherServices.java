@@ -1,6 +1,7 @@
 package org.example.teacher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.example.teacher.dto.*;
@@ -29,13 +30,13 @@ import java.util.Set;
 
 @Service
 public class TeacherServices {
-
     private final TeacherMapper teacherMapper;
     private final TeacherRepository teacherRepository;
     private final WebClient.Builder webClient;
     private final TokenStore tokenStore;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final Logger logger = LoggerFactory.getLogger(TeacherServices.class);
+    private List<Student> students;
     @Value("${student}")
     private String studentUrl;
     @Value("${course}")
@@ -72,18 +73,17 @@ public class TeacherServices {
         return teacherRepository.findTeacherBySubjectNameContains(subjectName).map(teacherMapper::teacherPublicInfo);
     }
 
-    Mono<Void> findAllMyStudents() {
-        return name().flatMap(teacherRepository::findByEmail).map(teacherMapper::email).flatMap(s->produceSubjects(s.subjects()));
+    Mono<List<Student>> findAllMyStudents() {
+         name().flatMap(teacherRepository::findByEmail).flatMap(s -> produceSubjects(s.getSubjectName())).subscribe();
+        try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return Mono.just(students);
+
     }
 
-
-    private Flux<String> findCourseBySubject(String subject) {
-        return webClient.baseUrl(courseUrl).build().get().uri("/course/{subject}/name", subject).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CourseName.class).map(CourseName::courseName).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : course")));
-    }
-
-    private Flux<Student> finaAllUniqueStudents(String course) {
-        return webClient.baseUrl(studentUrl).build().get().uri("student/studentInfo/{course}", course).accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(Student.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : student")));
-    }
 
     Mono<List<Grades>> allGrades(String email) {
         String authorization = "Authorization";
@@ -131,6 +131,36 @@ public class TeacherServices {
             throw new RuntimeException(e);
 
         }
+    }
+
+    @KafkaListener(topics = "student-topic", groupId = "your-consumer-group")
+    private void listenStudentTopic(ConsumerRecord<String, String> record) {
+        String topicKey = "student";
+        String key = record.key();
+        if (key.equals(topicKey)) {
+            studentsDeserialization(record.value());
+
+
+        } else {
+            logger.info("-----------");
+        }
+
+
+    }
+
+    private void studentsDeserialization(String value) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            students = objectMapper.readValue(value, new TypeReference<>() {
+            });
+            System.out.println("------------" + students);
+
+
+        } catch (Exception e) {
+            logger.error("Failed to deserialize record value: {}", value, e);
+            logger.info("---------");
+        }
+
     }
 
 

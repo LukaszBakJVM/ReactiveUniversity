@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 @Configuration
 @EnableWebFluxSecurity
+@EnableKafka
 public class AppConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")

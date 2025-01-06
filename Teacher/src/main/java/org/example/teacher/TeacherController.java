@@ -1,14 +1,13 @@
 package org.example.teacher;
 
-import org.example.teacher.dto.AddSchoolSubjects;
-import org.example.teacher.dto.FindAllTeacherStudents;
-import org.example.teacher.dto.TeacherPrivateInfo;
-import org.example.teacher.dto.TeacherPublicInfo;
+import org.example.teacher.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/teacher")
@@ -47,7 +46,7 @@ public class TeacherController {
 
     @GetMapping("/my-students")
     @ResponseStatus(HttpStatus.OK)
-    Mono<Void> findAllTeacherStudents() {
+   Mono<List<Student>>findAllTeacherStudents() {
         return teacherServices.findAllMyStudents();
     }
 
