@@ -31,7 +31,7 @@ is sent to the appropriate microservice depending on the role.
     available roles -> only user with role office allowed access
     
  ```bash
- curl -X GET mojeip.dynu.net:8090/user/role -H "Authorization: Bearer <token>"
+ curl -X GET mojeip.dynu.net:8080/user/role -H "Authorization: Bearer <token>"
  ````
 
 - registration controller ->  register  new person (role office,teacher,student)  -> only user with role office allowed access
