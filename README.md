@@ -15,7 +15,7 @@ is sent to the appropriate microservice depending on the role.
 - registration  login:password
 - lukasz.bak@interiowy.pl:lukasz  ->  role office
 
-[**__Swagger UI - API Documentation (Registration)__**](http://mojeip.dynu.net:8090/webjars/swagger-ui/index.html)
+[**__Swagger UI - API Documentation (Registration)__**](http://mojeip.dynu.net:8080/webjars/swagger-ui/index.html)
 
 
 
@@ -36,7 +36,7 @@ is sent to the appropriate microservice depending on the role.
 
 - registration controller ->  register  new person (role office,teacher,student)  -> only user with role office allowed access
 ```bash
- curl -X POST mojeip.dynu.net:8090/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
+ curl -X POST mojeip.dynu.net:8080/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
     \"firstName\":\"John\",
     \"lastName\": \"Doe\",
     \"email\": \"johndoe@example.com\",
