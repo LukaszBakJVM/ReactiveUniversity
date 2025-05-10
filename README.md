@@ -15,7 +15,7 @@ is sent to the appropriate microservice depending on the role.
 - registration  login:password
 - lukasz.bak@interiowy.pl:lukasz  ->  role office
 
-[**__Swagger UI - API Documentation (Registration)__**](http://mojeip.dynu.net:8090/webjars/swagger-ui/index.html)
+[**__Swagger UI - API Documentation (Registration)__**](http://mojeip.dynu.net:8080/webjars/swagger-ui/index.html)
 
 
 
@@ -25,18 +25,18 @@ is sent to the appropriate microservice depending on the role.
 
  - login endpoint
   ```bash
-  curl -X POST mojeip.dynu.net:8090/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
+  curl -X POST mojeip.dynu.net:8080/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
   ````
 
     available roles -> only user with role office allowed access
     
  ```bash
- curl -X GET mojeip.dynu.net:8090/user/role -H "Authorization: Bearer <token>"
+ curl -X GET mojeip.dynu.net:8080/user/role -H "Authorization: Bearer <token>"
  ````
 
 - registration controller ->  register  new person (role office,teacher,student)  -> only user with role office allowed access
 ```bash
- curl -X POST mojeip.dynu.net:8090/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
+ curl -X POST mojeip.dynu.net:8080/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
     \"firstName\":\"John\",
     \"lastName\": \"Doe\",
     \"email\": \"johndoe@example.com\",
