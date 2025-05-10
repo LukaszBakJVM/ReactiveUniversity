@@ -31,7 +31,7 @@ import java.nio.file.Files;
 public class AppConfig {
 
 
-    @Bean
+  /*  @Bean
     public ApplicationRunner initializeDatabase(DatabaseClient databaseClient) {
         return sql -> {
             Resource resource = new ClassPathResource("schema.sql");
@@ -40,7 +40,7 @@ public class AppConfig {
             databaseClient.sql(schemaSql).then().subscribe();
         };
     }
-
+*/
 
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, ServerAuthenticationConverter authenticationConverter) {
