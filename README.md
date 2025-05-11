@@ -15,7 +15,8 @@ is sent to the appropriate microservice depending on the role.
 - registration  login:password
 - lukasz.bak@interiowy.pl:lukasz  ->  role office
 
-[**__Swagger UI - API Documentation (Registration)__**](http://mojeip.dynu.net:8080/webjars/swagger-ui/index.html)
+
+[**__Swagger UI - API Documentation (Registration)__**](http://university.ddnsfree.com:8080/webjars/swagger-ui/index.html)
 
 
 
@@ -25,18 +26,18 @@ is sent to the appropriate microservice depending on the role.
 
  - login endpoint
   ```bash
-  curl -X POST mojeip.dynu.net:8080/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
+  curl -X POST https://university.ddnsfree.com/login -H "Content-Type: application/json" -d "{\"email\": \"lukasz.bak@interiowy.pl\", \"password\": \"lukasz\"}"
   ````
 
     available roles -> only user with role office allowed access
     
  ```bash
- curl -X GET mojeip.dynu.net:8080/user/role -H "Authorization: Bearer <token>"
+ curl -X GET https://university.ddnsfree.com/user/role -H "Authorization: Bearer <token>"
  ````
 
 - registration controller ->  register  new person (role office,teacher,student)  -> only user with role office allowed access
 ```bash
- curl -X POST mojeip.dynu.net:8080/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
+ curl -X POST https://university.ddnsfree.com/user/registration -H "Content-Type: application/json" -H "Authorization: Bearer <token> " -d "{
     \"firstName\":\"John\",
     \"lastName\": \"Doe\",
     \"email\": \"johndoe@example.com\",
@@ -53,7 +54,7 @@ is sent to the appropriate microservice depending on the role.
 - 
 #############################################################################################
 
-- **[Swagger UI - API Documentation (Teacher)](http://mojeip.dynu.net:8081/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation (Teacher)](http://university.ddnsfree.com:8081/webjars/swagger-ui/index.html)**
 
                email : password
   teacher1@interia.pl:lukasz
@@ -63,7 +64,7 @@ is sent to the appropriate microservice depending on the role.
 - /teacher/update
 - Assign a subject to a teacher  -> only person with office role
 ```bash
-curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <token>"  -H "Content-Type: application/json"  -d "{\"email\": \"teacher email\", \"subjects\": [\"subject\", \"subject1\"]}"
+curl -X PUT "https://university.ddnsfree.com/teacher/update"  -H "Authorization: Bearer <token>"  -H "Content-Type: application/json"  -d "{\"email\": \"teacher email\", \"subjects\": [\"subject\", \"subject1\"]}"
 ````
 
  -teacher post -> look registration controller
@@ -72,7 +73,7 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
  private information about teacher 
 
  ```bash
- curl -X GET mojeip.dynu.net:8081/teacher/private/teacher1@interia.pl -H "Authorization: Bearer <token>"
+ curl -X GET https://university.ddnsfree.com/teacher/private/teacher1@interia.pl -H "Authorization: Bearer <token>"
 ```
 
  response 
@@ -91,7 +92,7 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 -/teacher/private/all
 
  ```bash
- curl -X GET mojeip.dynu.net:8081/teacher/private/all -H "Authorization: Bearer <token>"
+ curl -X GET https://university.ddnsfree.com/teacher/private/all -H "Authorization: Bearer <token>"
 ```
 
  response 
@@ -121,7 +122,7 @@ curl -X PUT "mojeip.dynu.net:8081/teacher/update"  -H "Authorization: Bearer <to
 Get /teacher/my-students    information about  what students the teacher has
 information based on email from token
 ```bash
- curl -X GET mojeip.dynu.net:8081/teacher/my-students -H "Authorization: Bearer <token>"
+ curl -X GET https://university.ddnsfree.com/teacher/my-students -H "Authorization: Bearer <token>"
 ```
 
  response
@@ -158,53 +159,53 @@ information based on email from token
 
 #########################################################################
 
-- **[Swagger UI - API Documentation (Office)](http://mojeip.dynu.net:8082/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation (Office)](http://university.ddnsfree.com:8082/webjars/swagger-ui/index.html)**
 
 - look - registration controller
 - 
 #########################################################################
 
 
-- **[Swagger UI - API Documentation (Subject)](http://mojeip.dynu.net:8083/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation (Subject)](http://university.ddnsfree.com:8083/webjars/swagger-ui/index.html)**
 
 - Post /subject  -> only person with office role
 - create new subject
 
  ```bash
- curl -X POST mojeip.dynu.net:8083/subject  -H "Authorization: Bearer <token> " -d "{
+ curl -X POST https://university.ddnsfree.com/subject  -H "Authorization: Bearer <token> " -d "{
     \"subject\":\"subjectName\" }"
   ````
 Delete  /subject/{subjectName} -> only person with office role
 delete subject
 ```bash 
-curl -X DELETE "http://mojeip.dynu.net:8083/subject/{subjectName}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
+curl -X DELETE "https://university.ddnsfree.com/subject/{subjectName}" -H "Content-Type: application/json" -H "Authorization: Bearer <token>"
 ````
 
 -Get /subject/all  
 find all subject
 ```bash
- curl -X GET mojeip.dynu.net:8083/subject/all -H "Content-Type: application/json"
+ curl -X GET https://university.ddnsfree.com/subject/all -H "Content-Type: application/json"
 ````
 ########################################################################
 
-  - **[Swagger UI - API Documentation (Course)](http://mojeip.dynu.net:8084/webjars/swagger-ui/index.html)**
+  - **[Swagger UI - API Documentation (Course)](http://university.ddnsfree.com:8084/webjars/swagger-ui/index.html)**
 
 - Post /course  -> only person with office role
 - create new course
 
  ```bash
-curl -X POST "mojeip.dynu.net:8084/course"  -H "Authorization: Bearer <token>" -d "{\"courseName\": \"Course Name\", \"subjects\": [\"subject1\", \"subject2\", \"subject3\"]}"
+curl -X POST "https://university.ddnsfree.com/course"  -H "Authorization: Bearer <token>" -d "{\"courseName\": \"Course Name\", \"subjects\": [\"subject1\", \"subject2\", \"subject3\"]}"
 
  ````
 - Delete  /subject/{subjectName} -> only person with office role
 - delete /course
 ```bash 
-curl -X DELETE "mojeip.dynu.net:8084/course/{course}" -H "Authorization: Bearer <token>"
+curl -X DELETE "https://university.ddnsfree.com/course/{course}" -H "Authorization: Bearer <token>"
 ````
 - Get /course/all
 - all courses
   ```bash
-  curl -X GET "mojeip.dynu.net:8084/course/all" -H "Content-Type: application/json"
+  curl -X GET "https://university.ddnsfree.com/course/all" -H "Content-Type: application/json"
   ```
   - get /course/{subject}/name
   - find courses containing  some subject
@@ -214,10 +215,10 @@ curl -X GET "mojeip.dynu.net:8084/course/{subject}/name" -H "Content-Type: appli
 - get course/{course}
 - show  what subjects are included in the course
  ```bash
-curl -X GET "mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application/json"
+curl -X GET "https://university.ddnsfree.com/course/{course}" -H "Content-Type: application/json"
 ```
 
-- **[Swagger UI - API Documentation(Student)](http://mojeip.dynu.net:8085/webjars/swagger-ui/index.html)**
+- **[Swagger UI - API Documentation(Student)](http://university.ddnsfree.com:8085/webjars/swagger-ui/index.html)**
 -  email : password
 -  student@interia.pl:lukasz
   ......             :lukasz
@@ -228,7 +229,7 @@ curl -X GET "mojeip.dynu.net:8084/course/{course}" -H "Content-Type: application
 
 write course to student
 ```
-curl -X PUT "mojeip.dynu.net:8085/student/update" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d "{
+curl -X PUT "https://university.ddnsfree.com/student/update" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d "{
     "course": "course name",
     "studentEmail": "student email"
 }"
@@ -237,31 +238,31 @@ curl -X PUT "mojeip.dynu.net:8085/student/update" -H "Content-Type: application/
 -Get /student/{email}
 - get student information by email
 ```
-curl -X GET "mojeip.dynu.net:8085/student/{email}" -H "Content-Type: application/json"
+curl -X GET "https://university.ddnsfree.com/student/{email}" -H "Content-Type: application/json"
 ```
 -
 - Get /student/assigned 
 - get students with course
 ```
-curl -X GET "mojeip.dynu.net:8085/student/assigned" -H "Content-Type: application/json"
+curl -X GET "https://university.ddnsfree.com/student/assigned" -H "Content-Type: application/json"
 ```
 
 - Get /student/unassigned
 - get students without course
 ``` 
-curl -X GET "mojeip.dynu.net:8085/student/unassigned" -H "Content-Type: application/json"
+curl -X GET "https://university.ddnsfree.com/student/unassigned" -H "Content-Type: application/json"
 ```
 -
 -Get /student/studentInfo/{course}
 -get students by course
 ``` 
-curl -X GET "mojeip.dynu.net:8085/student/studentInfo/{course}" -H "Content-Type: application/json"
+curl -X GET "https://university.ddnsfree.com/student/studentInfo/{course}" -H "Content-Type: application/json"
 ```
 -
 -Get /student/teachers
 -get my teachers find teachers who teach me based on token
 ``` 
-curl -X GET mojeip.dynu.net:8085/student/teachers -H "Authorization: Bearer <token>"
+curl -X GET https://university.ddnsfree.com/student/teachers -H "Authorization: Bearer <token>"
 ```
 
 -
@@ -271,7 +272,7 @@ Post  /grades  -> only person with Teacher role
 write grades to student
 
 ``` 
-curl -X POST "mojeip.dynu.net:8085/grades" -H "Authorization: Bearer <token>" -d "{\"email\": \"student email\",  \"subject\": \"example subject\",\"gradesDescription\": \"  example description\"}"
+curl -X POST "https://university.ddnsfree.com/grades" -H "Authorization: Bearer <token>" -d "{\"email\": \"student email\",  \"subject\": \"example subject\",\"gradesDescription\": \"  example description\"}"
 ```
 -
 Get /grades/my-grades
@@ -279,7 +280,7 @@ Get /grades/my-grades
 get my grades  based on token
 
 ``` 
-curl -X GET mojeip.dynu.net:8085/grades/my-grades -H "Authorization: Bearer <token>"
+curl -X GET https://university.ddnsfree.com/grades/my-grades -H "Authorization: Bearer <token>"
 ```
 
 
