@@ -2,6 +2,7 @@ package org.example.reactiveuniversity.security;
 
 
 import org.example.reactiveuniversity.RegistrationService;
+import org.example.reactiveuniversity.dto.Token;
 import org.example.reactiveuniversity.exception.WrongCredentialsException;
 import org.example.reactiveuniversity.security.token.TokenStore;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
@@ -27,11 +28,11 @@ public class CustomUserDetailsService implements ReactiveUserDetailsService {
     }
 
 
-    Mono<String> token(Login login) {
+    Mono<Token> token(Login login) {
         return this.findByUsername(login.email()).filter(u -> passwordEncoder.matches(login.password(), u.getPassword())).map(user -> {
             String generatedToken = token.generateToken(user);
             tokenStore.setToken(login.email(), generatedToken);
-            return generatedToken;
+            return new Token(generatedToken);
         }).switchIfEmpty(Mono.error(new WrongCredentialsException("Bad Credentials")));
 
     }

@@ -1,5 +1,6 @@
 package org.example.reactiveuniversity.security;
 
+import org.example.reactiveuniversity.dto.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ public class RestLoginController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    Mono<String> token(@RequestBody Login login) {
+    Mono<Token> token(@RequestBody Login login) {
         return services.token(login);
     }
 
