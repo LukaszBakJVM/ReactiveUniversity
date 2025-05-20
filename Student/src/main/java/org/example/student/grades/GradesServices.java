@@ -1,7 +1,9 @@
 package org.example.student.grades;
 
 import org.example.student.grades.dto.*;
-import org.example.student.security.token.TokenStore;
+import org.example.student.security.token.Token;
+import org.example.student.security.token.TokenServices;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,13 +21,16 @@ public class GradesServices {
     private final GradesRepository repository;
     private final GradesMapper mapper;
     private final WebClient webclient;
-    private final TokenStore tokenStore;
+    private final TokenServices tokenServices;
 
-    public GradesServices(GradesRepository repository, GradesMapper mapper, WebClient.Builder webclient, TokenStore tokenStore) {
+
+    public GradesServices(GradesRepository repository, GradesMapper mapper, WebClient.Builder webclient, TokenServices tokenServices) {
         this.repository = repository;
         this.mapper = mapper;
         this.webclient = webclient.build();
-        this.tokenStore = tokenStore;
+
+
+        this.tokenServices = tokenServices;
     }
 
     Mono<GradesResponse> grade(GradesRequest gradesRequest) {
@@ -53,13 +58,16 @@ public class GradesServices {
     private Mono<String> teacherByEmail() {
 
         String authorization = "Authorization";
-        return name().flatMap(e -> webclient.get().uri("/teacher/private/{email}", e).header(authorization, "Bearer %s".formatted(tokenStore.getToken(e))).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(Teacher.class).map(teacher -> teacher.firstName() + " " + teacher.lastName()));
+        return name().flatMap(e -> webclient.get().uri("/teacher/private/{email}", e).header(authorization, "Bearer %s".formatted(findToken(e))).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(Teacher.class).map(teacher -> teacher.firstName() + " " + teacher.lastName()));
     }
 
     private Mono<String> name() {
         return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
 
 
+    }
+    private Mono<String>findToken(String email){
+        return tokenServices.findTokenByEmail(email).map(Token::token);
     }
 
 
