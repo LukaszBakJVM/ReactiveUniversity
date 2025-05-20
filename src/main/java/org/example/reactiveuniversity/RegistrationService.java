@@ -6,7 +6,7 @@ import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.example.reactiveuniversity.exception.*;
 import org.example.reactiveuniversity.security.Login;
-import org.example.reactiveuniversity.token.TokenServices;
+import org.example.reactiveuniversity.security.token.TokenServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;

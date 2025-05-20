@@ -3,7 +3,7 @@ package org.example.reactiveuniversity.security;
 
 import org.example.reactiveuniversity.RegistrationService;
 import org.example.reactiveuniversity.dto.Token;
-import org.example.reactiveuniversity.token.TokenServices;
+import org.example.reactiveuniversity.security.token.TokenServices;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

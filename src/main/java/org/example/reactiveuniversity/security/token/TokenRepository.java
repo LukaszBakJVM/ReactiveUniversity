@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.token;
+package org.example.reactiveuniversity.security.token;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;

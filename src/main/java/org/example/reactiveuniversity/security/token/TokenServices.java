@@ -1,4 +1,4 @@
-package org.example.reactiveuniversity.token;
+package org.example.reactiveuniversity.security.token;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
