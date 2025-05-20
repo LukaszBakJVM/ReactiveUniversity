@@ -22,7 +22,7 @@ public class Registration {
     private String password;
     @NotBlank(message = "Select role")
     private String role;
-    @CreatedBy
+
     private String createdBy;
 
     @CreatedDate
@@ -82,4 +82,6 @@ public class Registration {
     public void setRole(@NotBlank(message = "Select role") String role) {
         this.role = role;
     }
+
+
 }

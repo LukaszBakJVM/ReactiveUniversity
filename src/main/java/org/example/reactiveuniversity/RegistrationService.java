@@ -6,7 +6,7 @@ import org.example.reactiveuniversity.dto.RegistrationResponseDto;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.example.reactiveuniversity.exception.*;
 import org.example.reactiveuniversity.security.Login;
-import org.example.reactiveuniversity.security.token.TokenStore;
+import org.example.reactiveuniversity.token.TokenServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -30,7 +30,8 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
     private final LocalValidatorFactoryBean validation;
-    private final TokenStore tokenStore;
+    private final TokenServices tokenServices;
+
     private final WebClient.Builder webclient;
     @Value("${teacher}")
     private String teacherUrl;
@@ -40,11 +41,12 @@ public class RegistrationService {
     private String officeUrl;
 
 
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenStore tokenStore, WebClient.Builder webclient) {
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenServices tokenServices, WebClient.Builder webclient) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
-        this.tokenStore = tokenStore;
+        this.tokenServices = tokenServices;
+
         this.webclient = webclient;
     }
 
@@ -62,7 +64,7 @@ public class RegistrationService {
             Mono<String> name = ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
 
 
-            return name.flatMap(e -> writeUser(registrationDto.role(), write, tokenStore.getToken(e)).then(registrationRepository.save(registration).map(registrationMapper::entityToDto)));
+            return name.flatMap(tokenServices::getToken).flatMap(e -> writeUser(registrationDto.role(), write, e).then(registrationRepository.save(registration).map(registrationMapper::entityToDto)));
         }));
     }
 
@@ -94,6 +96,8 @@ public class RegistrationService {
 
         return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
     }
+
+
 }
 
 
