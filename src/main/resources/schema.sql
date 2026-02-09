@@ -36,3 +36,12 @@ CREATE TABLE IF NOT EXISTS registration
                              last_modified_by VARCHAR (255),
     last_modified_date TIMESTAMP
                          WITH TIME ZONE);
+
+
+
+CREATE TABLE IF NOT EXISTS token
+(
+    id integer primary key  generated always as identity,
+    email VARCHAR (255),
+    token VARCHAR (255));
+

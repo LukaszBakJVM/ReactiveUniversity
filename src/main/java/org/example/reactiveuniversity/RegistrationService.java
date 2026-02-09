@@ -1,8 +1,11 @@
 package org.example.reactiveuniversity;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import jakarta.validation.ConstraintViolation;
 import org.example.reactiveuniversity.dto.RegistrationDto;
 import org.example.reactiveuniversity.dto.RegistrationResponseDto;
+import org.example.reactiveuniversity.dto.UserInfo;
 import org.example.reactiveuniversity.dto.WriteNewPerson;
 import org.example.reactiveuniversity.exception.*;
 import org.example.reactiveuniversity.security.Login;
@@ -19,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
+import javax.crypto.SecretKey;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +36,7 @@ public class RegistrationService {
     private final LocalValidatorFactoryBean validation;
     private final TokenServices tokenServices;
 
+
     private final WebClient.Builder webclient;
     @Value("${teacher}")
     private String teacherUrl;
@@ -39,6 +44,9 @@ public class RegistrationService {
     private String studentUrl;
     @Value("${office}")
     private String officeUrl;
+
+    @Value("${jws.sharedKey}")
+    private String sharedKey;
 
 
     public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenServices tokenServices, WebClient.Builder webclient) {
@@ -82,6 +90,32 @@ public class RegistrationService {
             throw new CustomValidationException(errorMessage);
         }
     }
+
+    Mono<UserInfo> userInfo(String token) {
+        if (token == null || token.isEmpty()) {
+            return Mono.empty();
+        }
+
+        Claims body = Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        System.out.println("boody    " + body.toString());
+
+
+        String email = body.get("sub", String.class);
+        List<String> role = body.get("roles", List.class);
+
+
+        return Mono.just(new UserInfo(email, role.getFirst()));
+    }
+
+
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = io.jsonwebtoken.io.Decoders.BASE64.decode(sharedKey);
+        return io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes);
+
+
+    }
+
+
 
 
     private Mono<Void> writeUser(String role, WriteNewPerson body, String token) {
