@@ -1,5 +1,6 @@
 package org.example.reactiveuniversity.exception;
 
+import org.example.reactiveuniversity.security.JwtAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -54,6 +55,14 @@ public class Handler {
     @ResponseStatus(HttpStatus.FAILED_DEPENDENCY)
     public Error fileException(ReadWriteFileException ex) {
         return new Error(HttpStatus.FAILED_DEPENDENCY, ex.getMessage());
+    }
+
+
+
+    @ExceptionHandler(JwtAuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Error wrongCredentials(JwtAuthenticationException  ex) {
+        return new Error(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
 

@@ -92,7 +92,8 @@ public class RegistrationService {
     }
 
     Mono<UserInfo> userInfo(String token) {
-        if (token == null || token.isEmpty()) {
+
+        if (token.equals("notLogged")) {
             return Mono.empty();
         }
 
