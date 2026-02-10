@@ -99,9 +99,9 @@ public class RegistrationService {
 
         Claims body = Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
 
+        String sub = body.get("sub", String.class);
 
-
-        String email = body.get("sub", String.class);
+        String email = body.get("email", String.class);
         List<String> role = body.get("roles", List.class);
 
 

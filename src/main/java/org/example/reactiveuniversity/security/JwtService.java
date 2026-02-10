@@ -6,10 +6,13 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.example.reactiveuniversity.Registration;
+import org.example.reactiveuniversity.RegistrationRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -23,6 +26,11 @@ class JwtService implements TokenProvider {
     private final long thirtyDaysTokenDuration = 30L * 24 * 60 * 60 * 1000;
     @Value("${jws.sharedKey}")
     private String secretKey;
+    private final RegistrationRepository repository;
+
+    JwtService(RegistrationRepository repository) {
+        this.repository = repository;
+    }
 
     String extractUsername(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
@@ -33,8 +41,10 @@ class JwtService implements TokenProvider {
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(Map.of(), userDetails);
+    public Mono<String> generateToken(UserDetails userDetails) {
+       return repository.findByEmail(userDetails.getUsername()).map(e->generateToken(Map.of(),userDetails,e.getId()));
+
+       // return generateToken(Map.of(), userDetails,byEmail);
     }
 
     boolean isTokenValid(String jwt) {
@@ -45,9 +55,9 @@ class JwtService implements TokenProvider {
         return extractClaim(jwt, Claims::getExpiration).before(new Date());
     }
 
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails,Long userId) {
         long currentTimeMillis = System.currentTimeMillis();
-        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername()).claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).map(role -> role.substring("ROLE_".length())).toArray()).issuedAt(new Date(currentTimeMillis)).expiration(new Date(currentTimeMillis + thirtyDaysTokenDuration)).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
+        return Jwts.builder().claims(extraClaims).subject(String.valueOf(userId)).claim("email",userDetails.getUsername()).claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).map(role -> role.substring("ROLE_".length())).toArray()).issuedAt(new Date(currentTimeMillis)).expiration(new Date(currentTimeMillis + thirtyDaysTokenDuration)).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
     }
 
     private <T> T extractClaim(String jwt, Function<Claims, T> claimResolver) {

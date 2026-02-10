@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements ReactiveUserDetailsService {
 
 
     Mono<Token> token(Login login) {
-        return findByUsername(login.email()).filter(u -> passwordEncoder.matches(login.password(), u.getPassword())).map(token::generateToken).map(Token::new).switchIfEmpty(Mono.error(new JwtAuthenticationException("Bad Credentials")));
+        return findByUsername(login.email()).filter(u -> passwordEncoder.matches(login.password(), u.getPassword())).flatMap(token::generateToken).map(Token::new).switchIfEmpty(Mono.error(new JwtAuthenticationException("Bad Credentials")));
 
     }
 
