@@ -98,8 +98,6 @@ public class RegistrationService {
         }
 
         Claims body = Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
-        System.out.println(body.toString());
-
 
 
         String email = body.get("email", String.class);
