@@ -33,8 +33,8 @@ class JwtService implements TokenProvider {
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(Map.of(), userDetails);
+    public String generateToken(UserDetails userDetails,long id) {
+        return generateToken(Map.of(), userDetails,id);
     }
 
     boolean isTokenValid(String jwt) {
@@ -45,9 +45,9 @@ class JwtService implements TokenProvider {
         return extractClaim(jwt, Claims::getExpiration).before(new Date());
     }
 
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails,long id) {
         long currentTimeMillis = System.currentTimeMillis();
-        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername()).claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).map(role -> role.substring("ROLE_".length())).toArray()).issuedAt(new Date(currentTimeMillis)).expiration(new Date(currentTimeMillis + thirtyDaysTokenDuration)).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
+        return Jwts.builder().claims(extraClaims).subject(String.valueOf(id)).claim("email",userDetails.getUsername()).claim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).map(role -> role.substring("ROLE_".length())).toArray()).issuedAt(new Date(currentTimeMillis)).expiration(new Date(currentTimeMillis + thirtyDaysTokenDuration)).signWith(getSigningKey(), Jwts.SIG.HS256).compact();
     }
 
     private <T> T extractClaim(String jwt, Function<Claims, T> claimResolver) {

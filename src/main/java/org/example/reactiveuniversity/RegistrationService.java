@@ -98,14 +98,18 @@ public class RegistrationService {
         }
 
         Claims body = Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        System.out.println(body.toString());
 
 
 
-        String email = body.get("sub", String.class);
+        String email = body.get("email", String.class);
         List<String> role = body.get("roles", List.class);
 
 
         return Mono.just(new UserInfo(email, role.getFirst()));
+    }
+   public Mono<Long>userId(String email){
+        return registrationRepository.findByEmail(email).map(Registration::getId);
     }
 
 
