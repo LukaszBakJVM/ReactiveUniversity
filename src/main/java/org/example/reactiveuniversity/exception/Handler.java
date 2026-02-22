@@ -40,9 +40,9 @@ public class Handler {
 
 
     @ExceptionHandler(WrongCredentialsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public Error wrongCredentials(WrongCredentialsException ex) {
-        return new Error(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return new Error(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
     @ExceptionHandler(ConnectionException.class)
