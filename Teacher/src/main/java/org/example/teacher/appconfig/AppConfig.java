@@ -27,7 +27,13 @@ public class AppConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 
-        http.authorizeExchange(exchanges -> exchanges.pathMatchers(HttpMethod.POST, "/teacher").authenticated().pathMatchers(HttpMethod.PUT, "/teacher/update").hasAuthority("ROLE_Office").pathMatchers(HttpMethod.GET, "/teacher/private/{email}").hasAnyAuthority("ROLE_Teacher", "ROLE_Office").pathMatchers(HttpMethod.GET, "/teacher/private/all").hasAnyAuthority("ROLE_Teacher", "ROLE_Office").pathMatchers(HttpMethod.GET, "/teacher/my-students").hasAuthority("ROLE_Teacher").anyExchange().permitAll()).oauth2ResourceServer(spec -> spec.jwt((jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))).csrf(ServerHttpSecurity.CsrfSpec::disable).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
+        http.authorizeExchange(exchanges -> exchanges.pathMatchers(HttpMethod.POST, "/teacher").authenticated().pathMatchers(
+                HttpMethod.PUT, "/teacher/update").authenticated()
+                .pathMatchers(HttpMethod.GET, "/teacher/private/{email}","/teacher/private/all","/teacher/my-students").authenticated()
+           .anyExchange().permitAll()).oauth2ResourceServer(spec -> spec
+                .jwt((jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))))
+                .csrf(ServerHttpSecurity.CsrfSpec::disable).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
 
         return http.build();
     }

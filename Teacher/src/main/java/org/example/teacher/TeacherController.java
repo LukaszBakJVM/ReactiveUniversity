@@ -4,7 +4,6 @@ import org.example.teacher.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,25 +27,22 @@ public class TeacherController {
 
     }
 
-    @GetMapping("/debug")
-    public Mono<Object> debug(Authentication authentication) {
 
-
-        return Mono.just(authentication.getAuthorities());
-    }
-
+    @PreAuthorize("hasRole('Office')")
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     Mono<AddSchoolSubjects> updateSubject(@RequestBody AddSchoolSubjects subjects) {
         return teacherServices.addSchoolSubjects(subjects);
     }
 
+    @PreAuthorize("hasAnyRole('Office','Teacher')")
     @GetMapping("/private/{email}")
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<Mono<TeacherPrivateInfo>> teacherInfoByEmail(@PathVariable String email) {
         return ResponseEntity.ok(teacherServices.findTeacher(email));
     }
 
+    @PreAuthorize("hasAnyRole('Office','Teacher')")
     @GetMapping("/private/all")
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<Flux<TeacherPrivateInfo>> allTeacherInfo() {
@@ -58,6 +54,7 @@ public class TeacherController {
         return teacherServices.teacherPublicInfo(subject);
     }
 
+    @PreAuthorize("hasRole('Teacher')")
     @GetMapping("/my-students")
     @ResponseStatus(HttpStatus.OK)
     Flux<FindAllTeacherStudents> findAllTeacherStudents() {
