@@ -17,9 +17,6 @@ public class CustomUserDetailsService implements ReactiveUserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
 
-
-
-
     public CustomUserDetailsService(RegistrationService service, TokenProvider token, PasswordEncoder passwordEncoder) {
         this.service = service;
         this.token = token;
@@ -30,14 +27,18 @@ public class CustomUserDetailsService implements ReactiveUserDetailsService {
 
 
     Mono<Token> token(Login login) {
-        return findByUsername(login.email()).filter(u -> passwordEncoder.matches(login.password(), u.getPassword())).flatMap(user -> service.userId(login.email()).map(userId -> token.generateToken(user, userId)).map(Token::new).switchIfEmpty(Mono.error(new JwtAuthenticationException("Bad Credentials"))));
+        return findByUsername(login.email()).filter(u -> passwordEncoder.matches(login.password(), u.getPassword()))
+                .flatMap(user -> service.userId(login.email()).map(userId -> token.generateToken(user, userId)).map(Token::new));
+
 
     }
 
 
     @Override
     public Mono<UserDetails> findByUsername(String username) {
-        return service.login(username).map(this::create);
+        return service.login(username)
+
+                .map(this::create).switchIfEmpty(Mono.error(new JwtAuthenticationException("Bad Credentials")));
     }
 
     private UserDetails create(Login login) {
