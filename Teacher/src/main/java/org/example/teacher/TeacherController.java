@@ -3,6 +3,8 @@ package org.example.teacher;
 import org.example.teacher.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,11 +20,19 @@ public class TeacherController {
 
     }
 
+    @PreAuthorize("hasRole('Office')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     Mono<WriteNewTeacherDto> addNewTeacher(@RequestBody WriteNewTeacherDto dto) {
         return teacherServices.createTeacher(dto);
 
+    }
+
+    @GetMapping("/debug")
+    public Mono<Object> debug(Authentication authentication) {
+
+
+        return Mono.just(authentication.getAuthorities());
     }
 
     @PutMapping("/update")

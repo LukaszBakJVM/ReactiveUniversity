@@ -13,17 +13,13 @@ import org.example.reactiveuniversity.security.token.TokenServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +33,7 @@ public class RegistrationService {
     private final TokenServices tokenServices;
 
 
-    private final WebClient.Builder webclient;
+    private final WebClient webclient;
     @Value("${teacher}")
     private String teacherUrl;
     @Value("${student}")
@@ -49,7 +45,7 @@ public class RegistrationService {
     private String sharedKey;
 
 
-    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenServices tokenServices, WebClient.Builder webclient) {
+    public RegistrationService(RegistrationRepository registrationRepository, RegistrationMapper registrationMapper, LocalValidatorFactoryBean validation, TokenServices tokenServices, WebClient webclient) {
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.validation = validation;
@@ -62,17 +58,17 @@ public class RegistrationService {
         return Arrays.stream(Role.values()).map(Role::getROLE).toList();
     }
 
-    @Transactional
+
     public Mono<RegistrationResponseDto> createNewUser(RegistrationDto registrationDto) {
+
+
         return registrationRepository.findByEmailIgnoreCase(registrationDto.email()).flatMap(existingSubject -> Mono.<RegistrationResponseDto>error(new DuplicateEmailException(String.format("Email %s already exists", registrationDto.email())))).switchIfEmpty(Mono.defer(() -> {
 
             Registration registration = registrationMapper.dtoToEntity(registrationDto);
             validationRegistration(registration);
-            WriteNewPerson write = registrationMapper.write(registration);
-            Mono<String> name = ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
 
 
-            return name.flatMap(tokenServices::getToken).flatMap(e -> writeUser(registrationDto.role(), write, e).then(registrationRepository.save(registration).map(registrationMapper::entityToDto)));
+            return writeUser(registrationDto.role(), new WriteNewPerson(registrationDto.firstName(), registrationDto.firstName(), registrationDto.email())).then(registrationRepository.save(registration).map(registrationMapper::entityToDto));
         }));
     }
 
@@ -106,7 +102,8 @@ public class RegistrationService {
 
         return Mono.just(new UserInfo(email, role.getFirst()));
     }
-   public Mono<Long>userId(String email){
+
+    public Mono<Long> userId(String email) {
         return registrationRepository.findByEmail(email).map(Registration::getId);
     }
 
@@ -119,11 +116,8 @@ public class RegistrationService {
     }
 
 
+    private Mono<Void> writeUser(String role, WriteNewPerson body) {
 
-
-    private Mono<Void> writeUser(String role, WriteNewPerson body, String token) {
-        String authorization = "Authorization";
-        String header = "Bearer %s".formatted(token);
         String url = switch (role) {
             case "Office" -> officeUrl + "/office";
             case "Teacher" -> teacherUrl + "/teacher";
@@ -131,7 +125,8 @@ public class RegistrationService {
             default -> throw new WrongRoleException("Unknown Error");
         };
 
-        return webclient.baseUrl(url).build().post().header(authorization, header).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
+
+        return webclient.post().uri(url).accept(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToMono(Void.class).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection Error")));
     }
 
 

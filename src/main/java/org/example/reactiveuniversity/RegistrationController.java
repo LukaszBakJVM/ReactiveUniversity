@@ -28,6 +28,8 @@ public class RegistrationController {
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
     Mono<RegistrationResponseDto> createNewUser(@RequestBody RegistrationDto dto) {
+
+
         return registrationService.createNewUser(dto);
     }
 

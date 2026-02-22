@@ -1,15 +1,11 @@
 package org.example.reactiveuniversity.appconfig;
 
 
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.ReactiveAuditorAware;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.http.HttpMethod;
-import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
@@ -17,12 +13,13 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.nio.file.Files;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -30,17 +27,6 @@ import java.nio.file.Files;
 
 public class AppConfig {
 
-
-  /*  @Bean
-    public ApplicationRunner initializeDatabase(DatabaseClient databaseClient) {
-        return sql -> {
-            Resource resource = new ClassPathResource("schema.sql");
-            String schemaSql;
-            schemaSql = new String(Files.readAllBytes(resource.getFile().toPath()));
-            databaseClient.sql(schemaSql).then().subscribe();
-        };
-    }
-*/
 
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, ServerAuthenticationConverter authenticationConverter) {
@@ -59,10 +45,30 @@ public class AppConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    @Bean
+    public ReactiveOAuth2AuthorizedClientManager authorizedClientManager(ReactiveClientRegistrationRepository clientRegistrations, ReactiveOAuth2AuthorizedClientService authorizedClientService) {
+
+
+        AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager manager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(clientRegistrations, authorizedClientService);
+
+        ReactiveOAuth2AuthorizedClientProvider provider = ReactiveOAuth2AuthorizedClientProviderBuilder.builder().clientCredentials().build();
+
+        manager.setAuthorizedClientProvider(provider);
+
+        return manager;
+
+    }
 
     @Bean
-    public WebClient.Builder webClientBuilder() {
-        return WebClient.builder();
+    public WebClient webClient(ReactiveOAuth2AuthorizedClientManager manager) {
+
+        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth =
+                new ServerOAuth2AuthorizedClientExchangeFilterFunction(manager);
+
+        oauth.setDefaultClientRegistrationId("service-b-client");
+
+        return WebClient.builder()
+                .filter(oauth).build();
     }
 
     @Bean

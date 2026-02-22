@@ -4,8 +4,6 @@ import org.example.teacher.dto.*;
 import org.example.teacher.exception.ConnectionException;
 import org.example.teacher.exception.UsernameNotFoundException;
 import org.example.teacher.exception.WrongCredentialsException;
-import org.example.teacher.security.token.Token;
-import org.example.teacher.security.token.TokenServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -26,7 +24,7 @@ public class TeacherServices {
     private final TeacherMapper teacherMapper;
     private final TeacherRepository teacherRepository;
     private final WebClient.Builder webClient;
-    private final TokenServices tokenServices;
+
 
     @Value("${student}")
     private String studentUrl;
@@ -34,12 +32,12 @@ public class TeacherServices {
     private String courseUrl;
 
 
-    public TeacherServices(TeacherMapper teacherMapper, TeacherRepository teacherRepository, WebClient.Builder webClient, TokenServices tokenServices) {
+    public TeacherServices(TeacherMapper teacherMapper, TeacherRepository teacherRepository, WebClient.Builder webClient) {
         this.teacherMapper = teacherMapper;
         this.teacherRepository = teacherRepository;
         this.webClient = webClient;
 
-        this.tokenServices = tokenServices;
+
     }
 
     Mono<WriteNewTeacherDto> createTeacher(WriteNewTeacherDto dto) {
@@ -84,16 +82,15 @@ public class TeacherServices {
     }
 
     Mono<List<Grades>> allGrades(String email) {
-        String authorization = "Authorization";
-        return name().flatMap(n -> webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).header(authorization, "Bearer %s".formatted(findToken(n))).accept(MediaType.APPLICATION_JSON).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToFlux(Grades.class).collectList()).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : grades")));
+
+        return name().flatMap(n -> webClient.baseUrl(studentUrl).build().get().uri("/grades/{email}", email).accept(MediaType.APPLICATION_JSON).retrieve().onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new WrongCredentialsException("Wrong credentials"))).bodyToFlux(Grades.class).collectList()).onErrorResume(WebClientRequestException.class, response -> Mono.error(new ConnectionException("Connection refused : grades")));
     }
 
     private Mono<String> name() {
         return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).map(Principal::getName);
     }
-    private Mono<String>findToken(String email){
-        return tokenServices.findTokenByEmail(email).map(Token::token);
-    }
+
+
 }
 
 
