@@ -1,6 +1,7 @@
 package org.example.course;
 
 import org.example.course.dto.CourseDto;
+import org.example.course.dto.CoursesList;
 import org.example.course.exception.CourseNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -34,8 +35,10 @@ public class CourseServices {
                 .flatMap(c->courseRepository.deleteByCourseName(courseName));
     }
 
-    Flux<CourseDto> findAll() {
-        return courseRepository.findAll().map(courseMapper::entityToDto);
+    Mono<CoursesList> findAll() {
+      return   courseRepository.findAll().collectList().
+              map(courseMapper::toList);
+             // map(e->courseMapper.toList(((e))));
     }
 
     Flux<CourseDto> findCourseBySubject(String subjectName) {

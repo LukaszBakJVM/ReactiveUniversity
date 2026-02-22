@@ -1,7 +1,9 @@
 package org.example.course;
 
 import org.example.course.dto.CourseDto;
+import org.example.course.dto.CoursesList;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,13 +16,13 @@ public class CourseController {
     public CourseController(CourseServices courseServices) {
         this.courseServices = courseServices;
     }
-
+@PreAuthorize("hasRole('Office')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     Mono<CourseDto> createCourse(@RequestBody CourseDto dto) {
         return courseServices.createOrUpdateCourse(dto);
     }
-
+    @PreAuthorize("hasRole('Office')")
     @DeleteMapping("/{courseName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteCourse(@PathVariable String courseName) {
@@ -30,7 +32,7 @@ public class CourseController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    Flux<CourseDto> allCourseInfo() {
+    Mono<CoursesList> allCourseInfo() {
         return courseServices.findAll();
     }
 
