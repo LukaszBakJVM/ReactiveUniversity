@@ -41,8 +41,10 @@ public class CourseServices {
 
     }
 
-    Flux<CourseDto> findCourseBySubject(String subjectName) {
-        return courseRepository.findCourseBySubjectNameContaining(subjectName).map(courseMapper::entityToDto);
+    Mono<CoursesList> findCourseBySubject(String subjectName) {
+        return courseRepository.findCourseBySubjectNameContaining(subjectName).collectList()
+                        .map(courseMapper::toList);
+
     }
 
     Mono<CourseDto> courseInfo(String courseName) {

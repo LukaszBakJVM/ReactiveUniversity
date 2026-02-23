@@ -5,7 +5,6 @@ import org.example.course.dto.CoursesList;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -16,12 +15,14 @@ public class CourseController {
     public CourseController(CourseServices courseServices) {
         this.courseServices = courseServices;
     }
-@PreAuthorize("hasRole('Office')")
+
+    @PreAuthorize("hasRole('Office')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     Mono<CourseDto> createCourse(@RequestBody CourseDto dto) {
         return courseServices.createOrUpdateCourse(dto);
     }
+
     @PreAuthorize("hasRole('Office')")
     @DeleteMapping("/{courseName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -38,7 +39,7 @@ public class CourseController {
 
     @GetMapping("/{subject}/name")
     @ResponseStatus(HttpStatus.OK)
-    Flux<CourseDto> courseInfoBySubjectName(@PathVariable String subject) {
+    Mono<CoursesList> courseInfoBySubjectName(@PathVariable String subject) {
         return courseServices.findCourseBySubject(subject);
     }
 
