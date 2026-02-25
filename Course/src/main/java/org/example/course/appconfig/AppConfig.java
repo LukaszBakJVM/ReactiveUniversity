@@ -3,7 +3,10 @@ package org.example.course.appconfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,6 +14,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +23,7 @@ import java.util.Map;
 
 @Configuration
 @EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 public class AppConfig {
 
 
@@ -31,18 +37,20 @@ public class AppConfig {
         };
     }*/
 
+
+
+
     @Bean
-    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, ServerAuthenticationConverter authenticationConverter) {
+        AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
+        authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
 
         http.authorizeExchange(request -> request.pathMatchers(HttpMethod.POST, "/course").authenticated()
-                        .pathMatchers(HttpMethod.DELETE, "/course/*").authenticated().anyExchange().permitAll()).
-                oauth2ResourceServer(spec -> spec.jwt((jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))))
-                .csrf(ServerHttpSecurity.CsrfSpec::disable).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
-
+                        .pathMatchers(HttpMethod.DELETE, "/course/*").authenticated()
+                        .anyExchange().permitAll());
+        http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION).httpBasic(ServerHttpSecurity.HttpBasicSpec::disable).formLogin(ServerHttpSecurity.FormLoginSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable).cors(ServerHttpSecurity.CorsSpec::disable);
         return http.build();
-
     }
 
     public ReactiveJwtAuthenticationConverterAdapter jwtAuthenticationConverter() {
